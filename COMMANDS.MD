@@ -41,10 +41,10 @@
     - [/unafk](#unafk)
     - [/temprole \<name> \<duration>](#temprole-name-duration)
   - [Moderation](#moderation)
-    - [/kick \<user> [reason]](#kick-user-reason)
-    - [/ban \<user> [reason]](#ban-user-reason)
-    - [/mute \<user> [duration]](#mute-user-duration)
-    - [/shadowban \<user> [duration]](#shadowban-user-duration)
+    - [/kick \<@user> [reason]](#kick-user-reason)
+    - [/ban \<@user> [reason]](#ban-user-reason)
+    - [/mute \<@user> [duration]](#mute-user-duration)
+    - [/shadowban \<@user> [duration]](#shadowban-user-duration)
     - [/lock [channel] [duration]](#lock-channel-duration)
     - [/unlock [channel]](#unlock-channel)
   - [Giveaway](#giveaway)
@@ -429,7 +429,7 @@ Creates a temporary role.
 
 ## Moderation
 
-### /kick \<user> [reason]
+### /kick \<@user> [reason]
 
 Kicks a user from the server.
 
@@ -442,7 +442,7 @@ Kicks a user from the server.
 user1 has been kicked from the server.
 ```
 
-### /ban \<user> [reason]
+### /ban \<@user> [reason]
 
 Dans a user from the server.
 
@@ -455,7 +455,7 @@ Dans a user from the server.
 user1 has been banned.
 ```
 
-### /mute \<user> [duration]
+### /mute \<@user> [duration]
 
 Gives the [mute role](#muterole) to the user.
 
@@ -466,7 +466,7 @@ Gives the [mute role](#muterole) to the user.
 /mute @user1 1
 ```
 
-### /shadowban \<user> [duration]
+### /shadowban \<@user> [duration]
 
 Gives the [shadow ban role](#shadowbanrole) to the user.
 
