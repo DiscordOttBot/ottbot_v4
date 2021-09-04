@@ -57,8 +57,6 @@
   - [Wiki](#wiki)
     - [/wiki \<word>](#wiki-word)
     - [/urbandictonary \<word>](#urbandictonary-word)
-  - [Misc](#misc)
-- [TODO](#todo)
   - [Currency](#currency)
     - [/bal [@user]](#bal-user)
     - [/slots](#slots)
@@ -70,11 +68,6 @@
   - [Owner Only](#owner-only)
     - [setactivity \<message> [type]](#setactivity-message-type)
     - [/shutdown](#shutdown)
-- [FEATURES](#features)
-  - [Starboard](#starboard)
-  - [Invite tracker](#invite-tracker)
-  - [multi server mod mail](#multi-server-mod-mail)
-  - [Reaction roles](#reaction-roles)
 
 # Commands
 
@@ -598,17 +591,6 @@ Looks up the definition of a word on urban dictonary.
 A word used to indicate excitement or an epic moment. Comes from Pogchamp.
 ```
 
-## Misc
-
-wide -> "０ １ ２ ３ ４ ５ ６ ７ ８ ９ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ ， ． ： ； ！ ？ ＂ ＇ ｀ ＾ ～ ￣ ＿ ＆ ＠ ＃ ％ ＋ － ＊ ＝ ＜ ＞ （ ） ［ ］ ｛ ｝ ｟ ｠ ｜ ￤ ／ ＼ ￢ ＄ ￡ ￠ ￦ ￥"  
-prettify -> "𝙦𝙬𝙚𝙧𝙩𝙮𝙪𝙞𝙤𝙥𝙖𝙨𝙙𝙛𝙜𝙝𝙟𝙠𝙡𝙯𝙭𝙘𝙫𝙗𝙣𝙢𝙌𝙒𝙀𝙍𝙏𝙔𝙐𝙄𝙊𝙋𝘼𝙎𝘿𝙁𝙂𝙃𝙆𝙇𝙕𝙓𝘾𝙑𝘽𝙉𝙈𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟬"  
-color/colorpalette  
-ISS tracker  
-whois
-IRL event tracking: Leap day/second, ISS tracker
-
-# TODO
-
 ## Currency
 
 ### /bal [@user]
@@ -738,4 +720,13 @@ UNKNOWN/TODO
     ## Games
     blackjack  
     connect 4
+
+    ## Misc
+
+    wide -> "０ １ ２ ３ ４ ５ ６ ７ ８ ９ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ ， ． ： ； ！ ？ ＂ ＇ ｀ ＾ ～ ￣ ＿ ＆ ＠ ＃ ％ ＋ － ＊ ＝ ＜ ＞ （ ） ［ ］ ｛ ｝ ｟ ｠ ｜ ￤ ／ ＼ ￢ ＄ ￡ ￠ ￦ ￥"  
+    prettify -> "𝙦𝙬𝙚𝙧𝙩𝙮𝙪𝙞𝙤𝙥𝙖𝙨𝙙𝙛𝙜𝙝𝙟𝙠𝙡𝙯𝙭𝙘𝙫𝙗𝙣𝙢𝙌𝙒𝙀𝙍𝙏𝙔𝙐𝙄𝙊𝙋𝘼𝙎𝘿𝙁𝙂𝙃𝙆𝙇𝙕𝙓𝘾𝙑𝘽𝙉𝙈𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟬"  
+    color/colorpalette  
+    ISS tracker  
+    whois
+    IRL event tracking: Leap day/second, ISS tracker
  -->
