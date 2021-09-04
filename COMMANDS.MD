@@ -64,7 +64,7 @@
   - [Code runner](#code-runner)
     - [/run \<code>](#run-code)
   - [Games](#games)
-    - [Minesweeper [diffaculty]](#minesweeper-diffaculty)
+    - [/minesweeper [diffaculty]](#minesweeper-diffaculty)
   - [Owner Only](#owner-only)
     - [setactivity \<message> [type]](#setactivity-message-type)
     - [/shutdown](#shutdown)
@@ -649,7 +649,7 @@ Runs code.
 
 ## Games
 
-### Minesweeper [diffaculty]
+### /minesweeper [diffaculty]
 
 Play minesweeper with spoiler messages.
 
@@ -665,7 +665,6 @@ Play minesweeper with spoiler messages.
 ⬛⬛⬛⬛⬛
 ```
 
-
 ## Owner Only
 
 ### setactivity \<message> [type]
@@ -679,7 +678,8 @@ Sets the bot's activity.
 /setactivity "over you" WATCHING
 ```
 
-### /shutdown 
+### /shutdown
+
 Shuts down the bot.
 
 ```
@@ -687,12 +687,6 @@ Shuts down the bot.
 
 shutting down...
 ```
-
-
-
-
-
-
 
 <!--
 UP FOR DEBATE
@@ -718,15 +712,15 @@ UNKNOWN/TODO
     set welcome image
 
     ## Games
-    blackjack  
+    blackjack
     connect 4
 
     ## Misc
 
-    wide -> "０ １ ２ ３ ４ ５ ６ ７ ８ ９ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ ， ． ： ； ！ ？ ＂ ＇ ｀ ＾ ～ ￣ ＿ ＆ ＠ ＃ ％ ＋ － ＊ ＝ ＜ ＞ （ ） ［ ］ ｛ ｝ ｟ ｠ ｜ ￤ ／ ＼ ￢ ＄ ￡ ￠ ￦ ￥"  
-    prettify -> "𝙦𝙬𝙚𝙧𝙩𝙮𝙪𝙞𝙤𝙥𝙖𝙨𝙙𝙛𝙜𝙝𝙟𝙠𝙡𝙯𝙭𝙘𝙫𝙗𝙣𝙢𝙌𝙒𝙀𝙍𝙏𝙔𝙐𝙄𝙊𝙋𝘼𝙎𝘿𝙁𝙂𝙃𝙆𝙇𝙕𝙓𝘾𝙑𝘽𝙉𝙈𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟬"  
-    color/colorpalette  
-    ISS tracker  
+    wide -> "０ １ ２ ３ ４ ５ ６ ７ ８ ９ Ａ Ｂ Ｃ Ｄ Ｅ Ｆ Ｇ Ｈ Ｉ Ｊ Ｋ Ｌ Ｍ Ｎ Ｏ Ｐ Ｑ Ｒ Ｓ Ｔ Ｕ Ｖ Ｗ Ｘ Ｙ Ｚ ａ ｂ ｃ ｄ ｅ ｆ ｇ ｈ ｉ ｊ ｋ ｌ ｍ ｎ ｏ ｐ ｑ ｒ ｓ ｔ ｕ ｖ ｗ ｘ ｙ ｚ ， ． ： ； ！ ？ ＂ ＇ ｀ ＾ ～ ￣ ＿ ＆ ＠ ＃ ％ ＋ － ＊ ＝ ＜ ＞ （ ） ［ ］ ｛ ｝ ｟ ｠ ｜ ￤ ／ ＼ ￢ ＄ ￡ ￠ ￦ ￥"
+    prettify -> "𝙦𝙬𝙚𝙧𝙩𝙮𝙪𝙞𝙤𝙥𝙖𝙨𝙙𝙛𝙜𝙝𝙟𝙠𝙡𝙯𝙭𝙘𝙫𝙗𝙣𝙢𝙌𝙒𝙀𝙍𝙏𝙔𝙐𝙄𝙊𝙋𝘼𝙎𝘿𝙁𝙂𝙃𝙆𝙇𝙕𝙓𝘾𝙑𝘽𝙉𝙈𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟬"
+    color/colorpalette
+    ISS tracker
     whois
     IRL event tracking: Leap day/second, ISS tracker
  -->
