@@ -65,8 +65,12 @@
     - [/run \<code>](#run-code)
   - [Games](#games)
     - [/minesweeper [diffaculty]](#minesweeper-diffaculty)
+  - [QR Code](#qr-code)
+    - [/qr \<text>](#qr-text)
+  - [Math](#math)
+    - [/latex \<text>](#latex-text)
   - [Owner Only](#owner-only)
-    - [setactivity \<message> [type]](#setactivity-message-type)
+    - [/setactivity \<message> [type]](#setactivity-message-type)
     - [/shutdown](#shutdown)
 
 # Commands
@@ -665,9 +669,37 @@ Play minesweeper with spoiler messages.
 ⬛⬛⬛⬛⬛
 ```
 
+## QR Code
+
+### /qr \<text>
+
+Generate a qr code.
+
+`text`: The text that will be rendered as a qr code.
+
+```
+/qr "Hello World"
+
+(qr code)
+```
+
+## Math
+
+### /latex \<text>
+
+Generate latex expressions.
+
+`text`: The text that will be rendered as latex.
+
+```
+/latex \frac{1}{2}
+
+(latex)
+```
+
 ## Owner Only
 
-### setactivity \<message> [type]
+### /setactivity \<message> [type]
 
 Sets the bot's activity.
 
