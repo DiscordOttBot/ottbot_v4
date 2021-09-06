@@ -1,5 +1,6 @@
-from ottbot.config import Secrets
-from ottbot.core import Bot
+from ottbot.config import Config
+# from ottbot.core.bot import Bot
+# from ottbot.core.client import Client
 
 
 __version__ = "4.0.0α"  # Αα | Ββ | Δδ | Λλ | Ωω
@@ -10,14 +11,15 @@ __url__ = "https://discord.com/api/oauth2/authorize?client_id=866821214316003339
 __summary__ = "Discord Bot written in Python"
 __keywords__ = "Python / 3.9.6, OS independent, Discord Bot, Hikari"
 
-__all__ = [
-    "Bot",
-    "Secrets",
-    "__version__",
-    "__python_version__",
-    "__author__",
-    "__license__",
-    "__url__",
-    "__summary__",
-    "__keywords__",
-]
+# __all__ = [
+#     "Bot",
+#     "Client",
+#     "Config",
+#     "__version__",
+#     "__python_version__",
+#     "__author__",
+#     "__license__",
+#     "__url__",
+#     "__summary__",
+#     "__keywords__",
+# ]

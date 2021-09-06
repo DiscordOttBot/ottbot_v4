@@ -5,7 +5,7 @@ import tanjun
 
 _IClientT = t.TypeVar("_IClientT", bound="IClient")
 
-class IClient(ABC, tanjun.Client):
+class IClient(ABC):
     """Interface for Client"""
 
     @abstractmethod

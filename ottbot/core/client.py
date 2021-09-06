@@ -1,19 +1,17 @@
 import typing as t
 from pathlib import Path
-from abc import ABC, abstractmethod
 
 import tanjun
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pytz import utc
 
-# from ottbot.interfaces.client import IClient
+# from ottbot.interfaces.iclient import IClient
 
-_ClientT = t.TypeVar("_ClientT", bound="Client")
+_ClientT = t.TypeVar("_ClientT", bound="OttClient")
 
 
-
-class Client(tanjun.Client):
-    """Placeholder"""
+class OttClient(tanjun.Client):
+    """Attachable Client for slash commands"""
 
     __slots__ = tanjun.Client.__slots__ + ("scheduler",)
 
@@ -22,7 +20,8 @@ class Client(tanjun.Client):
         self.scheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone=utc)
 
-    def load_modules(self: _ClientT) -> _ClientT:
+    def load_modules_(self: _ClientT) -> _ClientT:
+        """Loads slash command modules"""
         return super().load_modules(
             *[
                 f"ottbot.core.modules.{m.stem}"

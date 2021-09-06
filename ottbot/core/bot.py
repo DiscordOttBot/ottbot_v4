@@ -4,30 +4,32 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 
 import hikari
-import sake
+
+# import sake
 
 from ottbot import __version__
 from ottbot.config import Config
 
-from .client import Client
-# from ottbot.interfaces.bot import IBot
+from ottbot.core.client import OttClient
 
-_BotT = t.TypeVar("_BotT", bound="Bot")
+# from ottbot.interfaces.ibot import IBot
+
+_BotT = t.TypeVar("_BotT", bound="OttBot")
 
 
-class Bot(hiakri.GatewayBot):
+class OttBot(hikari.GatewayBot):
     """Placeholder"""
 
-    __slots__ = hikari.GatewayBot.__slots__ + ("client")
+    # __slots__ = hikari.GatewayBot.__slots__ + ("client",)
 
     def __init__(self: _BotT) -> None:
         super().__init__(token=Config["TOKEN"], intents=hikari.Intents.ALL)
 
     def create_client(self: _BotT) -> None:
-        self.client = Client.from_ageway_bot(
+        self.client: OttClient = OttClient.from_gateway_bot(
             self, set_global_commands=545984256640286730
         )  # test server id
-        self.client.load_modules()
+        self.client.load_modules_()
 
     def run(self: _BotT) -> None:
         self.create_client()
@@ -46,18 +48,18 @@ class Bot(hiakri.GatewayBot):
         )
 
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
-        cache = sake.redis.RedisCache(self, self, address="redis://127.0.0.1")
-        await cache.open()
+        # cache = sake.redis.RedisCache(self, self, address="redis://127.0.0.1")
+        # await cache.open()
         logging.info("Connecting to redis server")
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:
         self.client.scheduler.start()
 
-        self.stdout_channel = await self.rest.fetch_channel(883885654319190016)
-        await self.stdout_channel.send(f"Testing v{__version__} now online!")
+        # self.stdout_channel = await self.rest.fetch_channel(883885654319190016)
+        # await self.stdout_channel.send(f"Testing v{__version__} now online!")
 
         logging.info("Bot ready")
 
     async def on_stopping(self: _BotT, event: hikari.StoppingEvent) -> None:
-        await self.stdout_channel.send(f"Testing v{__version__} is shutting down.")
+        # await self.stdout_channel.send(f"Testing v{__version__} is shutting down.")
         self.client.scheduler.shutdown()

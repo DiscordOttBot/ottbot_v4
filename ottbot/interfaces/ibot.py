@@ -1,6 +1,8 @@
 import typing as t
 from abc import ABC, abstractmethod
 
+import hikari
+
 _IBotT = t.TypeVar("_IBotT", bound="IBot")
 
 class IBot(ABC):

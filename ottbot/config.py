@@ -14,7 +14,7 @@ dotenv.load_dotenv()
 class ConfigMeta(type):
     """Metaclass for extracting environment variables"""
 
-    def _resolve_value(cls, value: str) -> t.Callable[..., t.Any] | t.Any:
+    def _resolve_value(cls, value: str):
         """Type casts values from a string
         Example:
             str:Discord_bot_token -> "Discord_bot_token"
@@ -36,14 +36,14 @@ class ConfigMeta(type):
         except Exception:  # value contains ":" and needs to be type casted
             return cls._resolve_value(key)
 
-    def __getattr__(cls, name: str) -> t.Callable[..., t.Any]:
+    def __getattr__(cls, name: str):
         try:
             return cls._resolve_key(name)
         except KeyError:
             traceback.print_exc()
             raise AttributeError(f"{name} is not a key in config.") from None
 
-    def __getitem__(cls, name: str) -> t.Callable[..., t.Any]:
+    def __getitem__(cls, name: str):
         return cls.__getattr__(name)
 
 
@@ -55,18 +55,3 @@ class Config(metaclass=ConfigMeta):
     """
 
     pass
-
-
-if __name__ == "__main__":
-    token = Config["TOKEN"]  # or
-    token = Config.TOKEN
-    print(f"Discord Token: {token[:4]}...")
-    print(Config.L)
-
-# Example .env file
-"""
-TOKEN=str:discord_token_here
-BOT_ID=int:866821214316003339
-OWNER_IDS=set:int:425800572671754242,int:1234
-
-"""
