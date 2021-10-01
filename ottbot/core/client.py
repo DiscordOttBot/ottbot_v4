@@ -5,7 +5,7 @@ import tanjun
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pytz import utc
 
-# from ottbot.interfaces.iclient import IClient
+# from ottbot.abc.iclient import IClient
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 

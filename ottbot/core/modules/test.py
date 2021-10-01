@@ -2,14 +2,13 @@ import random
 
 import hikari
 import tanjun
-
 from ottbot.core.client import OttClient
 
 component = tanjun.Component()
 
 
 @component.with_slash_command
-@tanjun.as_slash_command("hello", "Say hello!")
+@tanjun.as_slash_command("hello", "Says hello!")
 async def command_hello(ctx: tanjun.abc.Context) -> None:
     greeting = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(f"{greeting} {ctx.member.mention}!", user_mentions=True)

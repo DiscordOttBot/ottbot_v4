@@ -3,6 +3,11 @@
   - [Lightbulb Docs](#lightbulb-docs)
   - [Tanjun Docs](#tanjun-docs)
   - [Sake Docs](#sake-docs)
+  - [Fast API](#fast-api)
+  - [Async PG](#async-pg)
+  - [Pydantic](#pydantic)
+  - [Mypy](#mypy)
+  - [Testing](#testing)
 
 # Documentation
 
@@ -22,3 +27,14 @@
 
 [source](https://github.com/FasterSpeeding/Sake/)
 
+## [Fast API](https://fastapi.tiangolo.com/)
+
+[tutorial](https://www.youtube.com/watch?v=7t2alSnE2-I)
+
+## [Async PG](https://magicstack.github.io/asyncpg/current/)
+
+## [Pydantic](https://pydantic-docs.helpmanual.io/)
+
+## [Mypy](https://mypy.readthedocs.io/en/stable/)
+
+## [Testing](https://python.readthedocs.io/en/stable/library/unittest.html?highlight=re)

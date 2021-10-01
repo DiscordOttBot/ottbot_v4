@@ -6,8 +6,7 @@ import tanjun
 _IClientT = t.TypeVar("_IClientT", bound="IClient")
 
 class IClient(ABC):
-    """Interface for Client"""
+    """Interface for Command Handler Client"""
 
     @abstractmethod
-    def load_modules(self: _IClientT) -> _IClientT:
-        pass
+    def load_modules(self: _IClientT) -> _IClientT: ...

@@ -299,3 +299,4 @@ tags
 .idea
 dynamic/
 examples/
+.vim/
