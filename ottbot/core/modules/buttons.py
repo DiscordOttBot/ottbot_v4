@@ -13,7 +13,14 @@ component = tanjun.Component()
 @component.with_slash_command
 @tanjun.as_slash_command("paginate", "Paginate through a list of options!")
 async def command_paginate(ctx: tanjun.abc.Context) -> None:
-    values: tuple[str] = ("Page 1", "Page 2", "Page 3", "Page 4", "Page 5", "Page 6")
+    values: tuple[str, str, str, str, str, str] = (
+        "Page 1",
+        "Page 2",
+        "Page 3",
+        "Page 4",
+        "Page 5",
+        "Page 6",
+    )
     index: int = 0
 
     button_menu: ActionRowBuilder = (
@@ -35,6 +42,7 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
     await ctx.respond(values[0], component=button_menu)
 
     while True:
+
         try:
             event: hikari.InteractionCreateEvent = await ctx.client.events.wait_for(
                 hikari.InteractionCreateEvent, timeout=60
@@ -43,13 +51,13 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
             await ctx.edit_initial_response("Timed out.", components=[])
         else:
             if event.interaction.custom_id == "<<":
-                index: int = 0
+                index = 0
             elif event.interaction.custom_id == "<":
-                index: int = (index - 1) % len(values)
+                index = (index - 1) % len(values)
             elif event.interaction.custom_id == ">":
-                index: int = (index + 1) % len(values)
+                index = (index + 1) % len(values)
             elif event.interaction.custom_id == ">>":
-                index: int = len(values) - 1
+                index = len(values) - 1
 
             await ctx.edit_initial_response(values[index])
             await event.interaction.create_initial_response(
@@ -58,5 +66,5 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
 
 
 @tanjun.as_loader
-def load_component(client: OttClient) -> None:
+def load_component(client: tanjun.Client) -> None:
     client.add_component(component.copy())

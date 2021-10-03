@@ -91,6 +91,7 @@ class Board:
         self.status = status
         for cell in self.cells:
             cell.revealed = True
+        return
 
 
 component = tanjun.Component()
@@ -152,5 +153,5 @@ async def minesweeper_cmd(ctx: tanjun.abc.Context, bombs: int) -> None:
 
 
 @tanjun.as_loader
-def load_component(client: OttClient) -> None:
+def load_component(client: tanjun.Client) -> None:
     client.add_component(component.copy())

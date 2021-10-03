@@ -1,5 +1,9 @@
 import typing as t
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractclassmethod
+
+import hikari
+from hikari import traits
+
 
 import tanjun
 
@@ -10,5 +14,31 @@ class IClient(ABC):
     """Interface for Command Handler Client"""
 
     @abstractmethod
-    def load_modules(self: _IClientT) -> _IClientT:
+    def load_modules_(self: _IClientT) -> _IClientT:
+        """Load slash command"""
+        ...
+
+    @abstractclassmethod
+    def from_gateway_bot(
+        cls,
+        bot: hikari.GatewayBotAware,
+        /,
+        *,
+        event_managed: bool = False,
+        mention_prefix: bool = False,
+        set_global_commands: t.Union[
+            hikari.guilds.PartialGuild, hikari.Snowflake, bool
+        ] = False,
+    ) -> tanjun.Client:
+        ...
+
+    @abstractclassmethod
+    def from_rest_bot(
+        cls,
+        bot: traits.RESTBotAware,
+        /,
+        set_global_commands: t.Union[
+            hikari.SnowflakeishOr[hikari.PartialGuild], bool
+        ] = False,
+    ) -> tanjun.Client:
         ...

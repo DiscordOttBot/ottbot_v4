@@ -52,5 +52,5 @@ async def cmd_user(ctx: tanjun.abc.SlashContext, id_str: str) -> None:
 
 
 @tanjun.as_loader
-def load_component(client: OttClient) -> None:
+def load_component(client: tanjun.Client) -> None:
     client.add_component(component.copy())

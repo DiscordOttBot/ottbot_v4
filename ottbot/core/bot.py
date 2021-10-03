@@ -1,7 +1,8 @@
+import asyncio
 import logging
 import typing as t
-from abc import ABC, abstractmethod
 from pathlib import Path
+import time
 
 import hikari
 
@@ -13,13 +14,13 @@ from ottbot.config import Config
 from ottbot.core.client import OttClient
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
-SERVER_ID: t.Literal[545984256640286730] = 545984256640286730
+SERVER_ID: hikari.PartialGuild = 545984256640286730
 
 
 class OttBot(hikari.GatewayBot):
     """Main Bot Class"""
 
-    __slots__: t.Sequence[str] = hikari.GatewayBot.__slots__ + ("client", "guilds")
+    __slots__: tuple = (*hikari.GatewayBot.__slots__, "client", "guilds")
 
     def __init__(self: _BotT) -> None:
         super().__init__(token=Config["TOKEN"], intents=hikari.Intents.ALL)
@@ -33,10 +34,23 @@ class OttBot(hikari.GatewayBot):
         self.client.bot = self
         self.client.load_modules_()
 
+    async def init_cache(self):
+        cache: sake.redis.RedisCache = sake.redis.RedisCache(
+            self, None, address="redis://127.0.0.1"
+        )
+        try:
+            await cache.open()
+        except ConnectionRefusedError as e:
+            logging.warn(e)
+        except Exception as e:
+            logging.critical(e)
+
     def run(self: _BotT) -> None:
         """Create the client, subscribe to important events, and run the bot"""
         self.create_client()
-        subscriptions: dict[hikari.Event, t.Callable[..., None]] = {
+        subscriptions: dict[
+            hikari.Event, t.Callable[[hikari.Event], t.Coroutine[t.Any, t.Any, None]]
+        ] = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,
             hikari.StoppingEvent: self.on_stopping,
@@ -51,11 +65,9 @@ class OttBot(hikari.GatewayBot):
 
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
-        cache: sake.redis.RedisCache = sake.redis.RedisCache(
-            self, None, address="redis://127.0.0.1"
-        )
-        await cache.open()
+
         logging.info("Connecting to redis server")
+        await self.init_cache()
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:
         """Runs once bot is fully connected"""
