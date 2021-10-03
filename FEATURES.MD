@@ -13,7 +13,7 @@ cringe
 
 ## Invite tracker
 
-Count invites from a user
+Count invites from a user  
 invite leaderboard
 
 ## multi-server mod mail
