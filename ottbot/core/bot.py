@@ -14,17 +14,29 @@ from ottbot.config import Config
 from ottbot.core.client import OttClient
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
-SERVER_ID: hikari.PartialGuild = 545984256640286730
+EventT = t.Union[
+    hikari.StartingEvent,
+    hikari.StartedEvent,
+    hikari.StoppingEvent,
+    hikari.StoppedEvent,
+]
+
+SERVER_ID: int = 545984256640286730
 
 
-class OttBot(hikari.GatewayBot):
+class OttBot(hikari.GatewayBot, IBot):
     """Main Bot Class"""
 
     __slots__: tuple = (*hikari.GatewayBot.__slots__, "client", "guilds")
 
     def __init__(self: _BotT) -> None:
-        super().__init__(token=Config["TOKEN"], intents=hikari.Intents.ALL)
+        super().__init__(token=self._get_token(), intents=hikari.Intents.ALL)
         self.guilds: list[hikari.OwnGuild] = []
+
+    def _get_token(self) -> str:
+        if isinstance(token := Config["TOKEN"], str):
+            return token
+        raise ValueError("Invalid token in .env file")
 
     def create_client(self: _BotT) -> None:
         """Creates a client and adds it to the `client` attribute"""
@@ -41,16 +53,14 @@ class OttBot(hikari.GatewayBot):
         try:
             await cache.open()
         except ConnectionRefusedError as e:
-            logging.warn(e)
+            logging.warning(f"Redis Error: {e}")
         except Exception as e:
             logging.critical(e)
 
-    def run(self: _BotT) -> None:
+    def run(self):
         """Create the client, subscribe to important events, and run the bot"""
         self.create_client()
-        subscriptions: dict[
-            hikari.Event, t.Callable[[hikari.Event], t.Coroutine[t.Any, t.Any, None]]
-        ] = {
+        subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,
             hikari.StoppingEvent: self.on_stopping,
@@ -81,3 +91,8 @@ class OttBot(hikari.GatewayBot):
     async def on_stopping(self: _BotT, event: hikari.StoppingEvent) -> None:
         """Runs at the beginning of shutdown sequence"""
         self.client.scheduler.shutdown()
+        self.dispatch
+
+
+    async def on_guild_available(self: _BotT, event: hikari.GuildAvailableEvent) -> None:
+        ...

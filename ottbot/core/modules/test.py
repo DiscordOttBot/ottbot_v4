@@ -12,7 +12,10 @@ component = tanjun.Component()
 @tanjun.as_slash_command("hello", "Says hello!")
 async def command_hello(ctx: tanjun.abc.SlashContext) -> None:
     greeting: str = random.choice(("Hello", "Hi", "Hey"))
-    await ctx.respond(f"{greeting} {ctx.member.mention}!", user_mentions=True)
+    await ctx.respond(
+        f"{greeting} {ctx.author.mention if ctx.member else ctx.author.username}!",
+        user_mentions=True,
+    )
 
 
 @component.with_slash_command
@@ -35,7 +38,7 @@ async def command_dice(
         await ctx.respond("The dice cannot have more than 100 sides.")
         return
 
-    rolls: int = [random.randint(1, sides) for _ in range(number)]
+    rolls: list[int] = [random.randint(1, sides) for _ in range(number)]
     await ctx.respond(
         " + ".join(f"{r}" for r in rolls)
         + (f" + {bonus} (bonus)" if bonus else "")
@@ -47,6 +50,7 @@ async def command_dice(
 @tanjun.with_str_slash_option("id_str", "The ID of the user you would like to access")
 @tanjun.as_slash_command("user", "Get the name of a user give their ID")
 async def cmd_user(ctx: tanjun.abc.SlashContext, id_str: str) -> None:
+    logging.info(type(ctx.client))
     user = ctx.client.bot.cache.get_member(ctx.guild_id, int(id_str))
     await ctx.respond(user.username)
 

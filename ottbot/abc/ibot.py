@@ -20,6 +20,10 @@ class IBot(ABC):
         ...
 
     @abstractmethod
+    async def on_guild_available(self: _IBotT, event: hikari.GuildAvailableEvent) -> None:
+        ...
+
+    @abstractmethod
     async def on_starting(self: _IBotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
         ...

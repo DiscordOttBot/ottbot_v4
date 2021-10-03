@@ -9,6 +9,7 @@ import hikari
 
 from ottbot.abc.iclient import IClient
 from ottbot.abc.ibot import _IBotT
+from ottbot import core
 
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
@@ -19,16 +20,16 @@ class OttClient(tanjun.Client, IClient):
 
     __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler", "bot")
 
-    def __init__(self: _ClientT, *args: t.Any, **kwards: t.Any) -> None:
-        tanjun.Client.__init__(*args, **kwards)
+    def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
+        super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone=utc)
-        self.bot: t.Optional[_IBotT] = None # type: ignore
+        self.bot: core.Bot = kwargs["shards"]
 
-    def load_modules_(self: _ClientT):
+    def load_modules_(self):
         """Loads slash command modules"""
 
-        return tanjun.Client.load_modules(
+        return super().load_modules(
             *[
                 f"ottbot.core.modules.{m.stem}"
                 for m in Path(__file__).parent.glob("modules/*.py")
@@ -38,17 +39,16 @@ class OttClient(tanjun.Client, IClient):
         # Fixed in #55, need to wait until @task/components is merged.
         # return super().load_modules(*Path(__file__).parent.glob("modules/*.py"))
 
+    @classmethod
     def from_gateway_bot(
         cls,
-        bot: hikari.GatewayBotAware,
+        bot,
         /,
         *,
-        event_managed: bool = False,
-        mention_prefix: bool = False,
-        set_global_commands: t.Union[
-            hikari.guilds.PartialGuild, hikari.Snowflake, bool
-        ] = False,
-    ) -> _ClientT:
+        event_managed=False,
+        mention_prefix=False,
+        set_global_commands=False,
+    ):
         constructor: _ClientT = (
             cls(
                 rest=bot.rest,
@@ -65,15 +65,14 @@ class OttClient(tanjun.Client, IClient):
 
         return constructor
 
+    @classmethod
     def from_rest_bot(
         cls,
-        bot: traits.RESTBotAware,
+        bot,
         /,
-        set_global_commands: t.Union[
-            hikari.SnowflakeishOr[hikari.PartialGuild], bool
-        ] = False,
-    ) -> _ClientT:
-        constructor: _ClientT = cls(
+        set_global_commands=False,
+    ):
+        constructor = cls(
             rest=bot.rest,
             server=bot.interaction_server,
             set_global_commands=set_global_commands,
