@@ -300,3 +300,4 @@ tags
 dynamic/
 examples/
 .vim/
+.ntvenv/

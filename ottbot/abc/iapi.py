@@ -7,11 +7,13 @@ from pydantic import BaseModel
 
 _IAPIT = t.TypeVar("_IAPIT", bound="IAPI")
 
+
 class IAPI(object):
     """Interface Class for custom ReST API"""
 
     @abstractmethod
-    def __init__(self, app: FastAPI): ...
+    def __init__(self: _IAPIT, app: FastAPI) -> None:
+        ...
 
     #  @abstractmethod
     #  def get_index(self): ...

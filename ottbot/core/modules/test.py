@@ -10,7 +10,7 @@ component = tanjun.Component()
 @component.with_slash_command
 @tanjun.as_slash_command("hello", "Says hello!")
 async def command_hello(ctx: tanjun.abc.Context) -> None:
-    greeting = random.choice(("Hello", "Hi", "Hey"))
+    greeting: str = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(f"{greeting} {ctx.member.mention}!", user_mentions=True)
 
 
@@ -34,7 +34,7 @@ async def command_dice(
         await ctx.respond("The dice cannot have more than 100 sides.")
         return
 
-    rolls = [random.randint(1, sides) for i in range(number)]
+    rolls: int = [random.randint(1, sides) for _ in range(number)]
     await ctx.respond(
         " + ".join(f"{r}" for r in rolls)
         + (f" + {bonus} (bonus)" if bonus else "")

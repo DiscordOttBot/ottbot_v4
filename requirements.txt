@@ -7,3 +7,5 @@ uvloop>=0.16; sys_platform != 'nt'
 APScheduler
 black
 mypy
+fastapi
+uvicorn

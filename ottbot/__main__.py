@@ -1,6 +1,6 @@
 import os
 
-from ottbot.core.bot import OttBot
+from ottbot.core.bot import OttBot, _BotT
 
 
 def main() -> None:
@@ -11,7 +11,6 @@ def main() -> None:
 
     bot: OttBot = OttBot()
     bot.run()
-
 
 
 if __name__ == "__main__":

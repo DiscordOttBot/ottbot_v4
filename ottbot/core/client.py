@@ -13,11 +13,11 @@ _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 class OttClient(tanjun.Client):
     """Attachable Client for slash commands"""
 
-    __slots__ = tanjun.Client.__slots__ + ("scheduler",)
+    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler",)
 
     def __init__(self: _ClientT, *args: t.Any, **kwards: t.Any) -> None:
         super().__init__(*args, **kwards)
-        self.scheduler = AsyncIOScheduler()
+        self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone=utc)
 
     def load_modules_(self: _ClientT) -> _ClientT:
