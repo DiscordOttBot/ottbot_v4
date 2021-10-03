@@ -30,6 +30,7 @@ class OttBot(hikari.GatewayBot):
         self.client: OttClient = OttClient.from_gateway_bot(
             self, set_global_commands=SERVER_ID
         )
+        self.client.bot = self
         self.client.load_modules_()
 
     def run(self: _BotT) -> None:
@@ -51,7 +52,7 @@ class OttBot(hikari.GatewayBot):
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
         cache: sake.redis.RedisCache = sake.redis.RedisCache(
-            self, self, address="redis://127.0.0.1"
+            self, None, address="redis://127.0.0.1"
         )
         await cache.open()
         logging.info("Connecting to redis server")
