@@ -21,10 +21,14 @@ class OttClient(tanjun.Client, IClient):
     __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler", "bot")
 
     def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
+
+        self.errors = core.Errors()
+        self.embeds = core.Embeds()
+        self.bot: core.OttBot = kwargs["shards"]
+
         super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone=utc)
-        self.bot: core.Bot = kwargs["shards"]
 
     def load_modules_(self):
         """Loads slash command modules"""

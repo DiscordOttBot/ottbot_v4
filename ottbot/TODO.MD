@@ -1,11 +1,11 @@
 # Immediate
 
  - [ ] Built-in ReST API
- - [ ] Redis Caching
+ - [x] Redis Caching
  - [ ] Util code
    - [ ] Error Handler
    - [ ] Logging system
-   - [ ] Embed Factory
+   - [x] Embed Factory
    - [ ] Async Database Wrapper
 
 # Soon™

@@ -4,6 +4,7 @@ import typing as t
 import hikari
 import tanjun
 
+from ottbot.abc.iembeds import IEmbed
 
 FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
 CtxT = tanjun.abc.Context
@@ -12,10 +13,11 @@ ResourceishT = t.Optional[hikari.files.Resourceish]
 ESCAPE_NAME = "None"
 
 
-class Embeds:
+class Embeds(IEmbed):
     """Embed factory"""
 
     def _init(self, **kwargs: t.Any) -> None:
+        """Initialize embed values"""
 
         self.fields: FieldsT = kwargs.get("fields")
         self._ctx: CtxT = kwargs.get("ctx")
@@ -33,6 +35,8 @@ class Embeds:
         )
 
     def _construct(self) -> hikari.Embed:
+        """Construct base embed"""
+
         embed = hikari.Embed(
             title=self.title,
             description=self.desc,
@@ -60,6 +64,8 @@ class Embeds:
         return embed
 
     def _add_content(self, embed):
+        """Add content fields to embed"""
+
         if self.fields:
             for name, value, inline in self.fields:
                 embed.add_field(name=name, value=value, inline=inline)
@@ -80,10 +86,9 @@ class Embeds:
         Returns:
             - hikari.Embed
         """
+
         self._init(**kwargs)
-
         embed = self._construct()
-
         self._add_content(embed)
 
         return embed
