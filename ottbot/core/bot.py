@@ -1,16 +1,16 @@
 import asyncio
 import logging
+import os
+import time
 import typing as t
 from pathlib import Path
-import time
 
 import hikari
-
 import sake
-
-from ottbot import __version__
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
+from ottbot.core.utils import BetterTimedRotatingFileHandler, Embeds, Errors
 from ottbot.core.client import OttClient
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
@@ -29,7 +29,17 @@ class OttBot(hikari.GatewayBot, IBot):
 
     __slots__: tuple = (*hikari.GatewayBot.__slots__, "client", "guilds")
 
-    def __init__(self: _BotT) -> None:
+    def __init__(self: _BotT, version: str = "") -> None:
+        self._dynamic = os.path.join(".", "ottbot", "data", "dynamic")
+        self._static = os.path.join(".", "ottbot", "data", "static")
+        self._log = os.path.join(".", "ottbot", "data", "logs")
+
+        self.version = version
+
+        self.scheduler = AsyncIOScheduler()
+        self.errors = Errors()
+        self.embeds = Embeds()
+
         super().__init__(token=self._get_token(), intents=hikari.Intents.ALL)
         self.guilds: list[hikari.OwnGuild] = []
 
@@ -69,9 +79,22 @@ class OttBot(hikari.GatewayBot, IBot):
 
         super().run(
             activity=hikari.Activity(
-                name=f"/help | {__version__}", type=hikari.ActivityType.WATCHING
+                name=f"/help | {self.version}", type=hikari.ActivityType.WATCHING
             )
         )
+
+    def logging_config(self) -> None:
+        """Logging configuration for the bot"""
+
+        btrfh = BetterTimedRotatingFileHandler(path=self._log)
+        ff = logging.Formatter(
+            f"[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        btrfh.setFormatter(ff)
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        self.logger.addHandler(btrfh)
 
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
@@ -93,6 +116,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.client.scheduler.shutdown()
         self.dispatch
 
-
-    async def on_guild_available(self: _BotT, event: hikari.GuildAvailableEvent) -> None:
+    async def on_guild_available(
+        self: _BotT, event: hikari.GuildAvailableEvent
+    ) -> None:
         ...

@@ -9,7 +9,7 @@ def main() -> None:
 
         uvloop.install()
 
-    bot: OttBot = OttBot()
+    bot: OttBot = OttBot(version="4.0.0")
     bot.run()
 
 

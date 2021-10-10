@@ -9,7 +9,7 @@ import hikari
 
 from ottbot.abc.iclient import IClient
 from ottbot.abc.ibot import _IBotT
-from ottbot import core
+from ottbot.core import utils
 
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
@@ -22,8 +22,8 @@ class OttClient(tanjun.Client, IClient):
 
     def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
 
-        self.errors = core.Errors()
-        self.embeds = core.Embeds()
+        self.errors = utils.Errors()
+        self.embeds = utils.Embeds()
         self.bot: core.OttBot = kwargs["shards"]
 
         super().__init__(*args, **kwargs)

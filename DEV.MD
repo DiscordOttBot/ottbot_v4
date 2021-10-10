@@ -1,3 +1,4 @@
+- [commands](#commands)
 - [Documentation](#documentation)
   - [Hikari Docs](#hikari-docs)
   - [Lightbulb Docs](#lightbulb-docs)
@@ -8,6 +9,24 @@
   - [Pydantic](#pydantic)
   - [Mypy](#mypy)
   - [Testing](#testing)
+
+# commands
+
+```
+python -m ottbot
+```
+
+```
+redis-server
+```
+
+```
+uvicorn main:app --reload
+```
+
+```
+sudo /etc/init.d/postgres start
+```
 
 # Documentation
 
