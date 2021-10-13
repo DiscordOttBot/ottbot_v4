@@ -1,10 +1,7 @@
-try:
-    import codecs
-except ImportError:
-    codecs = None
+import codecs
 import logging.handlers
-import time
 import os
+import time
 
 
 class LoggingFilter(logging.Filter):

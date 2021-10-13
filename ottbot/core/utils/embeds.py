@@ -10,7 +10,7 @@ FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
 CtxT = tanjun.abc.Context
 ResourceishT = t.Optional[hikari.files.Resourceish]
 
-ESCAPE_NAME = "None"
+ESCAPE_NAME: t.Final = "None"
 
 
 class Embeds(IEmbed):

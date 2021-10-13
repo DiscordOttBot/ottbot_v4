@@ -10,6 +10,7 @@ import hikari
 from ottbot.abc.iclient import IClient
 from ottbot.abc.ibot import _IBotT
 from ottbot.core import utils
+from ottbot.core.bot import OttBot
 
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
@@ -24,7 +25,7 @@ class OttClient(tanjun.Client, IClient):
 
         self.errors = utils.Errors()
         self.embeds = utils.Embeds()
-        self.bot: core.OttBot = kwargs["shards"]
+        self.bot: OttBot = kwargs["shards"]
 
         super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
