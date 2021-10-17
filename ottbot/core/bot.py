@@ -4,10 +4,12 @@ import os
 import time
 import typing as t
 from pathlib import Path
+from fastapi import FastAPI
 
 import hikari
 import sake
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import uvicorn
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
 from ottbot.core.utils import BetterTimedRotatingFileHandler, Embeds, Errors
@@ -40,8 +42,10 @@ class OttBot(hikari.GatewayBot, IBot):
         self.errors = Errors()
         self.embeds = Embeds()
 
-        super().__init__(token=self._get_token(), intents=hikari.Intents.ALL)
         self.guilds: list[hikari.OwnGuild] = []
+
+
+        super().__init__(token=self._get_token(), intents=hikari.Intents.ALL)
 
     def _get_token(self) -> str:
         if isinstance(token := Config["TOKEN"], str):

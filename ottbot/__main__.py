@@ -1,17 +1,12 @@
 import os
 
-from ottbot.core.bot import OttBot, _BotT
+from ottbot.core.bot import OttBot
 
 
-def main() -> None:
-    if os.name != "nt":
-        import uvloop
+if os.name != "nt":
+    import uvloop
 
-        uvloop.install()
+    uvloop.install()
 
-    bot: OttBot = OttBot(version="4.0.0")
-    bot.run()
-
-
-if __name__ == "__main__":
-    main()
+bot: OttBot = OttBot(version="4.0.0a")
+bot.run()
