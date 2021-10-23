@@ -34,7 +34,7 @@ SERVER_ID: int = 545984256640286730
 class OttBot(hikari.GatewayBot, IBot):
     """Main Bot Class"""
 
-    __slots__: tuple = (
+    __slots__: tuple[str, ...] = (
         *hikari.GatewayBot.__slots__,
         "client",
         "embeds",
@@ -88,7 +88,7 @@ class OttBot(hikari.GatewayBot, IBot):
         except Exception as e:
             logging.critical(e)
 
-    def run(self: _BotT):
+    def run(self: _BotT):  # type: ignore
         """Create the client, subscribe to important events, and run the bot.
 
         When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
@@ -109,7 +109,7 @@ class OttBot(hikari.GatewayBot, IBot):
             )
         )
 
-    async def start(self: _BotT) -> None:
+    async def start(self: _BotT) -> None:  # type: ignore
 
         self.logger.info("Starting Bot")
 
@@ -168,6 +168,10 @@ class OttBot(hikari.GatewayBot, IBot):
         """Runs at the beginning of shutdown sequence"""
         self.client.scheduler.shutdown()
         self.dispatch
+
+    async def on_stopped(self: _BotT, event: hikari.StoppingEvent) -> None:
+        """Runs after the bot has been shutdown"""
+        ...
 
     async def on_guild_available(
         self: _BotT, event: hikari.GuildAvailableEvent

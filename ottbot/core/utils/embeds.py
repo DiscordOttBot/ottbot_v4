@@ -20,7 +20,7 @@ class Embeds(IEmbed):
         """Initialize embed values"""
 
         self.fields: FieldsT = kwargs.get("fields")
-        self._ctx: CtxT = kwargs.get("ctx")
+        self._ctx: t.Union[CtxT, t.Any, None] = kwargs.get("ctx")
         self.title: t.Optional[str] = kwargs.get("title")
         self.desc: t.Optional[str] = kwargs.get("description")
         self.footer: t.Optional[str] = kwargs.get("footer")
@@ -46,21 +46,21 @@ class Embeds(IEmbed):
         embed.set_thumbnail(self.thumbnail)
         embed.set_image(self.image)
         embed.set_author(name=self.header, url=self.header_url, icon=self.header_icon)
-        embed.set_footer(
-            text=(
-                None
-                if self.footer == ESCAPE_NAME
-                else (self.footer or f"Invoked by: {self._ctx.author.username}")
-            ),
-            icon=(
-                None
-                if self.footer == ESCAPE_NAME
-                else (
-                    self._ctx.author.avatar_url
-                    or (self._ctx.client.bot.get_me().avatar_url)
-                )
-            ),
-        )
+        if isinstance(self._ctx, CtxT):
+            embed.set_footer(
+                text=(
+                    None
+                    if self.footer == ESCAPE_NAME
+                    else (self.footer or f"Invoked by: {self._ctx.author.username}")
+                ),
+                icon=(
+                    None
+                    if self.footer == ESCAPE_NAME
+                    else (
+                        self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
+                    )
+                ),
+            )
         return embed
 
     def _add_content(self, embed):

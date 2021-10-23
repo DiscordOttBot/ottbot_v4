@@ -3,8 +3,6 @@ from abc import ABC, abstractmethod, abstractclassmethod
 
 import hikari
 from hikari import traits
-
-
 import tanjun
 
 _IClientT = t.TypeVar("_IClientT", bound="IClient")
@@ -12,6 +10,11 @@ _IClientT = t.TypeVar("_IClientT", bound="IClient")
 
 class IClient(ABC):
     """Interface for Command Handler Client"""
+
+    @abstractmethod
+    def __init__(self: _IClientT, *args: t.Any, **kwargs: t.Any) -> None:
+        self.errors: t.Optional[t.Any] = None
+        self.embeds: t.Optional[t.Any] = None
 
     @abstractmethod
     def load_modules_(self: _IClientT) -> _IClientT:

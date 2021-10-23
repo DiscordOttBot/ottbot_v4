@@ -20,7 +20,9 @@ class IBot(ABC):
         ...
 
     @abstractmethod
-    async def on_guild_available(self: _IBotT, event: hikari.GuildAvailableEvent) -> None:
+    async def on_guild_available(
+        self: _IBotT, event: hikari.GuildAvailableEvent
+    ) -> None:
         ...
 
     @abstractmethod
@@ -36,4 +38,9 @@ class IBot(ABC):
     @abstractmethod
     async def on_stopping(self: _IBotT, event: hikari.StoppingEvent) -> None:
         """Runs at the beginning of shutdown sequence"""
+        ...
+
+    @abstractmethod
+    async def on_stopped(self: _IBotT, event: hikari.StoppingEvent) -> None:
+        """Runs after the bot has been shutdown"""
         ...

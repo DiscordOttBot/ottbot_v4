@@ -11,17 +11,17 @@ if os.name != "nt":
 
     uvloop.install()
 
-app = FastAPI()
+app: FastAPI = FastAPI()
 bot: OttBot = OttBot(version=__version__)
 
 
 @app.on_event("startup")
-async def api_startup():
+async def api_startup() -> None:
     await bot.start()
 
 
 @app.on_event("shutdown")
-async def api_shutdown():
+async def api_shutdown() -> None:
     await bot.close()
 
 

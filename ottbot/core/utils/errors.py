@@ -3,7 +3,7 @@ import typing as t
 import hikari
 import tanjun
 
-import ottbot
+from ottbot.abc.iclient import IClient
 
 
 class Doneions(Exception):
@@ -24,15 +24,18 @@ class NGonError(Exception):
 
 
 class Errors:
-    def embed(self, ctx: tanjun.abc.Context, message: str) -> hikari.Embed:
-        assert isinstance(ctx.client, ottbot.OttClient)
+    def embed(self, ctx: tanjun.abc.Context, message: str) -> t.Optional[hikari.Embed]:
+        assert isinstance(ctx.client, IClient)
         desc: str = f"❌ {message}"
 
-        embed: hikari.Embed = ctx.client.embeds.build(
-            ctx=ctx, description=desc, footer="None"
-        )
+        if ctx.client.embeds is not None:
+            embed: hikari.Embed = ctx.client.embeds.build(
+                ctx=ctx, description=desc, footer="None"
+            )
 
-        return embed
+            return embed
+        else:
+            return None
 
     @staticmethod
     def ngon(message: str) -> NGonError:
