@@ -1,7 +1,9 @@
 import codecs
 import logging.handlers
+import logging
 import os
 import time
+from colorama import Fore, Style
 
 
 class LoggingFilter(logging.Filter):
@@ -53,6 +55,26 @@ class BetterTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
         self.rollover_at = self.rollover_at + self.interval
 
 
+class HikariFormatter(logging.Formatter):
+
+    fmt = "%(asctime)s %(name)s %(message)s"
+    date_fmt = "%Y-%m-%d %H:%M:%S"
+    # fmt = "%(asctime)s %(name)s %(message)s (%(filename)s:%(lineno)d)"
+
+    FORMATS: dict[int, str] = {
+        logging.DEBUG: f"{Style.BRIGHT}{Fore.WHITE}D {Style.DIM}{fmt}{Fore.RESET}{Style.NORMAL}",
+        logging.INFO: f"{Style.BRIGHT}{Fore.GREEN}I {Style.DIM}{fmt}{Fore.RESET}{Style.NORMAL}",
+        logging.WARNING: f"{Style.BRIGHT}{Fore.YELLOW}W {Style.DIM}{fmt}{Fore.RESET}{Style.NORMAL}",
+        logging.ERROR: f"{Style.BRIGHT}{Fore.RED}E {Style.DIM}{fmt}{Fore.RESET}{Style.NORMAL}",
+        logging.CRITICAL: f"{Style.BRIGHT}{Fore.MAGENTA}C {Style.DIM}{fmt}{Fore.RESET}{Style.NORMAL}",
+    }
+
+    def format(self, record: logging.LogRecord) -> str:
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+
 if __name__ == "__main__":
     trfh = BetterTimedRotatingFileHandler(
         os.path.join(".", "logs")
@@ -65,3 +87,8 @@ if __name__ == "__main__":
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(trfh)
+
+    logger.info("hello")
+    other_logger = logger
+
+    other_logger.info("other logger")

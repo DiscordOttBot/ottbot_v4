@@ -1,6 +1,17 @@
 from .embeds import Embeds
 from .errors import Errors
 from .lines import Lines
-from .rotating_logs import BetterTimedRotatingFileHandler
+from .rotating_logs import (
+    BetterTimedRotatingFileHandler,
+    LoggingFilter,
+    HikariFormatter,
+)
 
-__all__ = ["Embeds", "Errors", "Lines", "BetterTimedRotatingFileHandler"]
+__all__ = [
+    "Embeds",
+    "Errors",
+    "Lines",
+    "BetterTimedRotatingFileHandler",
+    "LoggingFilter",
+    "HikariFormatter",
+]
