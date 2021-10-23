@@ -8,7 +8,7 @@
     - [/userinfo](#userinfo)
     - [/stats](#stats)
     - [/seen \<user\>](#seen-user)
-    - [/spotlight <user>](#spotlight-user)
+    - [/spotlight \<user\>](#spotlight-user)
   - [Xp](#xp)
     - [/leaderboard](#leaderboard)
     - [/level [@user]](#level-user)
@@ -151,7 +151,7 @@ Displays the approximate time the user was last online.
 user was last online 1:00:00 hour ago
 ```
 
-### /spotlight <user>
+### /spotlight \<user\>
 
 Displays recient messages from a user.
 
@@ -261,8 +261,7 @@ Displays a floating point number between 0 and 1.
 
 ### /wheel \<items>
 
-Similar to [wheel decide](https://wheeldecide.com/).
-
+Similar to <a href="http://wheeldecide.com" target="_blank">wheel decide</a>.  
 `items`: the list of items seperated by spaces which are up for selection.
 
 ```
