@@ -21,10 +21,6 @@ redis-server
 ```
 
 ```
-uvicorn main:app --reload
-```
-
-```
 sudo /etc/init.d/postgres start
 ```
 
