@@ -1,5 +1,4 @@
 from fastapi import APIRouter, FastAPI
-
 from ottbot.core.bot import OttBot
 
 

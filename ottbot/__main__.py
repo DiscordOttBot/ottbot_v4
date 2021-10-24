@@ -6,6 +6,9 @@ import uvicorn
 from ottbot.core.bot import OttBot
 from ottbot import __version__
 
+from ottbot.api.api_factory import APIFactory
+from ottbot.api.routers import user
+
 if os.name != "nt":
     import uvloop
 
@@ -13,6 +16,8 @@ if os.name != "nt":
 
 app: FastAPI = FastAPI()
 bot: OttBot = OttBot(version=__version__)
+
+APIFactory.build(bot, app, [user.router])
 
 
 @app.on_event("startup")
