@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import logging
 import os
 import time
@@ -10,6 +11,8 @@ import sake
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
+from hikari import presences
+
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
 from ottbot.core.client import OttClient
@@ -88,44 +91,79 @@ class OttBot(hikari.GatewayBot, IBot):
         except Exception as e:
             logging.critical(e)
 
-    def run(self: _BotT):  # type: ignore
+    def run(
+        self,
+        *,
+        activity: t.Optional[presences.Activity] = None,
+        afk: bool = False,
+        asyncio_debug: t.Optional[bool] = None,
+        check_for_updates: bool = True,
+        close_passed_executor: bool = False,
+        close_loop: bool = True,
+        coroutine_tracking_depth: t.Optional[int] = None,
+        enable_signal_handlers: bool = True,
+        idle_since: t.Optional[datetime.datetime] = None,
+        ignore_session_start_limit: bool = False,
+        large_threshold: int = 250,
+        propagate_interrupts: bool = False,
+        status: presences.Status = presences.Status.ONLINE,
+        shard_ids: t.Optional[t.AbstractSet[int]] = None,
+        shard_count: t.Optional[int] = None,
+    ) -> None:
         """Create the client, subscribe to important events, and run the bot.
 
         When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
 
         self.create_client()
-        subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
-            hikari.StartingEvent: self.on_starting,
-            hikari.StartedEvent: self.on_started,
-            hikari.StoppingEvent: self.on_stopping,
-        }
-        [self.event_manager.subscribe(key, subscriptions[key]) for key in subscriptions]
-
+        self.subscribe_to_events()
         self.logger.info("Bot started")
 
         super().run(
-            activity=hikari.Activity(
-                name=f"/help | {self.version}", type=hikari.ActivityType.WATCHING
-            )
+            activity=activity,
+            afk=afk,
+            asyncio_debug=asyncio_debug,
+            check_for_updates=check_for_updates,
+            close_passed_executor=close_passed_executor,
+            close_loop=close_loop,
+            coroutine_tracking_depth=coroutine_tracking_depth,
+            enable_signal_handlers=enable_signal_handlers,
+            idle_since=idle_since,
+            ignore_session_start_limit=ignore_session_start_limit,
+            large_threshold=large_threshold,
+            propagate_interrupts=propagate_interrupts,
+            status=status,
+            shard_ids=shard_ids,
+            shard_count=shard_count,
         )
 
-    async def start(self: _BotT) -> None:  # type: ignore
-
+    async def start(
+        self: _BotT,
+        *,
+        activity: t.Optional[presences.Activity] = None,
+        afk: bool = False,
+        check_for_updates: bool = True,
+        idle_since: t.Optional[datetime.datetime] = None,
+        ignore_session_start_limit: bool = False,
+        large_threshold: int = 250,
+        shard_ids: t.Optional[t.AbstractSet[int]] = None,
+        shard_count: t.Optional[int] = None,
+        status: presences.Status = presences.Status.ONLINE,
+    ) -> None:
         self.logger.info("Starting Bot")
 
         self.create_client()
-
-        subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
-            hikari.StartingEvent: self.on_starting,
-            hikari.StartedEvent: self.on_started,
-            hikari.StoppingEvent: self.on_stopping,
-        }
-        [self.event_manager.subscribe(key, subscriptions[key]) for key in subscriptions]
+        self.subscribe_to_events()
 
         await super().start(
-            activity=hikari.Activity(
-                name=f"/help | {self.version}", type=hikari.ActivityType.WATCHING
-            )
+            activity=activity,
+            afk=afk,
+            check_for_updates=check_for_updates,
+            idle_since=idle_since,
+            ignore_session_start_limit=ignore_session_start_limit,
+            large_threshold=large_threshold,
+            shard_ids=shard_ids,
+            shard_count=shard_count,
+            status=status,
         )
 
     def init_logger(self: _BotT, log_level: int = logging.DEBUG) -> None:
@@ -148,6 +186,15 @@ class OttBot(hikari.GatewayBot, IBot):
         logger.addHandler(sh)
 
         self.logger = logger
+
+    def subscribe_to_events(self: _BotT) -> None:
+        subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
+            hikari.StartingEvent: self.on_starting,
+            hikari.StartedEvent: self.on_started,
+            hikari.StoppingEvent: self.on_stopping,
+            hikari.StoppedEvent: self.on_stopped,
+        }
+        [self.event_manager.subscribe(key, subscriptions[key]) for key in subscriptions]
 
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""

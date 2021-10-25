@@ -11,6 +11,7 @@ component = tanjun.Component()
 @component.with_slash_command
 @tanjun.as_slash_command("hello", "Says hello!")
 async def command_hello(ctx: tanjun.abc.SlashContext) -> None:
+    ctx.client.bot.logger.critical("Inside hello slash command")
     greeting: str = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(
         f"{greeting} {ctx.author.mention if ctx.member else ctx.author.username}!",
