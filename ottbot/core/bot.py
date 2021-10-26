@@ -224,3 +224,5 @@ class OttBot(hikari.GatewayBot, IBot):
         self: _BotT, event: hikari.GuildAvailableEvent
     ) -> None:
         ...
+
+    
