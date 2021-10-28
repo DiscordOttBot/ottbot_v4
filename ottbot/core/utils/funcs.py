@@ -1,8 +1,10 @@
 import glob
+import logging
 import pathlib
 import typing as t
 
 import tanjun
+from uvicorn.main import LOG_LEVELS
 
 
 def to_dict(obj) -> dict[str, str]:
@@ -24,7 +26,7 @@ def to_dict(obj) -> dict[str, str]:
 
 
 def gen_load_component(component):
-    """WIP"""
+    """Generates a function that loads a component."""
 
     @tanjun.as_loader
     def load_component(client: tanjun.Client) -> None:
@@ -34,7 +36,8 @@ def gen_load_component(component):
 
 
 def load_modules_from_path(path: str, client: tanjun.Client):
-    """WIP"""
+    """Loads all modules from a given path."""
+
     print(path)
     filenames = glob.glob(path + "/**/*.py", recursive=True)
     print(filenames)
@@ -42,3 +45,28 @@ def load_modules_from_path(path: str, client: tanjun.Client):
     return filenames
     # client.load_modules()
 
+
+def parse_log_level(level: t.Union[str, int]) -> int:
+    """Parses a log level string to an integer.
+
+    This function parses a log level string to an integer. The string can
+    either be a number or a string that is a valid log level.
+
+    Args:
+        level (str | int): The log level to parse.
+
+    Returns:
+        int: The parsed log level.
+
+    Raises:
+        ValueError: If the log level is invalid.
+    """
+    if isinstance(level, int):
+        return level
+    elif level.isdigit():
+        return int(level)
+    elif type(level) is str:
+        lvl = logging._nameToLevel[level.upper()]
+        if lvl is not None:
+            return lvl
+    raise ValueError(f"Invalid log level: {level}")

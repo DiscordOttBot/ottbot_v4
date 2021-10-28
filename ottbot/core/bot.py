@@ -22,6 +22,7 @@ from ottbot.core.utils import (
     Errors,
     HikariFormatter,
 )
+from ottbot.core.utils.funcs import parse_log_level
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[
@@ -43,18 +44,19 @@ class OttBot(hikari.GatewayBot, IBot):
         "embeds",
         "errors",
         "guilds",
-        "version",
+        "log_level" "version",
         "_dynamic",
         "_static",
         "_log",
     )
 
-    def __init__(self: _BotT, version: str = "") -> None:
+    def __init__(self: _BotT, version: str = "", log_level: str = "info") -> None:
         self._dynamic = os.path.join(".", "ottbot", "data", "dynamic")
         self._static = os.path.join(".", "ottbot", "data", "static")
         self._log = os.path.join(".", "ottbot", "data", "logs")
 
         self.version: str = version
+        self.log_level: str = log_level
 
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.errors: Errors = Errors()
@@ -64,7 +66,9 @@ class OttBot(hikari.GatewayBot, IBot):
         self.init_logger()
 
         super().__init__(
-            token=self._get_token(), intents=hikari.Intents.ALL, logs="DEBUG"
+            token=self._get_token(),
+            intents=hikari.Intents.ALL,
+            logs=parse_log_level(self.log_level),
         )
 
     def _get_token(self: _BotT) -> str:
@@ -166,8 +170,10 @@ class OttBot(hikari.GatewayBot, IBot):
             status=status,
         )
 
-    def init_logger(self: _BotT, log_level: int = logging.DEBUG) -> None:
+    def init_logger(self: _BotT) -> None:
         """Initializes the logger for the bot"""
+
+        log_level = parse_log_level(self.log_level)
 
         file_fmt = logging.Formatter(
             f"[%(asctime)s.%(msecs)03d] %(levelname)s | %(message)s",
@@ -207,7 +213,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.client.scheduler.start()
 
         # async for guild in self.rest.fetch_my_guilds():
-            # self.guilds.append(guild)
+        # self.guilds.append(guild)
 
         logging.info("Bot ready")
 
@@ -224,5 +230,3 @@ class OttBot(hikari.GatewayBot, IBot):
         self: _BotT, event: hikari.GuildAvailableEvent
     ) -> None:
         ...
-
-    

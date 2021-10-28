@@ -1,10 +1,11 @@
+import logging
 import os
 import sys
 
 import uvicorn
 from fastapi import FastAPI
 
-from ottbot import __version__
+from ottbot import __version__, log_level
 from ottbot.api.api_factory import APIFactory
 from ottbot.api.routers import guild, user
 from ottbot.core.bot import OttBot
@@ -18,7 +19,7 @@ if os.name != "nt":
 def api_main() -> None:
     """Main entry point for running the bot and it's ReST API"""
     app: FastAPI = FastAPI()
-    bot: OttBot = OttBot(version=__version__)
+    bot: OttBot = OttBot(version=__version__, log_level=log_level)
 
     APIFactory.build(bot, app, [user.router, guild.router])
 
@@ -30,7 +31,7 @@ def api_main() -> None:
     async def api_shutdown() -> None:
         await bot.close()
 
-    uvicorn.run(app=app, host="127.0.0.1", port=8001, log_level="debug")
+    uvicorn.run(app=app, host="127.0.0.1", port=8001, log_level=log_level)
 
 
 def main() -> None:
