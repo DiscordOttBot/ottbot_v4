@@ -1,7 +1,8 @@
-import random
 import logging
+import random
 
 import hikari
+
 import tanjun
 from ottbot.core.client import OttClient
 
@@ -11,6 +12,17 @@ component = tanjun.Component()
 @component.with_slash_command
 @tanjun.as_slash_command("hello", "Says hello!")
 async def command_hello(ctx: tanjun.abc.SlashContext) -> None:
+    ctx.client.bot.logger.critical("Inside hello slash command")
+    greeting: str = random.choice(("Hello", "Hi", "Hey"))
+    await ctx.respond(
+        f"{greeting} {ctx.author.mention if ctx.member else ctx.author.username}!",
+        user_mentions=True,
+    )
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("test2", "Says hello!")
+async def command_test2(ctx: tanjun.abc.SlashContext) -> None:
     ctx.client.bot.logger.critical("Inside hello slash command")
     greeting: str = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(
@@ -58,4 +70,5 @@ async def cmd_user(ctx: tanjun.abc.SlashContext, id_str: str) -> None:
 
 @tanjun.as_loader
 def load_component(client: tanjun.Client) -> None:
+    client.bot.logger.critical("Loading component...")
     client.add_component(component.copy())

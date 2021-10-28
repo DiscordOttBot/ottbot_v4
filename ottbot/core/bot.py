@@ -136,7 +136,7 @@ class OttBot(hikari.GatewayBot, IBot):
             shard_count=shard_count,
         )
 
-    async def start(
+    async def start_(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -206,8 +206,8 @@ class OttBot(hikari.GatewayBot, IBot):
         """Runs once bot is fully connected"""
         self.client.scheduler.start()
 
-        async for guild in self.rest.fetch_my_guilds():
-            self.guilds.append(guild)
+        # async for guild in self.rest.fetch_my_guilds():
+            # self.guilds.append(guild)
 
         logging.info("Bot ready")
 

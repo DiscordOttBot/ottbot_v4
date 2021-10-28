@@ -45,43 +45,43 @@ class OttClient(tanjun.Client, IClient):
         # Fixed in #55, need to wait until @task/components is merged.
         # return super().load_modules(*Path(__file__).parent.glob("modules/*.py"))
 
-    @classmethod
-    def from_gateway_bot(
-        cls,
-        bot,
-        /,
-        *,
-        event_managed=False,
-        mention_prefix=False,
-        set_global_commands=False,
-    ):
-        constructor: _ClientT = (
-            cls(
-                rest=bot.rest,
-                cache=bot.cache,
-                events=bot.event_manager,
-                shards=bot,
-                event_managed=event_managed,
-                mention_prefix=mention_prefix,
-                set_global_commands=set_global_commands,
-            )
-            .set_human_only()
-            .set_hikari_trait_injectors(bot)
-        )
+    # @classmethod
+    # def from_gateway_bot(
+    #     cls,
+    #     bot,
+    #     /,
+    #     *,
+    #     event_managed=False,
+    #     mention_prefix=False,
+    #     set_global_commands=False,
+    # ):
+    #     constructor: _ClientT = (
+    #         cls(
+    #             rest=bot.rest,
+    #             cache=bot.cache,
+    #             events=bot.event_manager,
+    #             shards=bot,
+    #             event_managed=event_managed,
+    #             mention_prefix=mention_prefix,
+    #             set_global_commands=set_global_commands,
+    #         )
+    #         .set_human_only()
+    #         .set_hikari_trait_injectors(bot)
+    #     )
 
-        return constructor
+    #     return constructor
 
-    @classmethod
-    def from_rest_bot(
-        cls,
-        bot,
-        /,
-        set_global_commands=False,
-    ):
-        constructor = cls(
-            rest=bot.rest,
-            server=bot.interaction_server,
-            set_global_commands=set_global_commands,
-        ).set_hikari_trait_injectors(bot)
+    # @classmethod
+    # def from_rest_bot(
+    #     cls,
+    #     bot,
+    #     /,
+    #     set_global_commands=False,
+    # ):
+    #     constructor = cls(
+    #         rest=bot.rest,
+    #         server=bot.interaction_server,
+    #         set_global_commands=set_global_commands,
+    #     ).set_hikari_trait_injectors(bot)
 
-        return constructor
+    #     return constructor

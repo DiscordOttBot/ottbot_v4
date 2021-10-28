@@ -24,6 +24,8 @@ def to_dict(obj) -> dict[str, str]:
 
 
 def gen_load_component(component):
+    """WIP"""
+
     @tanjun.as_loader
     def load_component(client: tanjun.Client) -> None:
         client.add_component(component.copy())
@@ -32,9 +34,11 @@ def gen_load_component(component):
 
 
 def load_modules_from_path(path: str, client: tanjun.Client):
+    """WIP"""
     print(path)
     filenames = glob.glob(path + "/**/*.py", recursive=True)
     print(filenames)
     filenames = [f for f in filenames if not f.startswith(("_"))]
     return filenames
     # client.load_modules()
+
