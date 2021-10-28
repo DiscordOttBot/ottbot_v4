@@ -25,7 +25,7 @@ def api_main() -> None:
 
     @app.on_event("startup")
     async def api_startup() -> None:
-        await bot.start_()
+        await bot.start()
 
     @app.on_event("shutdown")
     async def api_shutdown() -> None:

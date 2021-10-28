@@ -8,8 +8,6 @@ from hikari import traits as hikari_traits
 import hikari
 
 from ottbot.abc.iclient import IClient
-from ottbot.abc.ibot import IBot
-from ottbot.abc.ibot import _IBotT
 from ottbot.core import utils
 
 
@@ -52,7 +50,9 @@ class OttClient(tanjun.Client, IClient):
         *,
         event_managed: bool = True,
         mention_prefix: bool = False,
-        set_global_commands: t.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool] = False,
+        set_global_commands: t.Union[
+            hikari.SnowflakeishOr[hikari.PartialGuild], bool
+        ] = False,
     ):
         """Build a `Client` from a `hikari.traits.GatewayBotAware` instance.
 
@@ -156,6 +156,3 @@ class OttClient(tanjun.Client, IClient):
         ).set_hikari_trait_injectors(bot)
 
         return constructor
-
-
-tanjun.Client.from_gateway_bot()

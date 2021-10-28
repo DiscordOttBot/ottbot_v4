@@ -1,9 +1,6 @@
 import typing as t
 from abc import ABC, abstractmethod, abstractclassmethod
 
-import hikari
-from hikari import traits
-import tanjun
 
 _IClientT = t.TypeVar("_IClientT", bound="IClient")
 
@@ -19,4 +16,3 @@ class IClient(ABC):
     @abstractmethod
     def load_modules_(self: _IClientT) -> _IClientT:
         """Load slash command"""
-
