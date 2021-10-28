@@ -16,7 +16,6 @@ async def user_get(id_: int):
     """Returns a JSON representation of a guild"""
 
     guild: hikari.Guild = await router.bot.rest.fetch_guild(id_)
-    router.bot.logger.critical(guild)
     return to_dict(guild)
 
 

@@ -34,7 +34,6 @@ class OttClient(tanjun.Client, IClient):
     def load_modules_(self):
         """Loads slash command modules"""
 
-        self.bot.logger.critical("  Loading modules")
         return super().load_modules(
             * [
                 f"ottbot.core.modules.{m.stem}"
