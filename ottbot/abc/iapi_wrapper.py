@@ -6,8 +6,8 @@ from ottbot.core.bot import OttBot
 class IAPIWrapper(ABC):
     @abstractmethod
     def __init__(self, routers: list[APIRouter]) -> None:
-        self.__bot
-        self.__routers
+        self.__bot: OttBot
+        self.__routers: list[APIRouter]
 
     @abstractproperty
     def bot(self) -> OttBot:
