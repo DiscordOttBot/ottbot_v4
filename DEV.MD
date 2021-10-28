@@ -17,6 +17,10 @@ python -m ottbot
 ```
 
 ```
+python -m ottbot api
+```
+
+```
 redis-server
 ```
 

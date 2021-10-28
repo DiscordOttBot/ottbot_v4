@@ -20,27 +20,3 @@ class IClient(ABC):
     def load_modules_(self: _IClientT) -> _IClientT:
         """Load slash command"""
 
-    @abstractclassmethod
-    def from_gateway_bot(
-        cls,
-        bot: hikari.GatewayBotAware,
-        /,
-        *,
-        event_managed: bool = False,
-        mention_prefix: bool = False,
-        set_global_commands: t.Union[
-            hikari.guilds.PartialGuild, hikari.Snowflake, bool
-        ] = False,
-    ) -> tanjun.Client:
-        """Class gateway factory method to be overwritten in child class"""
-
-    @abstractclassmethod
-    def from_rest_bot(
-        cls,
-        bot: traits.RESTBotAware,
-        /,
-        set_global_commands: t.Union[
-            hikari.SnowflakeishOr[hikari.PartialGuild], bool
-        ] = False,
-    ) -> tanjun.Client:
-        """Class rest factory method to be overwritten in child class"""

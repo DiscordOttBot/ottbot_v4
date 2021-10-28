@@ -4,7 +4,7 @@ from pathlib import Path
 import tanjun
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pytz import utc
-from hikari import traits
+from hikari import traits as hikari_traits
 import hikari
 
 from ottbot.abc.iclient import IClient
@@ -47,13 +47,13 @@ class OttClient(tanjun.Client, IClient):
     @classmethod
     def from_gateway_bot(
         cls,
-        bot: hikari.GatewayBotAware,
+        bot: hikari_traits.GatewayBotAware,
         /,
         *,
         event_managed: bool = True,
         mention_prefix: bool = False,
-        set_global_commands: t.Union[hikari.Snowflake, bool] = False,
-    ) -> _ClientT:
+        set_global_commands: t.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool] = False,
+    ):
         """Build a `Client` from a `hikari.traits.GatewayBotAware` instance.
 
         Notes
@@ -98,7 +98,7 @@ class OttClient(tanjun.Client, IClient):
         up to an hour to propagate globally but will immediately propagate
         when set on a specific guild.
         """
-        constructor: _ClientT = (
+        constructor = (
             cls(
                 rest=bot.rest,
                 cache=bot.cache,
