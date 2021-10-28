@@ -79,7 +79,7 @@ class OttBot(hikari.GatewayBot, IBot):
     def create_client(self: _BotT) -> None:
         """Creates a tanjun client and dynamically links the bot and the client"""
         self.client: OttClient = OttClient.from_gateway_bot(
-            self, set_global_commands=SERVER_ID
+            self, set_global_commands=SERVER_ID, event_managed=True
         )
         self.client.bot = self
         self.client.load_modules_()
