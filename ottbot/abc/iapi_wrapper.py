@@ -4,6 +4,8 @@ from ottbot.core.bot import OttBot
 
 
 class IAPIWrapper(ABC):
+    """Interface for the API Wrapper that holds the discord bot"""
+
     @abstractmethod
     def __init__(self, routers: list[APIRouter]) -> None:
         self.__bot: OttBot

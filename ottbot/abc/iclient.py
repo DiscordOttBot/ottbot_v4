@@ -9,17 +9,16 @@ _IClientT = t.TypeVar("_IClientT", bound="IClient")
 
 
 class IClient(ABC):
-    """Interface for Command Handler Client"""
+    """Interface for the Tanjun Command Handler Client"""
 
     @abstractmethod
     def __init__(self: _IClientT, *args: t.Any, **kwargs: t.Any) -> None:
-        self.errors: t.Optional[t.Any] = None
-        self.embeds: t.Optional[t.Any] = None
+        self.errors: t.Optional[t.Any]
+        self.embeds: t.Optional[t.Any]
 
     @abstractmethod
     def load_modules_(self: _IClientT) -> _IClientT:
         """Load slash command"""
-        ...
 
     @abstractclassmethod
     def from_gateway_bot(
@@ -33,7 +32,7 @@ class IClient(ABC):
             hikari.guilds.PartialGuild, hikari.Snowflake, bool
         ] = False,
     ) -> tanjun.Client:
-        ...
+        """Class gateway factory method to be overwritten in child class"""
 
     @abstractclassmethod
     def from_rest_bot(
@@ -44,4 +43,4 @@ class IClient(ABC):
             hikari.SnowflakeishOr[hikari.PartialGuild], bool
         ] = False,
     ) -> tanjun.Client:
-        ...
+        """Class rest factory method to be overwritten in child class"""

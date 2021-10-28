@@ -3,6 +3,7 @@ from ottbot.core.bot import OttBot
 
 
 class APIWrapper(FastAPI):
+    """API Wrapper that holds the discord bot"""
     def __init__(self, routers):
         self.__bot: OttBot = None
         self.__routers: list[APIRouter] = routers

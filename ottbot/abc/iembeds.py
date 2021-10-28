@@ -2,26 +2,22 @@ from abc import ABC, abstractmethod
 import typing as t
 
 import hikari
-import tanjun
 
 
 class IEmbed(ABC):
-    """Interface for Embed factory"""
+    """Interface for the Bot's Embed factory"""
 
     @abstractmethod
     def _init(self, **kwargs: dict[t.Any, t.Any]) -> None:
         """Initialize embed values"""
-        ...
 
     @abstractmethod
     def _construct(self):
         """Construct base embed"""
-        ...
 
     @abstractmethod
     def _add_content(self):
         """Add content fields to embed"""
-        ...
 
     @abstractmethod
     def build(self, **kwargs: dict[t.Any, t.Any]) -> hikari.Embed:

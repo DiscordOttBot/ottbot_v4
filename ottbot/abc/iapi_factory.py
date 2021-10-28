@@ -9,6 +9,5 @@ class IAPIFactory(ABC):
     """Interface Class for custom ReST API"""
 
     @abstractstaticmethod
-    def build(bot: OttBot, app: FastAPI, routers: list[APIRouter]):
+    def build(bot: OttBot, app: FastAPI, routers: list[APIRouter]) -> None:
         """Link the bot, api, and routers to each other"""
-        ...
