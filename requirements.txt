@@ -1,11 +1,13 @@
 git+https://github.com/hikari-py/hikari
 git+https://github.com/FasterSpeeding/Tanjun
-git+https://github.com/FasterSpeeding/Sake@dependabot/pip/hikari-approx-eq-2.0.0.dev102
+git+https://github.com/FasterSpeeding/Sake@dependabot/pip/hikari-approx-eq-2.0.0.dev103
 hikari[speedups]
-python-dotenv==0.19.0
-uvloop>=0.16; sys_platform != 'nt'
+python-dotenv
+uvloop>=0.16; os_name != 'nt'
 APScheduler
 black
 mypy
 fastapi
+uvicorn
+python-dotenv
 uvicorn

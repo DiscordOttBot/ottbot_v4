@@ -118,8 +118,8 @@ class OttBot(hikari.GatewayBot, IBot):
 
         When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
 
-        # self.create_client()
-        # self.subscribe_to_events()
+        self.create_client()
+        self.subscribe_to_events()
 
         super().run(
             activity=activity,
@@ -140,7 +140,7 @@ class OttBot(hikari.GatewayBot, IBot):
         )
         self.logger.critical("After super.run")
 
-    async def start(
+    async def start_(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
