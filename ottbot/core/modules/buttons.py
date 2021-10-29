@@ -47,6 +47,7 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
             event: hikari.InteractionCreateEvent = await ctx.client.events.wait_for(
                 hikari.InteractionCreateEvent, timeout=60
             )
+            ctx.client.bot.logger.critical(f"\n\nEVENT: {event} | {type(event)}")
         except asyncio.TimeoutError:
             await ctx.edit_initial_response("Timed out.", components=[])
         else:

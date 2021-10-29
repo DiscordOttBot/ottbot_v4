@@ -16,7 +16,7 @@ class IAPIWrapper(ABC):
         """Bot property for dynamic type checking"""
 
     @bot.setter
-    def set_bot(self, bot: OttBot) -> None:
+    def bot(self, bot: OttBot) -> None:
         """Bot setter for dynamic type checking"""
 
     @abstractproperty
@@ -24,5 +24,5 @@ class IAPIWrapper(ABC):
         """Routers property for dynamic type checking"""
 
     @routers.setter
-    def set_data(self, routers: list[APIRouter]) -> None:
+    def data(self, routers: list[APIRouter]) -> None:
         """Routers setter for dynamic checking"""

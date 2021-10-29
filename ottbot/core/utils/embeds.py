@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import datetime
 import typing as t
 
 import hikari
-import tanjun
 
+import lightbulb
+import tanjun
+import tanjun.abc
 from ottbot.abc.iembeds import IEmbed
 
 FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
-CtxT = tanjun.abc.Context
+CtxT = t.Union[lightbulb.Context, tanjun.abc.Context]
 ResourceishT = t.Optional[hikari.files.Resourceish]
 
 ESCAPE_NAME: t.Final = "None"
@@ -46,21 +50,22 @@ class Embeds(IEmbed):
         embed.set_thumbnail(self.thumbnail)
         embed.set_image(self.image)
         embed.set_author(name=self.header, url=self.header_url, icon=self.header_icon)
-        if isinstance(self._ctx, CtxT):
-            embed.set_footer(
-                text=(
-                    None
-                    if self.footer == ESCAPE_NAME
-                    else (self.footer or f"Invoked by: {self._ctx.author.username}")
-                ),
-                icon=(
-                    None
-                    if self.footer == ESCAPE_NAME
-                    else (
-                        self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
-                    )
-                ),
-            )
+        match self._ctx:
+            case lightbulb.Context | tanjun.abc.Context:
+                embed.set_footer(
+                    text=(
+                        None
+                        if self.footer == ESCAPE_NAME
+                        else (self.footer or f"Invoked by: {self._ctx.author.username}")
+                    ),
+                    icon=(
+                        None
+                        if self.footer == ESCAPE_NAME
+                        else (
+                            self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
+                        )
+                    ),
+                )
         return embed
 
     def _add_content(self, embed):

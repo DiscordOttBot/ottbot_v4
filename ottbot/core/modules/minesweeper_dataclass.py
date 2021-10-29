@@ -85,7 +85,9 @@ class Board:
             if 0 <= cell.value <= 8 and not cell.revealed:
                 return False
 
-            return True
+        return True
+
+        
 
     def reveal(self, status: BoardStatus) -> None:
         self.status = status
