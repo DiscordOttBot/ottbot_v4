@@ -50,7 +50,7 @@ class OttClient(tanjun.Client, IClient):
         *,
         event_managed: bool = True,
         mention_prefix: bool = False,
-        set_global_commands: t.Union[
+        declare_global_commands: t.Union[
             hikari.SnowflakeishOr[hikari.PartialGuild], bool
         ] = False,
     ):
@@ -106,7 +106,7 @@ class OttClient(tanjun.Client, IClient):
                 shards=bot,
                 event_managed=event_managed,
                 mention_prefix=mention_prefix,
-                set_global_commands=set_global_commands,
+                declare_global_commands=declare_global_commands,
             )
             .set_human_only()
             .set_hikari_trait_injectors(bot)
@@ -119,7 +119,7 @@ class OttClient(tanjun.Client, IClient):
         cls,
         bot,
         /,
-        set_global_commands=False,
+        declare_global_commands=False,
     ):
         """Build a `Client` from a `hikari.traits.RESTBotAware` instance.
 
@@ -152,7 +152,7 @@ class OttClient(tanjun.Client, IClient):
         constructor = cls(
             rest=bot.rest,
             server=bot.interaction_server,
-            set_global_commands=set_global_commands,
+            declare_global_commands=declare_global_commands,
         ).set_hikari_trait_injectors(bot)
 
         return constructor

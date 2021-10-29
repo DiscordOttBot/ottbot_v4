@@ -78,8 +78,9 @@ class OttBot(hikari.GatewayBot, IBot):
 
     def create_client(self: _BotT) -> None:
         """Creates a tanjun client and dynamically links the bot and the client"""
+        self.logger.info("Creating client")
         self.client: OttClient = OttClient.from_gateway_bot(
-            self, set_global_commands=SERVER_ID, event_managed=True
+            self, declare_global_commands=SERVER_ID, event_managed=True
         )
         self.client.bot = self
         self.client.load_modules_()
@@ -117,9 +118,9 @@ class OttBot(hikari.GatewayBot, IBot):
         """Create the client, subscribe to important events, and run the bot.
 
         When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
-
-        self.create_client()
-        self.subscribe_to_events()
+        self.logger.info("          Running bot")
+        # self.create_client()
+        # self.subscribe_to_events()
 
         super().run(
             activity=activity,
@@ -138,9 +139,8 @@ class OttBot(hikari.GatewayBot, IBot):
             shard_ids=shard_ids,
             shard_count=shard_count,
         )
-        self.logger.critical("After super.run")
 
-    async def start_(
+    async def start(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -153,7 +153,7 @@ class OttBot(hikari.GatewayBot, IBot):
         shard_count: t.Optional[int] = None,
         status: presences.Status = presences.Status.ONLINE,
     ) -> None:
-        self.logger.info("Starting Bot")
+        self.logger.info("          Starting Bot")
 
         self.create_client()
         self.subscribe_to_events()
@@ -194,6 +194,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.logger = logger
 
     def subscribe_to_events(self: _BotT) -> None:
+        self.logger.info("Subscribing to events")
         subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,

@@ -41,32 +41,38 @@ class Embeds(IEmbed):
     def _construct(self) -> hikari.Embed:
         """Construct base embed"""
 
-        embed = hikari.Embed(
-            title=self.title,
-            description=self.desc,
-            timestamp=self.time,
-            color=self.color or hikari.Color.from_hex_code("#713dc7"),
-        )
-        embed.set_thumbnail(self.thumbnail)
-        embed.set_image(self.image)
-        embed.set_author(name=self.header, url=self.header_url, icon=self.header_icon)
-        match self._ctx:
-            case lightbulb.Context | tanjun.abc.Context:
-                embed.set_footer(
-                    text=(
-                        None
-                        if self.footer == ESCAPE_NAME
-                        else (self.footer or f"Invoked by: {self._ctx.author.username}")
-                    ),
-                    icon=(
-                        None
-                        if self.footer == ESCAPE_NAME
-                        else (
-                            self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
-                        )
-                    ),
-                )
-        return embed
+        if isinstance(self._ctx, tanjun.abc.Context) or isinstance(
+            self._ctx, lightbulb.Context
+        ):
+            embed = hikari.Embed(
+                title=self.title,
+                description=self.desc,
+                timestamp=self.time,
+                color=self.color or hikari.Color.from_hex_code("#713dc7"),
+            )
+            embed.set_thumbnail(self.thumbnail)
+            embed.set_image(self.image)
+            embed.set_author(
+                name=self.header, url=self.header_url, icon=self.header_icon
+            )
+
+            embed.set_footer(
+                text=(
+                    None
+                    if self.footer == ESCAPE_NAME
+                    else (self.footer or f"Invoked by: {self._ctx.author.username}")
+                ),
+                icon=(
+                    None
+                    if self.footer == ESCAPE_NAME
+                    else (
+                        self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
+                    )
+                ),
+            )
+
+            return embed
+        raise ValueError(f"Invalid Context: {self._ctx}")
 
     def _add_content(self, embed):
         """Add content fields to embed"""
