@@ -1,3 +1,10 @@
+# Current Errors / bugs
+
+- [ ] mypy
+- [ ] bot.run()
+  - bot.run() -> super.run() -> bot.start() -> super.start()
+  - calling bot.start() after bot.run() causes errors
+
 # Immediate
 
 - [ ] Built-in ReST API

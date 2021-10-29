@@ -57,6 +57,7 @@ class OttBot(hikari.GatewayBot, IBot):
 
         self.version: str = version
         self.log_level: str = log_level
+        self._running: bool = False
 
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.errors: Errors = Errors()
@@ -140,7 +141,7 @@ class OttBot(hikari.GatewayBot, IBot):
             shard_count=shard_count,
         )
 
-    async def start(
+    async def start_(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -153,11 +154,11 @@ class OttBot(hikari.GatewayBot, IBot):
         shard_count: t.Optional[int] = None,
         status: presences.Status = presences.Status.ONLINE,
     ) -> None:
-        self.logger.info("          Starting Bot")
 
         self.create_client()
         self.subscribe_to_events()
 
+        self.logger.info("          Starting Bot")
         await super().start(
             activity=activity,
             afk=afk,
