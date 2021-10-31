@@ -6,11 +6,13 @@ import tanjun
 
 
 def to_dict(obj) -> dict[str, str]:
-    """Converts a non-serializable object to a dictionary.
+    """
+    Converts a non-serializable object to a dictionary.
 
     This function converts all non-private (methods not starting with a `_`)
     to dictionary entries where the attribute name is the key and the attribute
-    as a string is the value."""
+    as a string is the value.
+    """
     d: dict[str, str] = dict()
     for attr in dir(obj):
         if not attr.startswith("_"):
@@ -23,14 +25,14 @@ def to_dict(obj) -> dict[str, str]:
 # lambda obj: {attr: f"{getattr(obj, attr)}" for attr in dir(obj) if not attr.startswith("_")}
 
 
-def gen_load_component(component):
+def build_load_component(component) -> t.Callable[[tanjun.Client], None]:
     """Generates a function that loads a component."""
 
     @tanjun.as_loader
     def load_component(client: tanjun.Client) -> None:
         client.add_component(component.copy())
 
-    return load_component()
+    return load_component
 
 
 def load_modules_from_path(path: str, client: tanjun.Client):
@@ -45,7 +47,8 @@ def load_modules_from_path(path: str, client: tanjun.Client):
 
 
 def parse_log_level(level: t.Union[str, int]) -> int:
-    """Parses a log level string to an integer.
+    """
+    Parses a log level string to an integer.
 
     This function parses a log level string to an integer. The string can
     either be a number or a string that is a valid log level.

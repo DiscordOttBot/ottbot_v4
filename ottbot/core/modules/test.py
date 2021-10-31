@@ -1,15 +1,17 @@
+import typing as t
 import random
 
 import tanjun
 
 from ottbot.core.bot import OttBot
+from ottbot.core.utils.funcs import build_load_component
 
 component = tanjun.Component()
 
 
 @component.with_slash_command
 @tanjun.as_slash_command("hello", "Says hello!")
-async def command_hello(ctx: tanjun.abc.SlashContext) -> None:
+async def cmd_hello(ctx: tanjun.abc.SlashContext) -> None:
     greeting: str = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(
         f"{greeting} {ctx.author.mention if ctx.member else ctx.author.username}!",
@@ -19,7 +21,7 @@ async def command_hello(ctx: tanjun.abc.SlashContext) -> None:
 
 @component.with_slash_command
 @tanjun.as_slash_command("test2", "Says hello!")
-async def command_test2(ctx: tanjun.abc.SlashContext) -> None:
+async def cmd_test2(ctx: tanjun.abc.SlashContext) -> None:
     greeting: str = random.choice(("Hello", "Hi", "Hey"))
     await ctx.respond(
         f"{greeting} {ctx.author.mention if ctx.member else ctx.author.username}!",
@@ -36,7 +38,7 @@ async def command_test2(ctx: tanjun.abc.SlashContext) -> None:
     "bonus", "A fixed number to add to the total roll.", default=0
 )
 @tanjun.as_slash_command("dice", "Roll one or more dice.")
-async def command_dice(
+async def cmd_dice(
     ctx: tanjun.abc.SlashContext, number: int, sides: int, bonus: int
 ) -> None:
     if number > 25:
@@ -71,6 +73,4 @@ async def cmd_user(
         await ctx.respond("User not found")
 
 
-@tanjun.as_loader
-def load_component(client: tanjun.Client) -> None:
-    client.add_component(component.copy())
+load_component: t.Callable[[tanjun.Client], None] = build_load_component(component)
