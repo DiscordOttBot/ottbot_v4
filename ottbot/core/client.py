@@ -31,10 +31,10 @@ class OttClient(tanjun.Client, IClient):
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone=utc)
 
-    def load_modules_(self):
+    def load_modules_(self, module: str = ""):
         """Loads slash command modules"""
 
-        return super().load_modules(*get_list_of_files("ottbot/core/modules"))
+        return super().load_modules(*get_list_of_files("ottbot/core/modules/" + module))
 
     @classmethod
     def from_gateway_bot_(
