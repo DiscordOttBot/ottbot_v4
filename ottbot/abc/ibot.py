@@ -14,10 +14,6 @@ class IBot(ABC):
         """Bind a client to the Bot"""
 
     @abstractmethod
-    def run(self: _IBotT) -> None:
-        """Binds the client to the Bot and subscribs to Events"""
-
-    @abstractmethod
     async def on_guild_available(
         self: _IBotT, event: hikari.GuildAvailableEvent
     ) -> None:

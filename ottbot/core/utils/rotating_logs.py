@@ -10,7 +10,7 @@ from colorama import Fore, Style
 class LoggingFilter(logging.Filter):
     """Custom filter to get rid of repetitive messages"""
 
-    FILTER_MESSAGES = ["Commiting database"]
+    FILTER_MESSAGES = ["Committing database"]
 
     def filter(self, record: logging.LogRecord) -> bool:
         return all([msg in record.getMessage() for msg in self.FILTER_MESSAGES])

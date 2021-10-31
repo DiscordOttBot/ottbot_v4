@@ -302,3 +302,4 @@ examples/
 .vim/
 .ntvenv/
 temp/
+public/

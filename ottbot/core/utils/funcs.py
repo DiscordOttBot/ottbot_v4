@@ -9,7 +9,7 @@ def to_dict(obj) -> dict[str, str]:
     """Converts a non-serializable object to a dictionary.
 
     This function converts all non-private (methods not starting with a `_`)
-    to dictonary entries where the attribute name is the key and the attribute
+    to dictionary entries where the attribute name is the key and the attribute
     as a string is the value."""
     d: dict[str, str] = dict()
     for attr in dir(obj):
