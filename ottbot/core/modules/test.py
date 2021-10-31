@@ -1,5 +1,5 @@
-import typing as t
 import random
+import typing as t
 
 import tanjun
 

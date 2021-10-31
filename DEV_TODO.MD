@@ -1,6 +1,6 @@
 # TODO
 - [ ] poetry
-- [ ] nox
+- [x] nox
 - [ ] migrate to project.toml
 - [ ] actually write readme
 - [ ] write tests

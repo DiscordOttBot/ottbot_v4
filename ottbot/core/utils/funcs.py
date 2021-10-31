@@ -1,5 +1,7 @@
 import glob
 import logging
+import os
+import pathlib
 import typing as t
 
 import tanjun
@@ -71,3 +73,34 @@ def parse_log_level(level: t.Union[str, int]) -> int:
         if lvl is not None:
             return lvl
     raise ValueError(f"Invalid log level: {level}")
+
+def get_list_of_files(dir_name: str, ignore_underscores: bool = True) -> list[pathlib.Path]:
+            """
+            Returns the partial path seperated by '.'s of all the .py 
+            files in a given directory where the root is given directory.
+
+            Args:
+                dir_name (str): The directory to search in.
+                ignore_underscores (bool): Whether to ignore files that start
+                    with an underscore.
+            """
+
+            list_of_files = os.listdir(dir_name)
+            all_files = list()
+            # Iterate over all the entries
+            for entry in list_of_files:
+                # Create full path
+                full_path = os.path.join(dir_name, entry)
+                # If entry is a directory then get the list of files in this directory
+                if os.path.isdir(full_path):
+                    all_files += get_list_of_files(full_path)
+                else:
+                    if full_path.endswith(".py"):
+                        if ignore_underscores and full_path.split(os.sep)[
+                            -1
+                        ].startswith("_"):
+                            continue
+                        else:
+                            all_files.append(full_path)
+
+            return [pathlib.Path(f) for f in all_files]

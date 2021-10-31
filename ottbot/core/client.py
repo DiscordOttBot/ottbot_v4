@@ -1,6 +1,5 @@
 import typing as t
 from collections import abc as collections
-from pathlib import Path
 
 import hikari
 import tanjun
@@ -9,6 +8,7 @@ from hikari import traits as hikari_traits
 from pytz import utc
 
 from ottbot.abc.iclient import IClient
+from ottbot.core.utils.funcs import get_list_of_files
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 
@@ -23,7 +23,7 @@ class OttClient(tanjun.Client, IClient):
         "embeds",
     )
 
-    def __init__(self: _ClientT, bot=None, *args: t.Any, **kwargs: t.Any) -> None:
+    def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
 
         self.bot = kwargs["shards"]
 
@@ -34,12 +34,7 @@ class OttClient(tanjun.Client, IClient):
     def load_modules_(self):
         """Loads slash command modules"""
 
-        return super().load_modules(
-            *[
-                f"ottbot.core.modules.{m.stem}"
-                for m in Path(__file__).parent.glob("modules/*.py")
-            ]
-        )
+        return super().load_modules(*get_list_of_files("ottbot/core/modules"))
 
         # Fixed in #55, need to wait until @task/components is merged.
         # return super().load_modules(*Path(__file__).parent.glob("modules/*.py"))
@@ -66,7 +61,6 @@ class OttClient(tanjun.Client, IClient):
     ) -> "OttClient":
         return (
             cls(
-                bot=bot,
                 rest=bot.rest,
                 cache=bot.cache,
                 events=bot.event_manager,
