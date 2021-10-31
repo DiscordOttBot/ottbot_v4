@@ -1,18 +1,23 @@
 from fastapi import APIRouter, FastAPI
+import typing as t
 
 from ottbot.core.bot import OttBot
+from ottbot.abc.irouter_wrapper import IRouterWrapper
 
 
-class RouterWrapper(APIRouter):
+class RouterWrapper(APIRouter, IRouterWrapper):
     def __init__(self, **kwargs):
-        self.__app: FastAPI = None
-        self.__bot: OttBot = None
+        self.__app: t.Optional[FastAPI] = None
+        self.__bot: t.Optional[OttBot] = None
 
         super().__init__(**kwargs)
 
     @property
     def app(self) -> FastAPI:
-        return self.__app
+        if self.__app is not None:
+            return self.__app
+        raise ValueError("The router does not have an API attached to it yet")
+
 
     @app.setter
     def app(self, app: FastAPI) -> None:
@@ -23,7 +28,9 @@ class RouterWrapper(APIRouter):
 
     @property
     def bot(self) -> OttBot:
-        return self.__bot
+        if self.__bot is not None:
+            return self.__bot
+        raise ValueError("The router does not have a Bot attached to it yet")
 
     @bot.setter
     def bot(self, bot: OttBot) -> None:

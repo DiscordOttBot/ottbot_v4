@@ -1,12 +1,12 @@
 import typing as t
 from abc import ABC, abstractproperty
 
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 
 from ottbot.core.bot import OttBot
 
 
-class RouterWrapper(ABC):
+class IRouterWrapper(ABC):
     def __init__(self, **kwargs: dict[t.Any, t.Any]) -> None:
         self.__app: FastAPI
         self.__bot: OttBot
