@@ -34,7 +34,7 @@ def api_main() -> None:
     uvicorn.run(app, host="localhost", port=8001, log_level=log_level)
 
 
-def main() -> None:
+def bot_main() -> None:
     """Main entry point for only running the bot"""
     bot = OttBot(version=__version__, log_level=log_level)
     bot.run_()
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "api":
         api_main()
     else:
-        main()
+        bot_main()
