@@ -77,9 +77,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.logger.info("Creating client")
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
-        )
-        self.client.bot = self
-        self.client.load_modules_()
+        ).load_modules_()
 
     async def init_cache(self: _BotT):
         cache: sake.redis.RedisCache = sake.redis.RedisCache(

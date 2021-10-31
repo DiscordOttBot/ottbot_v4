@@ -27,14 +27,29 @@ def to_dict(obj) -> dict[str, str]:
 # lambda obj: {attr: f"{getattr(obj, attr)}" for attr in dir(obj) if not attr.startswith("_")}
 
 
-def build_load_component(component) -> t.Callable[[tanjun.Client], None]:
-    """Generates a function that loads a component."""
+def build_loaders(
+    component: tanjun.Component,
+) -> tuple[t.Callable[[tanjun.Client], None], t.Callable[[tanjun.Client], None]]:
+    """
+    Creates function that load and unload a component.
+
+    Args:
+        component (tanjun.Component): The component to load and unload.
+
+    Returns:
+        tuple(Callable[[tanjun.Client], None], Callable[[tanjun.Client], None]):
+            A tuple of functions that load and unload the component respectively.
+    """
 
     @tanjun.as_loader
     def load_component(client: tanjun.Client) -> None:
         client.add_component(component.copy())
 
-    return load_component
+    @tanjun.as_unloader
+    def unload_component(client: tanjun.Client) -> None:
+        client.remove_component_by_name(component.name)
+
+    return (load_component, unload_component)
 
 
 def load_modules_from_path(path: str, client: tanjun.Client):
@@ -74,33 +89,34 @@ def parse_log_level(level: t.Union[str, int]) -> int:
             return lvl
     raise ValueError(f"Invalid log level: {level}")
 
-def get_list_of_files(dir_name: str, ignore_underscores: bool = True) -> list[pathlib.Path]:
-            """
-            Returns the partial path seperated by '.'s of all the .py 
-            files in a given directory where the root is given directory.
 
-            Args:
-                dir_name (str): The directory to search in.
-                ignore_underscores (bool): Whether to ignore files that start
-                    with an underscore.
-            """
+def get_list_of_files(
+    dir_name: str, ignore_underscores: bool = True
+) -> list[pathlib.Path]:
+    """
+    Returns the partial path separated by '.'s of all the .py
+    files in a given directory where the root is given directory.
 
-            list_of_files = os.listdir(dir_name)
-            all_files = list()
-            # Iterate over all the entries
-            for entry in list_of_files:
-                # Create full path
-                full_path = os.path.join(dir_name, entry)
-                # If entry is a directory then get the list of files in this directory
-                if os.path.isdir(full_path):
-                    all_files += get_list_of_files(full_path)
+    Args:
+        dir_name (str): The directory to search in.
+        ignore_underscores (bool): Whether to ignore files that start
+            with an underscore.
+    """
+
+    list_of_files = os.listdir(dir_name)
+    all_files = list()
+    # Iterate over all the entries
+    for entry in list_of_files:
+        # Create full path
+        full_path = os.path.join(dir_name, entry)
+        # If entry is a directory then get the list of files in this directory
+        if os.path.isdir(full_path):
+            all_files += get_list_of_files(full_path)
+        else:
+            if full_path.endswith(".py"):
+                if ignore_underscores and full_path.split(os.sep)[-1].startswith("_"):
+                    continue
                 else:
-                    if full_path.endswith(".py"):
-                        if ignore_underscores and full_path.split(os.sep)[
-                            -1
-                        ].startswith("_"):
-                            continue
-                        else:
-                            all_files.append(full_path)
+                    all_files.append(full_path)
 
-            return [pathlib.Path(f) for f in all_files]
+    return [pathlib.Path(f) for f in all_files]

@@ -36,9 +36,6 @@ class OttClient(tanjun.Client, IClient):
 
         return super().load_modules(*get_list_of_files("ottbot/core/modules"))
 
-        # Fixed in #55, need to wait until @task/components is merged.
-        # return super().load_modules(*Path(__file__).parent.glob("modules/*.py"))
-
     @classmethod
     def from_gateway_bot_(
         cls,

@@ -1,8 +1,6 @@
-import typing as t
-
 import tanjun
 
-from ottbot.core.utils.funcs import build_load_component
+from ottbot.core.utils.funcs import build_loaders
 
 component = tanjun.Component()
 
@@ -13,4 +11,4 @@ async def cmd_sub(ctx: tanjun.abc.SlashContext) -> None:
     await ctx.respond("subcmd")
 
 
-load_component: t.Callable[[tanjun.Client], None] = build_load_component(component)
+load_component, unload_component = build_loaders(component)
