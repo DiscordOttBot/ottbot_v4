@@ -25,7 +25,7 @@ def api_main() -> None:
 
     @app.on_event("startup")
     async def api_startup() -> None:
-        await bot.start()
+        await bot.start_()
 
     @app.on_event("shutdown")
     async def api_shutdown() -> None:
@@ -36,8 +36,8 @@ def api_main() -> None:
 
 def main() -> None:
     """Main entry point for only running the bot"""
-    bot = OttBot(version=__version__)
-    bot.run()
+    bot = OttBot(version=__version__, log_level=log_level)
+    bot.run_()
 
 
 if __name__ == "__main__":

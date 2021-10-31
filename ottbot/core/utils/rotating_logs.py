@@ -59,7 +59,7 @@ class BetterTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
 
 class HikariFormatter(logging.Formatter):
 
-    fmt = "%(asctime)s %(name)s %(message)s"
+    fmt = f"%(asctime)s %(name)s %(message)s"
     date_fmt = "%Y-%m-%d %H:%M:%S"
     # fmt = "%(asctime)s %(name)s %(message)s (%(filename)s:%(lineno)d)"
 
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         os.path.join(".", "logs")
     )  # set logging dir to "./logs"
     ff = logging.Formatter(
-        "[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        f"[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
     trfh.setFormatter(ff)
 

@@ -92,7 +92,7 @@ class OttBot(hikari.GatewayBot, IBot):
         except Exception as e:
             logging.critical(e)
 
-    def run(
+    def run_(
         self,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -115,8 +115,8 @@ class OttBot(hikari.GatewayBot, IBot):
 
         When running an API along side the bot, use `await bot.start()`
         and `await bot.close()` on api events instead."""
-        # self.create_client()
-        # self.subscribe_to_events()
+        self.create_client()
+        self.subscribe_to_events()
 
         super().run(
             activity=activity,
@@ -136,7 +136,7 @@ class OttBot(hikari.GatewayBot, IBot):
             shard_count=shard_count,
         )
 
-    async def start(
+    async def start_(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -154,8 +154,6 @@ class OttBot(hikari.GatewayBot, IBot):
         self.create_client()
         self.subscribe_to_events()
 
-        self.logger.info("          Starting Bot")
-        self.logger.info("          Running bot.start()")
         await super().start(
             activity=activity,
             afk=afk,
