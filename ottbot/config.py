@@ -31,7 +31,8 @@ class ConfigMeta(type):
         return _types[(v := value.split(":", maxsplit=1))[0]](v[1])
 
     def _resolve_key(cls, key: str) -> SupportedTypes:
-        """Reads environment variable from machine or .env file. In case of type casting, it will call cls._resolve_value(key)"""
+        """Reads environment variable from machine or .env file. In case of type casting,
+        it will call cls._resolve_value(key)"""
         try:
             return cls._resolve_key(environ[key])
         except Exception:  # value contains ":" and needs to be type casted

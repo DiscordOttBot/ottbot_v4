@@ -16,11 +16,16 @@ _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 class OttClient(tanjun.Client, IClient):
     """Attachable Client for slash commands"""
 
-    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler", "bot", "errors", "embeds")
+    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + (
+        "scheduler",
+        "bot",
+        "errors",
+        "embeds",
+    )
 
     def __init__(self: _ClientT, bot=None, *args: t.Any, **kwargs: t.Any) -> None:
 
-        self.bot = kwargs["shards"] 
+        self.bot = kwargs["shards"]
 
         super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()

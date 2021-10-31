@@ -14,8 +14,8 @@ class AsyncPGDatabase:
         self.calls = 0
         self.db = "ottbot"
         self.host = "127.0.0.1"
-        self.user = "postgres"
-        self.password = "postgres"
+        self.user = Config["PG_USERNAME"]
+        self.password = Config["PG_PASSWORD"]
         self.port = 5432
         self.schema = "./ottbot/data/static/schema.sql"
 

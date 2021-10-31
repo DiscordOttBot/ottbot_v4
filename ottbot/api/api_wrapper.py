@@ -1,7 +1,8 @@
 from fastapi import APIRouter, FastAPI
 
-from ottbot.core.bot import OttBot
 from ottbot.abc.iapi_wrapper import IAPIWrapper
+from ottbot.core.bot import OttBot
+
 
 class APIWrapper(FastAPI, IAPIWrapper):
     """API Wrapper that holds the discord bot"""

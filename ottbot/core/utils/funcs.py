@@ -1,10 +1,8 @@
 import glob
 import logging
-import pathlib
 import typing as t
 
 import tanjun
-from uvicorn.main import LOG_LEVELS
 
 
 def to_dict(obj) -> dict[str, str]:

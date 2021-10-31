@@ -1,5 +1,5 @@
 import typing as t
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 
 _IClientT = t.TypeVar("_IClientT", bound="IClient")
 

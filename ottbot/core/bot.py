@@ -113,7 +113,8 @@ class OttBot(hikari.GatewayBot, IBot):
     ) -> None:
         """Create the client, subscribe to important events, and run the bot.
 
-        When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
+        When running an API along side the bot, use `await bot.start()`
+        and `await bot.close()` on api events instead."""
         # self.create_client()
         # self.subscribe_to_events()
 
@@ -173,7 +174,7 @@ class OttBot(hikari.GatewayBot, IBot):
         log_level = parse_log_level(self.log_level)
 
         file_fmt = logging.Formatter(
-            f"[%(asctime)s.%(msecs)03d] %(levelname)s | %(message)s",
+            "[%(asctime)s.%(msecs)03d] %(levelname)s | %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
         btrfh = BetterTimedRotatingFileHandler(path=self._log)

@@ -1,11 +1,8 @@
-import logging
 import random
 
-import hikari
 import tanjun
 
 from ottbot.core.bot import OttBot
-from ottbot.core.client import OttClient
 
 component = tanjun.Component()
 
@@ -71,8 +68,7 @@ async def cmd_user(
     if user is not None:
         await ctx.respond(f"{user.mention}")
     else:
-        await ctx.respond(f"User not found")
-    
+        await ctx.respond("User not found")
 
 
 @tanjun.as_loader

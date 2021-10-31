@@ -42,12 +42,13 @@ class BetterTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
 
     def doRollover(self):
         """
-        TimedRotatingFileHandler remix - rotates logs on daily basis, and filename of current logfile is time.strftime("%m-%d-%Y").log
+        TimedRotatingFileHandler remix - rotates logs on daily basis,
+        and filename of current logfile is time.strftime("%m-%d-%Y").log
         """
         self.stream.close()
         # get the time that this sequence started at and make it a TimeTuple
-        t = self.rollover_at - self.interval
-        time_tuple = time.localtime(t)
+        # t = self.rollover_at - self.interval
+        # time_tuple = time.localtime(t)
         self.base_filename = os.path.join(self.path, f"{time.strftime('%m-%d-%Y')}.log")
         if self.encoding:
             self.stream = codecs.open(self.base_Filename, "w", self.encoding)
@@ -81,7 +82,7 @@ if __name__ == "__main__":
         os.path.join(".", "logs")
     )  # set logging dir to "./logs"
     ff = logging.Formatter(
-        f"[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        "[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
     )
     trfh.setFormatter(ff)
 

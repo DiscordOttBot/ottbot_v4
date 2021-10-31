@@ -1,8 +1,9 @@
-from fastapi import APIRouter, FastAPI
 import typing as t
 
-from ottbot.core.bot import OttBot
+from fastapi import APIRouter, FastAPI
+
 from ottbot.abc.irouter_wrapper import IRouterWrapper
+from ottbot.core.bot import OttBot
 
 
 class RouterWrapper(APIRouter, IRouterWrapper):
@@ -17,7 +18,6 @@ class RouterWrapper(APIRouter, IRouterWrapper):
         if self.__app is not None:
             return self.__app
         raise ValueError("The router does not have an API attached to it yet")
-
 
     @app.setter
     def app(self, app: FastAPI) -> None:
