@@ -1,8 +1,8 @@
 import asyncio
 import typing as t
 
-import asyncpg
 import aiofiles
+import asyncpg
 
 from ottbot import Config
 

@@ -4,10 +4,10 @@ import datetime
 import typing as t
 
 import hikari
-
 import lightbulb
 import tanjun
 import tanjun.abc
+
 from ottbot.abc.iembeds import IEmbed
 
 FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]

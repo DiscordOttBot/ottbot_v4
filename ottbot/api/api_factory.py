@@ -1,10 +1,13 @@
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter
+
+from ottbot.api.api_wrapper import APIWrapper
+from ottbot.api.router_wrapper import RouterWrapper
 from ottbot.core.bot import OttBot
 
 
 class APIFactory(object):
     @staticmethod
-    def build(bot: OttBot, app: FastAPI, routers: list[APIRouter]) -> None:
+    def build(bot: OttBot, app: APIWrapper, routers: list[RouterWrapper]) -> None:
 
         for router in routers:
             app.include_router(router)
@@ -12,4 +15,3 @@ class APIFactory(object):
 
             router.app = app
             router.bot = bot
-

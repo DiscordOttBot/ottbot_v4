@@ -1,13 +1,13 @@
 import logging
 import os
 import sys
-from ottbot.api.api_wrapper import APIWrapper
 
 import uvicorn
 from fastapi import FastAPI
 
 from ottbot import __version__, log_level
 from ottbot.api.api_factory import APIFactory
+from ottbot.api.api_wrapper import APIWrapper
 from ottbot.api.routers import guild, user
 from ottbot.core.bot import OttBot
 
@@ -26,7 +26,7 @@ def api_main() -> None:
 
     @app.on_event("startup")
     async def api_startup() -> None:
-        await bot.start_()
+        await bot.start()
 
     @app.on_event("shutdown")
     async def api_shutdown() -> None:

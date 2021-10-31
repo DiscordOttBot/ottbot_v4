@@ -1,16 +1,11 @@
-import asyncio
 import datetime
 import logging
 import os
-import time
 import typing as t
-from pathlib import Path
 
 import hikari
 import sake
-import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from fastapi import FastAPI
 from hikari import presences
 
 from ottbot.abc.ibot import IBot
@@ -44,7 +39,8 @@ class OttBot(hikari.GatewayBot, IBot):
         "embeds",
         "errors",
         "guilds",
-        "log_level" "version",
+        "log_level",
+        "version",
         "_dynamic",
         "_static",
         "_log",
@@ -57,7 +53,6 @@ class OttBot(hikari.GatewayBot, IBot):
 
         self.version: str = version
         self.log_level: str = log_level
-        self._running: bool = False
 
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.errors: Errors = Errors()
@@ -80,7 +75,7 @@ class OttBot(hikari.GatewayBot, IBot):
     def create_client(self: _BotT) -> None:
         """Creates a tanjun client and dynamically links the bot and the client"""
         self.logger.info("Creating client")
-        self.client: OttClient = OttClient.from_gateway_bot(
+        self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
         )
         self.client.bot = self
@@ -119,7 +114,6 @@ class OttBot(hikari.GatewayBot, IBot):
         """Create the client, subscribe to important events, and run the bot.
 
         When running an API along side the bot, use `await bot.start()` and `await bot.close()` on api events instead."""
-        self.logger.info("          Running bot")
         # self.create_client()
         # self.subscribe_to_events()
 
@@ -141,7 +135,7 @@ class OttBot(hikari.GatewayBot, IBot):
             shard_count=shard_count,
         )
 
-    async def start_(
+    async def start(
         self: _BotT,
         *,
         activity: t.Optional[presences.Activity] = None,
@@ -154,11 +148,13 @@ class OttBot(hikari.GatewayBot, IBot):
         shard_count: t.Optional[int] = None,
         status: presences.Status = presences.Status.ONLINE,
     ) -> None:
+        """Bot's startup loop"""
 
         self.create_client()
         self.subscribe_to_events()
 
         self.logger.info("          Starting Bot")
+        self.logger.info("          Running bot.start()")
         await super().start(
             activity=activity,
             afk=afk,

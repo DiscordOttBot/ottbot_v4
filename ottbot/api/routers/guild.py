@@ -1,12 +1,11 @@
 import logging
 
+import hikari
 from fastapi import status
 from fastapi.exceptions import HTTPException
-import hikari
 
 from ottbot.api.router_wrapper import RouterWrapper
 from ottbot.core.utils.funcs import to_dict
-
 
 router: RouterWrapper = RouterWrapper(prefix="/guild", tags=["Guilds"])
 

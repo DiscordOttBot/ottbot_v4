@@ -2,8 +2,9 @@ import logging
 import random
 
 import hikari
-
 import tanjun
+
+from ottbot.core.bot import OttBot
 from ottbot.core.client import OttClient
 
 component = tanjun.Component()
@@ -60,10 +61,18 @@ async def command_dice(
 @component.with_slash_command
 @tanjun.with_str_slash_option("id_str", "The ID of the user you would like to access")
 @tanjun.as_slash_command("user", "Get the name of a user give their ID")
-async def cmd_user(ctx: tanjun.abc.SlashContext, id_str: str) -> None:
-    logging.info(type(ctx.client))
-    user = ctx.client.bot.cache.get_member(ctx.guild_id, int(id_str))
-    await ctx.respond(user.username)
+async def cmd_user(
+    ctx: tanjun.abc.SlashContext,
+    id_str: str,
+    bot: OttBot = tanjun.injected(type=OttBot),
+) -> None:
+    if ctx.guild_id is not None:
+        user = bot.cache.get_member(ctx.guild_id, int(id_str))
+    if user is not None:
+        await ctx.respond(f"{user.mention}")
+    else:
+        await ctx.respond(f"User not found")
+    
 
 
 @tanjun.as_loader

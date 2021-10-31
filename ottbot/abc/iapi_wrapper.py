@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod, abstractproperty
+
 from fastapi import APIRouter
+
 from ottbot.core.bot import OttBot
 
 
@@ -24,5 +26,5 @@ class IAPIWrapper(ABC):
         """Routers property for dynamic type checking"""
 
     @routers.setter
-    def data(self, routers: list[APIRouter]) -> None:
+    def routers(self, routers: list[APIRouter]) -> None:
         """Routers setter for dynamic checking"""

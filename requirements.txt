@@ -21,3 +21,4 @@ uvicorn
 # Dev
 mypy
 black
+isort

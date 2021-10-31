@@ -3,8 +3,8 @@ from .errors import Errors
 from .lines import Lines
 from .rotating_logs import (
     BetterTimedRotatingFileHandler,
-    LoggingFilter,
     HikariFormatter,
+    LoggingFilter,
 )
 
 __all__ = [

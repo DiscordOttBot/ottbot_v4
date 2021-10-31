@@ -1,15 +1,14 @@
 import typing as t
+from collections import abc as collections
 from pathlib import Path
 
+import hikari
 import tanjun
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from pytz import utc
 from hikari import traits as hikari_traits
-import hikari
+from pytz import utc
 
 from ottbot.abc.iclient import IClient
-from ottbot.core import utils
-
 
 _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 
@@ -17,13 +16,11 @@ _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 class OttClient(tanjun.Client, IClient):
     """Attachable Client for slash commands"""
 
-    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler", "bot")
+    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + ("scheduler", "bot", "errors", "embeds")
 
-    def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
+    def __init__(self: _ClientT, bot=None, *args: t.Any, **kwargs: t.Any) -> None:
 
-        self.errors = utils.Errors()
-        self.embeds = utils.Embeds()
-        self.bot: t.Optional[t.Any] = kwargs["shards"]
+        self.bot = kwargs["shards"] 
 
         super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
@@ -43,7 +40,7 @@ class OttClient(tanjun.Client, IClient):
         # return super().load_modules(*Path(__file__).parent.glob("modules/*.py"))
 
     @classmethod
-    def from_gateway_bot(
+    def from_gateway_bot_(
         cls,
         bot: hikari_traits.GatewayBotAware,
         /,
@@ -51,55 +48,20 @@ class OttClient(tanjun.Client, IClient):
         event_managed: bool = True,
         mention_prefix: bool = False,
         declare_global_commands: t.Union[
+            hikari.SnowflakeishSequence[hikari.PartialGuild],
+            hikari.SnowflakeishOr[hikari.PartialGuild],
+            bool,
+        ] = False,
+        set_global_commands: t.Union[
             hikari.SnowflakeishOr[hikari.PartialGuild], bool
         ] = False,
-    ):
-        """Build a `Client` from a `hikari.traits.GatewayBotAware` instance.
-
-        Notes
-        -----
-        * This implicitly defaults the client to human only mode.
-        * This sets type dependency injectors for the hikari traits present in
-        `bot` (including `hikari.traits.GatewayBotaWARE`).
-        * The endpoint used by `set_global_commands` has a strict ratelimit
-        which, as of writing, only allows for 2 requests per minute (with that
-        ratelimit either being per-guild if targeting a specific guild
-        otherwise globally).
-
-        Parameters
-        ----------
-        bot : hikari.traits.GatewayBotAware
-            The bot client to build from.
-
-            This will be used to infer the relevant Hikari clients to use.
-
-        Other Parameters
-        ----------------
-        event_managed : bool
-            Whether or not this client is managed by the event manager.
-
-            An event managed client will be automatically started and closed
-            based on Hikari's lifetime events.
-
-            Defaults to `True`.
-        mention_prefix : bool
-            Whether or not mention prefixes should be automatically set when this
-            client is first started.
-
-            Defaults to `False` and it should be noted that this only applies to
-            message commands.
-        set_global_commands : typing.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool]
-        Whether or not to automatically set global slash commands when this
-        client is first started. Defaults to `False`.
-
-        If a guild object or ID is passed here then the global commands will be
-        set on this specific guild at startup rather than globally. This
-        can be useful for testing/debug purposes as slash commands may take
-        up to an hour to propagate globally but will immediately propagate
-        when set on a specific guild.
-        """
-        constructor = (
+        command_ids: t.Optional[
+            collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]
+        ] = None,
+    ) -> "OttClient":
+        return (
             cls(
+                bot=bot,
                 rest=bot.rest,
                 cache=bot.cache,
                 events=bot.event_manager,
@@ -107,52 +69,36 @@ class OttClient(tanjun.Client, IClient):
                 event_managed=event_managed,
                 mention_prefix=mention_prefix,
                 declare_global_commands=declare_global_commands,
+                set_global_commands=set_global_commands,
+                command_ids=command_ids,
+                _stack_level=1,
             )
             .set_human_only()
             .set_hikari_trait_injectors(bot)
         )
 
-        return constructor
-
     @classmethod
-    def from_rest_bot(
+    def from_rest_bot_(
         cls,
-        bot,
+        bot: hikari_traits.RESTBotAware,
         /,
-        declare_global_commands=False,
-    ):
-        """Build a `Client` from a `hikari.traits.RESTBotAware` instance.
-
-        Notes
-        -----
-        * This sets type dependency injectors for the hikari traits present in
-        `bot` (including `hikari.traits.RESTBotAware`).
-        * The endpoint used by `set_global_commands` has a strict ratelimit
-        which, as of writing, only allows for 2 requests per minute (with that
-        ratelimit either being per-guild if targeting a specific guild
-        otherwise globally).
-
-        Parameters
-        ----------
-        bot : hikari.traits.RESTBotAware
-            The bot client to build from.
-
-        Other Parameters
-        ----------------
-        set_global_commands : typing.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool]
-            Whether or not to automatically set global slash commands when this
-            client is first started. Defaults to `False`.
-
-            If a guild object or ID is passed here then the global commands will be
-            set on this specific guild at startup rather than globally. This
-            can be useful for testing/debug purposes as slash commands may take
-            up to an hour to propagate globally but will immediately propagate
-            when set on a specific guild.
-        """
-        constructor = cls(
+        declare_global_commands: t.Union[
+            hikari.SnowflakeishSequence[hikari.PartialGuild],
+            hikari.SnowflakeishOr[hikari.PartialGuild],
+            bool,
+        ] = False,
+        set_global_commands: t.Union[
+            hikari.SnowflakeishOr[hikari.PartialGuild], bool
+        ] = False,
+        command_ids: t.Optional[
+            collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]
+        ] = None,
+    ) -> "OttClient":
+        return cls(
             rest=bot.rest,
             server=bot.interaction_server,
             declare_global_commands=declare_global_commands,
+            set_global_commands=set_global_commands,
+            command_ids=command_ids,
+            _stack_level=1,
         ).set_hikari_trait_injectors(bot)
-
-        return constructor
