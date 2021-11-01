@@ -2,7 +2,16 @@
 
 ## Immediate
 
-- [ ] reload command
+- [ ] Decide on command (file) structure
+  - maybe wait until command groups come out 
+- [ ] fix redis
+- [ ] make example commands w/ buttons
+- [ ] look into db code (orm)
+- [ ] dashboard
+- [ ] stream status (btc, eth, ...)
+- [x] reload command
+
+
 
 ## Soon
 
