@@ -78,6 +78,8 @@ class OttBot(hikari.GatewayBot, IBot):
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
         ).load_modules_()
+        self.client = self.client.set_type_dependency(OttClient, self.client)
+        # TODO: Add database type dependency
 
     async def init_cache(self: _BotT):
         cache: sake.redis.RedisCache = sake.redis.RedisCache(

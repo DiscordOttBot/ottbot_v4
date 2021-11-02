@@ -120,7 +120,7 @@ def get_list_of_files(
                 else:
                     all_files.append(pathlib.Path(full_path))
 
-    return all_files 
+    return all_files
 
 
 def type_check(func):
@@ -146,3 +146,5 @@ def type_check(func):
         return result
 
     return check
+
+

@@ -74,7 +74,7 @@ async def cmd_reload(
             bot.client.load_modules(m)
     await bot.client.declare_global_commands(guild=SERVER_ID)
 
-    await ctx.respond(f"Updated modules {[m.stem for m in modules]}")
+    await ctx.respond(f"Reloaded modules {[m.stem for m in modules]}")
 
 
 load_component, unload_component = build_loaders(component)

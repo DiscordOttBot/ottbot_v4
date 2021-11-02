@@ -19,13 +19,12 @@ class OttClient(tanjun.Client, IClient):
     __slots__: t.Iterable[str] = tanjun.Client.__slots__ + (
         "scheduler",
         "bot",
-        "errors",
-        "embeds",
     )
 
     def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
 
         self.bot = kwargs["shards"]
+        self.version = self.bot.version
 
         super().__init__(*args, **kwargs)
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
