@@ -66,8 +66,8 @@ async def cmd_user(
 ) -> None:
     if ctx.guild_id is not None:
         user = bot.cache.get_member(ctx.guild_id, int(id_str))
-    if user is not None:
-        await ctx.respond(f"{user.mention}")
+        if user is not None:
+            await ctx.respond(f"{user.mention}")
     else:
         await ctx.respond("User not found")
 

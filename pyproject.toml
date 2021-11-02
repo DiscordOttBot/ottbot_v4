@@ -1,2 +1,9 @@
 [tools.black]
 line-length = 120
+
+[tool.pyright]
+pythonVersion="3.10"
+reportMissingImports=false
+reportInvalidTypeVarUse=false
+reportMissingModuleSource=false
+pythonPlatform="Linux"

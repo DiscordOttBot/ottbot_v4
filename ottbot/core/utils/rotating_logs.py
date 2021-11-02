@@ -51,7 +51,7 @@ class BetterTimedRotatingFileHandler(logging.handlers.TimedRotatingFileHandler):
         # time_tuple = time.localtime(t)
         self.base_filename = os.path.join(self.path, f"{time.strftime('%m-%d-%Y')}.log")
         if self.encoding:
-            self.stream = codecs.open(self.base_Filename, "w", self.encoding)
+            self.stream = codecs.open(self.base_filename, "w", self.encoding)  # type: ignore
         else:
             self.stream = open(self.base_filename, "w")
         self.rollover_at = self.rollover_at + self.interval

@@ -60,7 +60,7 @@ class Embeds(IEmbed):
                 text=(
                     None
                     if self.footer == ESCAPE_NAME
-                    else (self.footer or f"Invoked by: {self._ctx.author.username}")
+                    else (self.footer or f"Invoked by: {self._ctx.author.username}" if self._ctx is not None else "")
                 ),
                 icon=(
                     None

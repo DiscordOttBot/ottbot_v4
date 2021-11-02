@@ -8,14 +8,16 @@ class APIWrapper(FastAPI, IAPIWrapper):
     """API Wrapper that holds the discord bot"""
 
     def __init__(self, routers):
-        self.__bot: OttBot = None
+        self.__bot: OttBot | None = None
         self.__routers: list[APIRouter] = routers
 
         super().__init__()
 
     @property
     def bot(self) -> OttBot:
-        return self.__bot
+        if self.__bot is not None:
+            return self.__bot
+        raise ValueError("No Bot object is set")
 
     @bot.setter
     def bot(self, bot: OttBot) -> None:

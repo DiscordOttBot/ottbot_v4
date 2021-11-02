@@ -54,11 +54,11 @@ class Errors:
         if isinstance(
             exc, (tanjun.NotEnoughArgumentsError, tanjun.TooManyArgumentsError)
         ):
-            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))
+            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))  # type: ignore
             raise exc
 
         elif isinstance(exc, tanjun.MissingDependencyError):
-            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))
+            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))  # type: ignore
             raise exc
 
         else:

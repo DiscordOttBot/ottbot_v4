@@ -1,3 +1,4 @@
+import functools
 import glob
 import logging
 import os
@@ -117,6 +118,31 @@ def get_list_of_files(
                 if ignore_underscores and full_path.split(os.sep)[-1].startswith("_"):
                     continue
                 else:
-                    all_files.append(full_path)
+                    all_files.append(pathlib.Path(full_path))
 
-    return [pathlib.Path(f) for f in all_files]
+    return all_files 
+
+
+def type_check(func):
+    @functools.wraps(func)
+    def check(*args, **kwargs):
+        for i in range(len(args)):
+            v = args[i]
+            v_name = list(func.__annotations__.keys())[i]
+            v_type = list(func.__annotations__.values())[i]
+            error_msg = "Variable `" + str(v_name) + "` should be type ("
+            error_msg += str(v_type) + ") but instead is type (" + str(type(v)) + ")"
+            if not isinstance(v, v_type):
+                raise TypeError(error_msg)
+
+        result = func(*args, **kwargs)
+        v = result
+        v_name = "return"
+        v_type = func.__annotations__["return"]
+        error_msg = "Variable `" + str(v_name) + "` should be type ("
+        error_msg += str(v_type) + ") but instead is type (" + str(type(v)) + ")"
+        if not isinstance(v, v_type):
+            raise TypeError(error_msg)
+        return result
+
+    return check
