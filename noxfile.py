@@ -12,7 +12,9 @@ def format_code(session):
 def lint_code(session):
     session.install("flake8")
     session.install("mypy")
+    session.install("pyright")
 
     session.run("flake8", "ottbot")
     session.run("mypy", "ottbot")
+    session.run("pyright", "ottbot")
 
