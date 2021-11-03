@@ -9,6 +9,7 @@
   - [Pydantic](#pydantic)
   - [Mypy](#mypy)
   - [Testing](#testing)
+- [Repos](#repos)
 
 # commands
 
@@ -57,3 +58,7 @@ sudo /etc/init.d/postgres start
 ## [Mypy](https://mypy.readthedocs.io/en/stable/)
 
 ## [Testing](https://python.readthedocs.io/en/stable/library/unittest.html?highlight=re)
+
+# Repos
+
+https://github.com/tandemdude/rtfm-botto

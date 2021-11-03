@@ -70,3 +70,5 @@ async def cmd_user(
             await ctx.respond(f"{user.mention}")
     else:
         await ctx.respond("User not found")
+
+
