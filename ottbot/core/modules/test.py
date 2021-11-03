@@ -2,10 +2,9 @@ import random
 import traceback
 
 import hikari
-
+import tanjun
 from hikari.events.message_events import GuildMessageCreateEvent
 
-import tanjun
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
 

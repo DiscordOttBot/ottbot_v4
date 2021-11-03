@@ -1,11 +1,11 @@
-import typing
-
-import hikari
-import re
-import zlib
 import io
 import os
+import re
+import typing
+import zlib
+
 import aiohttp
+import hikari
 from ext.utils import fuzzy
 
 
