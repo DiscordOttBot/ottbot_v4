@@ -17,7 +17,7 @@ class SphinxObjectFileReader:
         self.stream = io.BytesIO(buffer)
 
     def readline(self):
-        return self.stream.readline().decode('utf-8')
+        return self.stream.readline().decode("utf-8")
 
     def skipline(self):
         self.stream.readline()
@@ -32,14 +32,14 @@ class SphinxObjectFileReader:
         yield decompressor.flush()
 
     def read_compressed_lines(self):
-        buf = b''
+        buf = b""
         for chunk in self.read_compressed_chunks():
             buf += chunk
-            pos = buf.find(b'\n')
+            pos = buf.find(b"\n")
             while pos != -1:
-                yield buf[:pos].decode('utf-8')
-                buf = buf[pos + 1:]
-                pos = buf.find(b'\n')
+                yield buf[:pos].decode("utf-8")
+                buf = buf[pos + 1 :]
+                pos = buf.find(b"\n")
 
 
 class RTFMManager:
@@ -53,8 +53,8 @@ class RTFMManager:
         # first line is version info
         inv_version = stream.readline().rstrip()
 
-        if inv_version != '# Sphinx inventory version 2':
-            raise RuntimeError('Invalid objects.inv file version.')
+        if inv_version != "# Sphinx inventory version 2":
+            raise RuntimeError("Invalid objects.inv file version.")
 
         # next line is "# Project: <name>"
         # then after that is "# Version: <version>"
@@ -63,19 +63,19 @@ class RTFMManager:
 
         # next line says if it's a zlib header
         line = stream.readline()
-        if 'zlib' not in line:
-            raise RuntimeError('Invalid objects.inv file, not z-lib compatible.')
+        if "zlib" not in line:
+            raise RuntimeError("Invalid objects.inv file, not z-lib compatible.")
 
         # This code mostly comes from the Sphinx repository.
-        entry_regex = re.compile(r'(?x)(.+?)\s+(\S*:\S*)\s+(-?\d+)\s+(\S+)\s+(.*)')
+        entry_regex = re.compile(r"(?x)(.+?)\s+(\S*:\S*)\s+(-?\d+)\s+(\S+)\s+(.*)")
         for line in stream.read_compressed_lines():
             match = entry_regex.match(line.rstrip())
             if not match:
                 continue
 
             name, directive, prio, location, dispname = match.groups()
-            domain, _, subdirective = directive.partition(':')
-            if directive == 'py:module' and name in result:
+            domain, _, subdirective = directive.partition(":")
+            if directive == "py:module" and name in result:
                 # From the Sphinx Repository:
                 # due to a bug in 1.1 and below,
                 # two inventory entries are created
@@ -84,16 +84,16 @@ class RTFMManager:
                 continue
 
             # Most documentation pages have a label
-            if directive == 'std:doc':
-                subdirective = 'label'
+            if directive == "std:doc":
+                subdirective = "label"
 
-            if location.endswith('$'):
+            if location.endswith("$"):
                 location = location[:-1] + name
 
-            key = name if dispname == '-' else dispname
-            prefix = f'{subdirective}:' if domain == 'std' else ''
+            key = name if dispname == "-" else dispname
+            prefix = f"{subdirective}:" if domain == "std" else ""
 
-            result[f'{prefix}{key}'] = os.path.join(url, location)
+            result[f"{prefix}{key}"] = os.path.join(url, location)
 
         return result
 
@@ -102,9 +102,11 @@ class RTFMManager:
         for key, page in page_types.items():
             sub = cache[key] = {}
             async with aiohttp.ClientSession() as session:
-                async with session.get(page + '/objects.inv') as resp:
+                async with session.get(page + "/objects.inv") as resp:
                     if resp.status != 200:
-                        raise RuntimeError('Cannot build rtfm lookup table, try again later.')
+                        raise RuntimeError(
+                            "Cannot build rtfm lookup table, try again later."
+                        )
 
                     stream = SphinxObjectFileReader(await resp.read())
                     cache[key] = self.parse_object_inv(stream, page)
@@ -122,18 +124,18 @@ class RTFMManager:
         if obj is None:
             return page_types[key]
 
-        if not hasattr(self, '_rtfm_cache'):
+        if not hasattr(self, "_rtfm_cache"):
             await self.build_rtfm_lookup_table(page_types)
 
         cache = list(self._rtfm_cache[key].items())
 
         matches = fuzzy.finder(obj, cache, key=lambda t: t[0], lazy=False)[:8]
 
-        e = hikari.Embed(colour=0x39393f)
+        e = hikari.Embed(colour=0x39393F)
         if len(matches) == 0:
             return "Could not find anything. Sorry."
 
-        e.description = '\n'.join(f'[`{key}`]({url})' for key, url in matches)
+        e.description = "\n".join(f"[`{key}`]({url})" for key, url in matches)
         return e
 
 

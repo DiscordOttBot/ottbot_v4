@@ -5,8 +5,8 @@ import tanjun
 from hikari.impl.special_endpoints import ActionRowBuilder
 from hikari.interactions.base_interactions import ResponseType
 from hikari.messages import ButtonStyle
-from ottbot.core.bot import OttBot
 
+from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()
