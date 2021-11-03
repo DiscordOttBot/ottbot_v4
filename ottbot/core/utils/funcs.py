@@ -29,8 +29,12 @@ def to_dict(obj) -> dict[str, str]:
 
 
 def build_loaders(
-    component: tanjun.Component,
-) -> tuple[t.Callable[[tanjun.Client], None], t.Callable[[tanjun.Client], None]]:
+    checks: list = [],
+) -> tuple[
+    tanjun.Component,
+    t.Callable[[tanjun.Client], None],
+    t.Callable[[tanjun.Client], None],
+]:
     """
     Creates function that load and unload a component.
 
@@ -41,6 +45,10 @@ def build_loaders(
         tuple(Callable[[tanjun.Client], None], Callable[[tanjun.Client], None]):
             A tuple of functions that load and unload the component respectively.
     """
+    component = tanjun.Component()
+    if checks:
+        for check in checks:
+            component.add_check(check)
 
     @tanjun.as_loader
     def load_component(client: tanjun.Client) -> None:
@@ -50,7 +58,7 @@ def build_loaders(
     def unload_component(client: tanjun.Client) -> None:
         client.remove_component_by_name(component.name)
 
-    return (load_component, unload_component)
+    return (component, load_component, unload_component)
 
 
 def load_modules_from_path(path: str, client: tanjun.Client):
@@ -146,5 +154,3 @@ def type_check(func):
         return result
 
     return check
-
-

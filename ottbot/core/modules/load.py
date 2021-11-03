@@ -3,7 +3,7 @@ import tanjun
 from ottbot.core.bot import SERVER_ID, OttBot
 from ottbot.core.utils.funcs import build_loaders, get_list_of_files
 
-component = tanjun.Component()
+component, load_component, unload_component = build_loaders()
 
 
 @component.with_slash_command
@@ -75,6 +75,3 @@ async def cmd_reload(
     await bot.client.declare_global_commands(guild=SERVER_ID)
 
     await ctx.respond(f"Reloaded modules {[m.stem for m in modules]}")
-
-
-load_component, unload_component = build_loaders(component)

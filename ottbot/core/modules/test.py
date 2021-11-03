@@ -5,7 +5,7 @@ import tanjun
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
 
-component = tanjun.Component()
+component, load_component, unload_component = build_loaders()
 
 
 @component.with_slash_command
@@ -70,15 +70,3 @@ async def cmd_user(
             await ctx.respond(f"{user.mention}")
     else:
         await ctx.respond("User not found")
-
-
-@component.with_slash_command
-@tanjun.as_slash_command("deco", "custom decorator test")
-async def cmd_deco(
-    ctx,
-) -> None:
-
-    await ctx.respond(f"testing decorators ")
-
-
-load_component, unload_component = build_loaders(component)
