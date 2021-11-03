@@ -5,6 +5,7 @@ import tanjun
 from hikari.impl.special_endpoints import ActionRowBuilder
 from hikari.interactions.base_interactions import ResponseType
 from hikari.messages import ButtonStyle
+from ottbot.core.bot import OttBot
 
 from ottbot.core.utils.funcs import build_loaders
 
@@ -86,3 +87,21 @@ async def cmd_nsfw(ctx: tanjun.abc.SlashContext) -> None:
 )
 async def cmd_choice(ctx: tanjun.abc.SlashContext, c: str) -> None:
     await ctx.respond(f"**{c}** was a good choice")
+
+
+@component.with_slash_command
+@tanjun.with_str_slash_option(
+    "message", "The message that will be repeated", default=""
+)
+@tanjun.as_slash_command("echo", "Echo the message back to the user")
+async def cmd_echo(
+    ctx: tanjun.abc.SlashContext,
+    message: str,
+    bot: OttBot = tanjun.injected(type=OttBot),
+) -> None:
+    embed = bot.embeds.build(
+        ctx=ctx,
+        title=f"{ctx.author.username}'s message",
+        fields=(("message", message, True),),
+    )
+    await ctx.respond(embed=embed)
