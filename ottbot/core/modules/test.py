@@ -1,7 +1,11 @@
 import random
+import traceback
+
+import hikari
+
+from hikari.events.message_events import GuildMessageCreateEvent
 
 import tanjun
-
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
 
@@ -72,3 +76,19 @@ async def cmd_user(
         await ctx.respond("User not found")
 
 
+@component.with_slash_command
+@tanjun.as_slash_command("waitfor", "`wait_for` test")
+async def cmd_waitdfor(
+    ctx: tanjun.abc.SlashContext,
+    bot: OttBot = tanjun.injected(type=OttBot),
+) -> None:
+    await ctx.respond("Send a message")
+    event: GuildMessageCreateEvent = await bot.wait_for(
+        GuildMessageCreateEvent,
+        timeout=60,
+        predicate=lambda e: (
+            isinstance(e, GuildMessageCreateEvent)  # event is a MessageCreateEvent
+            and e.author.id == ctx.author.id  # event is from the author
+        ),
+    )
+    await ctx.respond(f"{event.author.mention} said {event.content}")
