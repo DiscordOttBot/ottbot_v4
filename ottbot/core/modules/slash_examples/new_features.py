@@ -75,3 +75,14 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
 )
 async def cmd_nsfw(ctx: tanjun.abc.SlashContext) -> None:
     await ctx.respond("Heyy~")
+
+
+@component.with_slash_command
+@tanjun.with_str_slash_option(
+    "c", "A very important choice", choices=["lmao", "bababooey"]
+)
+@tanjun.as_slash_command(
+    "choice", "An example command where you have a dropdown choice menu"
+)
+async def cmd_choice(ctx: tanjun.abc.SlashContext, c: str) -> None:
+    await ctx.respond(f"**{c}** was a good choice")
