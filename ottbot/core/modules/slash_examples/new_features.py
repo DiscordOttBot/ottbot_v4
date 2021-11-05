@@ -105,3 +105,16 @@ async def cmd_echo(
         fields=(("message", message, True),),
     )
     await ctx.respond(embed=embed)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("button", "A button")
+async def cmd_button(ctx: tanjun.abc.SlashContext):
+    button: ActionRowBuilder = (
+        ctx.rest.build_action_row()
+        .add_button(ButtonStyle.PRIMARY, "+")
+        .set_label("+")
+        .add_to_container()
+    )
+
+    await ctx.respond("buttons", component=button)
