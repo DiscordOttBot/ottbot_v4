@@ -14,7 +14,9 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("paginate", "Paginate through a list of options!")
-async def command_paginate(ctx: tanjun.abc.Context) -> None:
+async def command_paginate(
+    ctx: tanjun.abc.Context, bot: OttBot = tanjun.injected(type=OttBot)
+) -> None:
     values: tuple[str, str, str, str, str, str] = (
         "Page 1",
         "Page 2",
@@ -46,26 +48,28 @@ async def command_paginate(ctx: tanjun.abc.Context) -> None:
     while True:
 
         try:
-            event: hikari.InteractionCreateEvent = await ctx.client.events.wait_for(
-                hikari.InteractionCreateEvent, timeout=60
-            )
-            ctx.client.bot.logger.critical(f"\n\nEVENT: {event} | {type(event)}")
+            if ctx.client.events is not None:
+                event: hikari.InteractionCreateEvent = await ctx.client.events.wait_for(
+                    hikari.InteractionCreateEvent, timeout=60
+                )
+                bot.logger.critical(f"\n\nEVENT: {event} | {type(event)}")
         except asyncio.TimeoutError:
             await ctx.edit_initial_response("Timed out.", components=[])
         else:
-            if event.interaction.custom_id == "<<":
-                index = 0
-            elif event.interaction.custom_id == "<":
-                index = (index - 1) % len(values)
-            elif event.interaction.custom_id == ">":
-                index = (index + 1) % len(values)
-            elif event.interaction.custom_id == ">>":
-                index = len(values) - 1
+            if event.interaction is not None:
+                if event.interaction.custom_id == "<<":
+                    index = 0
+                elif event.interaction.custom_id == "<":
+                    index = (index - 1) % len(values)
+                elif event.interaction.custom_id == ">":
+                    index = (index + 1) % len(values)
+                elif event.interaction.custom_id == ">>":
+                    index = len(values) - 1
 
-            await ctx.edit_initial_response(values[index])
-            await event.interaction.create_initial_response(
-                ResponseType.DEFERRED_MESSAGE_UPDATE, values[index]
-            )
+                await ctx.edit_initial_response(values[index])
+                await event.interaction.create_initial_response(
+                    ResponseType.DEFERRED_MESSAGE_UPDATE, values[index]
+                )
 
 
 @component.with_slash_command

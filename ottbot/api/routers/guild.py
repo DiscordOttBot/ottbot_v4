@@ -1,10 +1,12 @@
 import asyncio
 
+import requests
 import hikari
-
 from fastapi import status
+
 from ottbot.api.router_wrapper import RouterWrapper
 from ottbot.core.utils.funcs import to_dict
+from ottbot import Config
 
 router: RouterWrapper = RouterWrapper(prefix="/guild", tags=["Guilds"])
 
@@ -20,15 +22,24 @@ async def user_get(id_: int):
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_all():
     """Returns a list of guilds"""
-    guilds = router.bot.rest.fetch_my_guilds()
-    print(guilds)
-    d = dict()
-    async for guild in guilds:
-        d[guild.id] = to_dict(guild)
-        await asyncio.sleep(1)  # TODO: Change back after discord fixes chunking requests
-    return d
-    # return {guild.id: to_dict(guild) async for guild in guilds}
+    r = requests.get(
+        "http://discord.com/api/v8/users/@me/guilds",
+        headers={"Authorization": f"Bot {Config['TOKEN']}"},
+    )
+    if r.status_code == 200:
+        return r.json()
+    else:
+        return {"error": f"{r.status_code}" }
 
+    # guilds = router.bot.rest.fetch_my_guilds()
+    # print(guilds)
+    # d = dict()
+    # async for guild in guilds:
+    #     d[guild.id] = to_dict(guild)
+    #     await asyncio.sleep(1)
+    # TODO: Change back after discord fixes chunking requests
+    # return d
+    # return {guild.id: to_dict(guild) async for guild in guilds}
 
 
 # @router.post("/{id_}/ban/{user_id_}", status_code=status.HTTP_200_OK)

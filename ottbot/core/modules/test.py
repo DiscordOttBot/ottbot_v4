@@ -1,7 +1,5 @@
 import random
-import traceback
 
-import hikari
 import tanjun
 from hikari.events.message_events import GuildMessageCreateEvent
 

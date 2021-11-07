@@ -17,6 +17,7 @@ aiofiles
 # REST API
 fastapi
 uvicorn
+requests
 
 # Dev
 mypy
