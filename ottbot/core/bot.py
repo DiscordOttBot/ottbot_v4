@@ -4,6 +4,7 @@ import os
 import typing as t
 
 import hikari
+from ottbot.core.utils.lines import Lines
 import sake
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from hikari import presences
@@ -11,6 +12,7 @@ from hikari import presences
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
 from ottbot.core.client import OttClient
+from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils import (
     BetterTimedRotatingFileHandler,
     Embeds,
@@ -47,9 +49,9 @@ class OttBot(hikari.GatewayBot, IBot):
     )
 
     def __init__(self: _BotT, version: str = "", log_level: str = "info") -> None:
-        self._dynamic = os.path.join(".", "ottbot", "data", "dynamic")
-        self._static = os.path.join(".", "ottbot", "data", "static")
-        self._log = os.path.join(".", "ottbot", "data", "logs")
+        self._dynamic: str = os.path.join(".", "ottbot", "data", "dynamic")
+        self._static: str = os.path.join(".", "ottbot", "data", "static")
+        self._log: str = os.path.join(".", "ottbot", "data", "logs")
 
         self.version: str = version
         self.log_level: str = log_level
@@ -57,6 +59,8 @@ class OttBot(hikari.GatewayBot, IBot):
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
         self.errors: Errors = Errors()
         self.embeds: Embeds = Embeds()
+        self.lines: Lines = Lines()
+        self.pool: AsyncPGDatabase = AsyncPGDatabase()
 
         self.guilds: list[hikari.OwnGuild] = []
         self.init_logger()

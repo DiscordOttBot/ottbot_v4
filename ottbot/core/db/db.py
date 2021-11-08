@@ -11,13 +11,13 @@ class AsyncPGDatabase:
     """Wrapper class for AsyncPG Database access."""
 
     def __init__(self) -> None:
-        self.calls = 0
-        self.db = "ottbot"
-        self.host = "127.0.0.1"
-        self.user = Config["PG_USERNAME"]
-        self.password = Config["PG_PASSWORD"]
-        self.port = 5432
-        self.schema = "./ottbot/data/static/schema.sql"
+        self.calls: int = 0
+        self.db: str = "ottbot"
+        self.host: str = "127.0.0.1"
+        self.user: str = Config["PG_USERNAME"]
+        self.password: str = Config["PG_PASSWORD"]
+        self.port: int = 5432
+        self.schema: str = "./ottbot/data/static/schema.sql"
 
     async def connect(self) -> None:
         """Opens a connection pool."""

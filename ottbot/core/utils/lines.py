@@ -7,8 +7,8 @@ class Lines:
     """Analyzes the bots source code."""
 
     def __init__(self) -> None:
-        self.py = [str(p) for p in Path(".").glob("jonxhikari/**/*.py")]
-        self.sql = [str(p) for p in Path(".").glob("jonxhikari/**/*.sql")]
+        self.py = [str(p) for p in Path(".").glob("ottbot/**/*.py")]
+        self.sql = [str(p) for p in Path(".").glob("ottbot/**/*.sql")]
         self.targets = self.py + self.sql
 
     def __len__(self) -> int:

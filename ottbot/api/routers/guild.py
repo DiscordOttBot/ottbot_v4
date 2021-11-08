@@ -1,12 +1,12 @@
 import asyncio
 
-import requests
 import hikari
+import requests
 from fastapi import status
 
+from ottbot import Config
 from ottbot.api.router_wrapper import RouterWrapper
 from ottbot.core.utils.funcs import to_dict
-from ottbot import Config
 
 router: RouterWrapper = RouterWrapper(prefix="/guild", tags=["Guilds"])
 

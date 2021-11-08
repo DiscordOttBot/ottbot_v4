@@ -26,7 +26,7 @@ redis-server
 ```
 
 ```
-sudo /etc/init.d/postgres start
+sudo /etc/init.d/postgresql start
 ```
 
 # Documentation
