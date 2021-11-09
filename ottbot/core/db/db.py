@@ -12,7 +12,7 @@ class AsyncPGDatabase:
 
     def __init__(self) -> None:
         self.calls: int = 0
-        self.db: str = "ottbot"
+        self.db: str = Config["DB_NAME"]
         self.host: str = "127.0.0.1"
         self.user: str = Config["PG_USERNAME"]
         self.password: str = Config["PG_PASSWORD"]

@@ -62,3 +62,6 @@ sudo /etc/init.d/postgresql start
 # Repos
 
 https://github.com/tandemdude/rtfm-botto
+https://gitlab.com/aster.codes/vegas2/-/tree/main
+https://github.com/Jonxslays/Jonxhikari
+https://github.com/FasterSpeeding/Reinhard

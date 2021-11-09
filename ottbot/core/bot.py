@@ -207,6 +207,7 @@ class OttBot(hikari.GatewayBot, IBot):
         """Runs before bot is connected. Blocks on_started until complete."""
 
         logging.info("Connecting to redis server")
+        await self.pool.connect()
         await self.init_cache()
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:

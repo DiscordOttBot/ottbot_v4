@@ -89,3 +89,18 @@ async def cmd_waitdfor(
         ),
     )
     await ctx.respond(f"{event.author.mention} said {event.content}")
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("testdb", "test that the bot's database is working")
+async def cmd_test_db(
+    ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)
+) -> None:
+    await bot.pool.execute(
+        "INSERT INTO users (id) VALUES ($1)",
+        ctx.author.id,
+    )
+    [id_] = await bot.pool.row("SELECT * FROM users WHERE id = $1", ctx.author.id)
+    usr = await bot.rest.fetch_user(id_)
+    await ctx.respond(usr.username)
+    await bot.pool.execute("DELETE FROM users WHERE id = $1", ctx.author.id)
