@@ -29,7 +29,7 @@ class ConfigMeta(type):
             "float": float,
             "file": lambda x: pathlib.Path(x).read_text().strip("\n"),
             "str": str,
-            "set": lambda x: set([cls._resolve_value(e.strip()) for e in x.split(",")]),
+            "set": lambda x: set([cls._parse_env_var(e.strip()) for e in x.split(",")]),
         }
         return _types[(v := value.split(":", maxsplit=1))[0]](v[1])
 
