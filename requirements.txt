@@ -15,7 +15,6 @@ asyncpg
 aiofiles
 psutil
 distro
-platform
 
 # REST API
 fastapi

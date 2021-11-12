@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from platform import python_version
 
 import distro
@@ -9,7 +9,6 @@ from psutil import Process, virtual_memory
 
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
-from ottbot.core.utils.lines import Lines
 
 component, load_component, unload_component = build_loaders()
 
@@ -81,7 +80,7 @@ async def cmd_stats(
         (
             "Database calls since uptime",
             f"```{bot.pool.calls:,} ({bot.pool.calls / (uptime.total_seconds() / 60):,.6f}"
-            + f" / minute)```",
+            + " / minute)```",
             False,
         ),
     ]

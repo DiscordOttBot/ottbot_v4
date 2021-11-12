@@ -122,4 +122,3 @@ async def cmd_button(ctx: tanjun.abc.SlashContext):
     )
 
     await ctx.respond("buttons", component=button)
-

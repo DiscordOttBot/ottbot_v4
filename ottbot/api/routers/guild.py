@@ -1,5 +1,3 @@
-import asyncio
-
 import hikari
 import requests
 from fastapi import status
@@ -29,7 +27,7 @@ async def get_all():
     if r.status_code == 200:
         return r.json()
     else:
-        return {"error": f"{r.status_code}" }
+        return {"error": f"{r.status_code}"}
 
     # guilds = router.bot.rest.fetch_my_guilds()
     # print(guilds)

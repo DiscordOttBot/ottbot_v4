@@ -1,5 +1,5 @@
 [flake8]
-ignore = W503
+ignore = W503, E203
 max-complexity = 20
 # Technically this is 120, but black has a policy of "1 or 2 over is fine if it is tidier", so we have to raise this.
 max-function-length = 130
