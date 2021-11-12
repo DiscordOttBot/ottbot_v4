@@ -565,12 +565,15 @@ async def publish_to_channel(
             found_channel = channel
             break
 
-    embed_message = await found_channel.send(
-        content=content_str, embed=client.metadata["embed"]
-    )
+    if found_channel is not None:
+        embed_message = await found_channel.send(
+            content=content_str, embed=client.metadata["embed"]
+        )
 
-    if client.metadata["pin"]:
-        await found_channel.pin_message(embed_message)
+        if client.metadata["pin"]:
+            await found_channel.pin_message(embed_message)
+    else:
+        raise ValueError(f"Channel not found in {[repr(c) for c in channels]}")
 
 
 @tanjun.as_loader

@@ -4,7 +4,6 @@ import os
 import typing as t
 
 import hikari
-from ottbot.core.utils.lines import Lines
 import sake
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from hikari import presences
@@ -20,6 +19,7 @@ from ottbot.core.utils import (
     HikariFormatter,
 )
 from ottbot.core.utils.funcs import parse_log_level
+from ottbot.core.utils.lines import Lines
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[
