@@ -1,5 +1,6 @@
 import os
 import pathlib
+import traceback
 import typing as t
 
 import dotenv
@@ -7,36 +8,73 @@ import dotenv
 dotenv.load_dotenv()
 
 T = t.TypeVar("T")
+S = t.TypeVar("S")
 
-class ConfigMeta(type):
-    def __getitem__(cls, tup: tuple[str, T]) -> T:
-        name, typ = cls._parse_tuple(tup)
-        return typ(cls._parse_env_var(os.environ[name], typ))
 
-    def __getattr__(cls, name):
-        return cls.__getitem__(name)
+class ConfigMeta(type, t.Generic[T]):
+    """Metaclass for extracting environment variables"""
 
-    def _parse_tuple(cls, tup) -> tuple[str, t.Callable[[t.Any], T]]:
-        if len(tup) == 1:
-            return (tup[0], str)
-        else:
-            return (tup[0], tup[1])
-
-    def _parse_env_var(cls, value, typ: t.Callable[[t.Any], T]) -> T:
-        _types: dict[str, t.Callable[..., t.Any]] = {
+    def _resolve_value(cls, value: str):
+        """Type casts values from a string
+        Example:
+            str:Discord_bot_token -> "Discord_bot_token"
+        """
+        _types: dict[str, t.Callable[...,]] = {
             "bool": bool,
             "int": int,
             "float": float,
             "file": lambda x: pathlib.Path(x).read_text().strip("\n"),
             "str": str,
-            "set": lambda x: set([cls._parse_env_var(e.strip()) for e in x.split(",")]),
+            "set": lambda x: set([cls._resolve_value(e.strip()) for e in x.split(",")]),
         }
         return _types[(v := value.split(":", maxsplit=1))[0]](v[1])
 
+    def _resolve_key(cls, key: str):
+        """Reads environment variable from machine or .env file. In case of type casting,
+        it will call cls._resolve_value(key)"""
+        try:
+            return cls._resolve_key(os.environ[key])
+        except Exception:  # value contains ":" and needs to be type casted
+            return cls._resolve_value(key)
+
+    def __getattr__(cls, name: str):
+        try:
+            return cls._resolve_key(name)
+        except KeyError:
+            traceback.print_exc()
+            raise AttributeError(f"{name} is not a key in config.") from None
+
+    @t.overload
+    def __getitem__(cls, key: str) -> str:
+        ...
+
+    @t.overload
+    def __getitem__(cls, key: tuple[str, t.Callable[[t.Any], T]]) -> T:
+        ...
+
+    def __getitem__(cls, key: tuple[str, t.Callable[[t.Any], T]] | str) -> T | str:
+        if isinstance(key, tuple) and len(key) == 2:  # type specified
+            if isinstance(key[1], list):  # type is as set
+                # set logic
+                print("SET")
+                return
+            return key[1](cls.__getattr__(key[0]))
+        elif isinstance(key, str):  # No type specified
+            return str(cls.__getattr__(key[0]))
+
 
 class Config(metaclass=ConfigMeta):
-    """Second config class"""
+    """
+    Class for accessing environment variables on the machine or .env file.
+
+    Examples:
+    `Config.TOKEN`
+    `Config["TOKEN"]`
+    """
+
+    ...
 
 
+print(Config["TOKEN", str])
 print(Config["DB_PORT", int])
-print(type(Config["DB_PORT", int]))
+print(Config["OWNER_IDS", [int]])
