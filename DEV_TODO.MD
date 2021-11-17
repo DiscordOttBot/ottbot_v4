@@ -2,16 +2,17 @@
 
 ## Immediate
 
+- [ ] mypy (why does it always break)
+
+- [ ] Yuyo client
 - [ ] Decide on command (file) structure
-  - maybe wait until command groups come out 
+  - maybe wait until command groups come out
 - [ ] fix redis
-- [ ] make example commands w/ buttons
+- [x] make example commands w/ buttons
 - [ ] look into db code (orm)
 - [ ] dashboard
 - [ ] stream status (btc, eth, ...)
 - [x] reload command
-
-
 
 ## Soon
 

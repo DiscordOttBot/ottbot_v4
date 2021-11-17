@@ -8,7 +8,6 @@ import dotenv
 dotenv.load_dotenv()
 
 T = t.TypeVar("T")
-S = t.TypeVar("S")
 
 
 class ConfigMeta(type, t.Generic[T]):
@@ -19,7 +18,7 @@ class ConfigMeta(type, t.Generic[T]):
         Example:
             str:Discord_bot_token -> "Discord_bot_token"
         """
-        _types: dict[str, t.Callable[...,]] = {
+        _types: dict[str, t.Callable[..., t.Any]] = {
             "bool": bool,
             "int": int,
             "float": float,
@@ -52,15 +51,27 @@ class ConfigMeta(type, t.Generic[T]):
     def __getitem__(cls, key: tuple[str, t.Callable[[t.Any], T]]) -> T:
         ...
 
-    def __getitem__(cls, key: tuple[str, t.Callable[[t.Any], T]] | str) -> T | str:
+    @t.overload
+    def __getitem__(cls, key: tuple[str, list[t.Callable[[t.Any], T]]]) -> set[T]:
+        ...
+
+    def __getitem__(
+        cls,
+        key: str
+        | tuple[str, t.Callable[[t.Any], T]]
+        | tuple[str, list[t.Callable[[t.Any], T]]],
+    ) -> str | T | set[T]:
         if isinstance(key, tuple) and len(key) == 2:  # type specified
             if isinstance(key[1], list):  # type is as set
                 # set logic
                 print("SET")
-                return
+                return set()
             return key[1](cls.__getattr__(key[0]))
         elif isinstance(key, str):  # No type specified
             return str(cls.__getattr__(key[0]))
+        raise ValueError(
+            f"Usage: Config['ENVVAR'], Config['ENVVAR', type], Config['ENVVAR', [type]]. Invalid key: {key!r}"
+        )
 
 
 class Config(metaclass=ConfigMeta):
