@@ -34,16 +34,12 @@ class Embeds(IEmbed):
         self.thumbnail: ResourceishT = kwargs.get("thumbnail")
         self.image: ResourceishT = kwargs.get("image")
         self.color: t.Optional[hikari.Colorish] = kwargs.get("color")
-        self.time: datetime.datetime = kwargs.get(
-            "timestamp", datetime.datetime.now().astimezone()
-        )
+        self.time: datetime.datetime = kwargs.get("timestamp", datetime.datetime.now().astimezone())
 
     def _construct(self) -> hikari.Embed:
         """Construct base embed"""
 
-        if isinstance(self._ctx, tanjun.abc.Context) or isinstance(
-            self._ctx, lightbulb.Context
-        ):
+        if isinstance(self._ctx, tanjun.abc.Context) or isinstance(self._ctx, lightbulb.Context):
             embed = hikari.Embed(
                 title=self.title,
                 description=self.desc,
@@ -52,26 +48,18 @@ class Embeds(IEmbed):
             )
             embed.set_thumbnail(self.thumbnail)
             embed.set_image(self.image)
-            embed.set_author(
-                name=self.header, url=self.header_url, icon=self.header_icon
-            )
+            embed.set_author(name=self.header, url=self.header_url, icon=self.header_icon)
 
             embed.set_footer(
                 text=(
                     None
                     if self.footer == ESCAPE_NAME
-                    else (
-                        self.footer or f"Invoked by: {self._ctx.author.username}"
-                        if self._ctx is not None
-                        else ""
-                    )
+                    else (self.footer or f"Invoked by: {self._ctx.author.username}" if self._ctx is not None else "")
                 ),
                 icon=(
                     None
                     if self.footer == ESCAPE_NAME
-                    else (
-                        self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url)  # type: ignore
-                    )
+                    else (self._ctx.author.avatar_url or (self._ctx.client.bot.get_me().avatar_url))  # type: ignore
                 ),
             )
 

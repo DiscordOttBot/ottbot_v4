@@ -20,13 +20,11 @@ class MetaFoo(type, t.Generic[T]):
         ...
 
     # def __getitem__(cls, key: t.Any) -> t.Any:
-        # return key
+    # return key
 
     def __getitem__(
         cls,
-        key: str
-        | tuple[str, t.Callable[[t.Any], T]]
-        | tuple[str, list[t.Callable[[t.Any], T]]],
+        key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, list[t.Callable[[t.Any], T]]],
     ) -> str | T | set[T]:
         if isinstance(key, tuple) and len(key) == 2:  # type specified
             if isinstance(key[1], list):  # type is as set
@@ -42,8 +40,10 @@ class MetaFoo(type, t.Generic[T]):
             f"Usage: Config['ENVVAR'], Config['ENVVAR', type], Config['ENVVAR', [type]]. Invalid key: {key!r}"
         )
 
+
 class Foo(metaclass=MetaFoo):
     ...
+
 
 # f: Foo = Foo()
 print(Foo.__getitem__)
@@ -57,4 +57,3 @@ print("---")
 
 print(Foo["1", [int]])
 print((f := Foo.__getitem__(("1", [int]))), type(f), type(f.copy().pop()))
-

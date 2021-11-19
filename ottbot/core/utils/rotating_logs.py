@@ -78,12 +78,8 @@ class HikariFormatter(logging.Formatter):
 
 
 if __name__ == "__main__":
-    trfh = BetterTimedRotatingFileHandler(
-        os.path.join(".", "logs")
-    )  # set logging dir to "./logs"
-    ff = logging.Formatter(
-        "[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-    )
+    trfh = BetterTimedRotatingFileHandler(os.path.join(".", "logs"))  # set logging dir to "./logs"
+    ff = logging.Formatter("[%(asctime)s] %(levelname)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     trfh.setFormatter(ff)
 
     logger = logging.getLogger(__name__)

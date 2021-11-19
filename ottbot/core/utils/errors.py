@@ -29,9 +29,7 @@ class Errors:
         desc: str = f"❌ {message}"
 
         if ctx.client.embeds is not None:
-            embed: hikari.Embed = ctx.client.embeds.build(
-                ctx=ctx, description=desc, footer="None"
-            )
+            embed: hikari.Embed = ctx.client.embeds.build(ctx=ctx, description=desc, footer="None")
 
             return embed
         else:
@@ -47,13 +45,9 @@ class Errors:
         print(exc)
         raise exc
 
-    async def parse_tanjun(
-        self, exc: t.Union[tanjun.CommandError, Exception], ctx: tanjun.abc.Context
-    ) -> None:
+    async def parse_tanjun(self, exc: t.Union[tanjun.CommandError, Exception], ctx: tanjun.abc.Context) -> None:
         """Parse tanjun errors"""
-        if isinstance(
-            exc, (tanjun.NotEnoughArgumentsError, tanjun.TooManyArgumentsError)
-        ):
+        if isinstance(exc, (tanjun.NotEnoughArgumentsError, tanjun.TooManyArgumentsError)):
             await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))  # type: ignore
             raise exc
 

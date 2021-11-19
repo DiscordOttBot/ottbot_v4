@@ -57,9 +57,7 @@ class ConfigMeta(type, t.Generic[T]):
 
     def __getitem__(
         cls,
-        key: str
-        | tuple[str, t.Callable[[t.Any], T]]
-        | tuple[str, list[t.Callable[[t.Any], T]]],
+        key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, list[t.Callable[[t.Any], T]]],
     ) -> str | T | set[T]:
         if isinstance(key, tuple) and len(key) == 2:  # type specified
             if isinstance(key[1], list):  # type is as set
@@ -86,6 +84,6 @@ class Config(metaclass=ConfigMeta):
     ...
 
 
-print(Config["TOKEN", str])
+print(Config["TOKEN", str][10:])
 print(Config["DB_PORT", int])
 print(Config["OWNER_IDS", [int]])

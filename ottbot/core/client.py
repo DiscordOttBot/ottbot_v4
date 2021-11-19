@@ -48,12 +48,8 @@ class OttClient(tanjun.Client, IClient):
             hikari.SnowflakeishOr[hikari.PartialGuild],
             bool,
         ] = False,
-        set_global_commands: t.Union[
-            hikari.SnowflakeishOr[hikari.PartialGuild], bool
-        ] = False,
-        command_ids: t.Optional[
-            collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]
-        ] = None,
+        set_global_commands: t.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool] = False,
+        command_ids: t.Optional[collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]] = None,
     ) -> "OttClient":
         return (
             cls(
@@ -82,12 +78,8 @@ class OttClient(tanjun.Client, IClient):
             hikari.SnowflakeishOr[hikari.PartialGuild],
             bool,
         ] = False,
-        set_global_commands: t.Union[
-            hikari.SnowflakeishOr[hikari.PartialGuild], bool
-        ] = False,
-        command_ids: t.Optional[
-            collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]
-        ] = None,
+        set_global_commands: t.Union[hikari.SnowflakeishOr[hikari.PartialGuild], bool] = False,
+        command_ids: t.Optional[collections.Mapping[str, hikari.SnowflakeishOr[hikari.Command]]] = None,
     ) -> "OttClient":
         return cls(
             rest=bot.rest,

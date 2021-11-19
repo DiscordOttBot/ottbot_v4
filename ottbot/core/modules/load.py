@@ -28,9 +28,7 @@ async def cmd_unload(
     module: str,
     bot: OttBot = tanjun.injected(type=OttBot),
 ) -> None:
-    modules = get_list_of_files(
-        "ottbot/core/modules/" + module, ignore_underscores=False
-    )
+    modules = get_list_of_files("ottbot/core/modules/" + module, ignore_underscores=False)
     for m in modules:
         try:
             bot.client.unload_modules(m)

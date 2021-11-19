@@ -31,16 +31,10 @@ async def cmd_test2(ctx: tanjun.abc.SlashContext) -> None:
 
 @component.with_slash_command
 @tanjun.with_int_slash_option("number", "The number of dice to roll (max: 25).")
-@tanjun.with_int_slash_option(
-    "sides", "The number of sides each die will have.", default=6
-)
-@tanjun.with_int_slash_option(
-    "bonus", "A fixed number to add to the total roll.", default=0
-)
+@tanjun.with_int_slash_option("sides", "The number of sides each die will have.", default=6)
+@tanjun.with_int_slash_option("bonus", "A fixed number to add to the total roll.", default=0)
 @tanjun.as_slash_command("dice", "Roll one or more dice.")
-async def cmd_dice(
-    ctx: tanjun.abc.SlashContext, number: int, sides: int, bonus: int
-) -> None:
+async def cmd_dice(ctx: tanjun.abc.SlashContext, number: int, sides: int, bonus: int) -> None:
     if number > 25:
         await ctx.respond("No more than 25 dice can be rolled at once.")
         return
@@ -51,9 +45,7 @@ async def cmd_dice(
 
     rolls: list[int] = [random.randint(1, sides) for _ in range(number)]
     await ctx.respond(
-        " + ".join(f"{r}" for r in rolls)
-        + (f" + {bonus} (bonus)" if bonus else "")
-        + f" = **{sum(rolls) + bonus:,}**"
+        " + ".join(f"{r}" for r in rolls) + (f" + {bonus} (bonus)" if bonus else "") + f" = **{sum(rolls) + bonus:,}**"
     )
 
 
@@ -93,9 +85,7 @@ async def cmd_waitdfor(
 
 @component.with_slash_command
 @tanjun.as_slash_command("testdb", "test that the bot's database is working")
-async def cmd_test_db(
-    ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)
-) -> None:
+async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     await bot.pool.execute(
         "INSERT INTO users (id) VALUES ($1)",
         ctx.author.id,

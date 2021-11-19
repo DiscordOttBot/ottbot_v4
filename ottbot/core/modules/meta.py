@@ -15,9 +15,7 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("ping", "Ping the bot to check if it's online")
-async def cmd_ping(
-    ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)
-) -> None:
+async def cmd_ping(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     before = time.time()
     msg = await ctx.respond("Pong!", ensure_result=True)
     after = time.time()
@@ -29,9 +27,7 @@ async def cmd_ping(
 
 @component.with_slash_command
 @tanjun.as_slash_command("stats", "Display stats about the bot")
-async def cmd_stats(
-    ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)
-):
+async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)):
     bot.lines.count()
     proc = Process()
     with proc.oneshot():
@@ -79,8 +75,7 @@ async def cmd_stats(
         ("CPU time", f"```{cpu_time[:-4]}```", True),
         (
             "Database calls since uptime",
-            f"```{bot.pool.calls:,} ({bot.pool.calls / (uptime.total_seconds() / 60):,.6f}"
-            + " / minute)```",
+            f"```{bot.pool.calls:,} ({bot.pool.calls / (uptime.total_seconds() / 60):,.6f}" + " / minute)```",
             False,
         ),
     ]

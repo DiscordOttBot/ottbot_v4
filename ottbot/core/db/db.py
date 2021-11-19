@@ -49,18 +49,14 @@ class AsyncPGDatabase:
         return wrapper
 
     @with_connection
-    async def fetch(
-        self, q: str, *values: t.Any, conn: asyncpg.Connection
-    ) -> t.Optional[t.Any]:
+    async def fetch(self, q: str, *values: t.Any, conn: asyncpg.Connection) -> t.Optional[t.Any]:
         """Read 1 field of applicable data"""
 
         query = await conn.prepare(q)
         return await query.fetchval(*values)
 
     @with_connection
-    async def row(
-        self, q: str, *values: t.Any, conn: asyncpg.Connection
-    ) -> t.Optional[t.List[t.Any]]:
+    async def row(self, q: str, *values: t.Any, conn: asyncpg.Connection) -> t.Optional[t.List[t.Any]]:
         """Read 1 row of applicable data"""
 
         query = await conn.prepare(q)
@@ -70,9 +66,7 @@ class AsyncPGDatabase:
         return None
 
     @with_connection
-    async def rows(
-        self, q: str, *values: t.Any, conn: asyncpg.Connection
-    ) -> t.Optional[t.List[t.Iterable[t.Any]]]:
+    async def rows(self, q: str, *values: t.Any, conn: asyncpg.Connection) -> t.Optional[t.List[t.Iterable[t.Any]]]:
         """Read all rows of applicable data"""
 
         query = await conn.prepare(q)
@@ -82,9 +76,7 @@ class AsyncPGDatabase:
         return None
 
     @with_connection
-    async def column(
-        self, q: str, *values: t.Any, conn: asyncpg.Connection
-    ) -> t.List[t.Any]:
+    async def column(self, q: str, *values: t.Any, conn: asyncpg.Connection) -> t.List[t.Any]:
         """Read a single column of applicable data."""
         query = await conn.prepare(q)
         return [r[0] for r in await query.fetch(*values)]
@@ -96,9 +88,7 @@ class AsyncPGDatabase:
         await query.fetch(*values)
 
     @with_connection
-    async def executemany(
-        self, q: str, values: t.List[t.Iterable[t.Any]], conn: asyncpg.Connection
-    ) -> None:
+    async def executemany(self, q: str, values: t.List[t.Iterable[t.Any]], conn: asyncpg.Connection) -> None:
         """Execute a write operation for each set of values"""
         query = await conn.prepare(q)
         await query.executemany(values)

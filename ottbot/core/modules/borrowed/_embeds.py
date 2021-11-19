@@ -48,9 +48,7 @@ EMBED_MENU_FULL = EMBED_MENU | EMBED_OK
 component = tanjun.Component()
 
 embed = component.with_slash_command(  # pylint: disable=C0103
-    tanjun.slash_command_group(
-        "embed", "Work with Embeds! (Requires Can Embed)", default_to_ephemeral=False
-    )
+    tanjun.slash_command_group("embed", "Work with Embeds! (Requires Can Embed)", default_to_ephemeral=False)
 )
 
 
@@ -146,22 +144,16 @@ async def embed_builder_loop(
                     await ctx.edit_initial_response(content="Exiting!", components=[])
                     return
 
-                await event.interaction.edit_initial_response(
-                    "Event processed. This can be dismissed."
-                )
+                await event.interaction.edit_initial_response("Event processed. This can be dismissed.")
 
-                await globals()[f"{selected['title'].lower().replace(' ', '_')}"](
-                    ctx, bot, client
-                )
+                await globals()[f"{selected['title'].lower().replace(' ', '_')}"](ctx, bot, client)
                 await ctx.edit_initial_response(
                     "Click/Tap your choice below, then watch the embed update!",
                     embed=client.metadata["embed"],
                     components=[*menu],
                 )
     except asyncio.TimeoutError:
-        await ctx.edit_initial_response(
-            "Waited for 60 seconds... Timeout.", embed=None, components=[]
-        )
+        await ctx.edit_initial_response("Waited for 60 seconds... Timeout.", embed=None, components=[])
 
 
 def build_menu(ctx: SlashContext) -> list[Any]:
@@ -178,12 +170,7 @@ def build_menu(ctx: SlashContext) -> list[Any]:
     last_menu_item = list(EMBED_MENU)[-1]
     row = ctx.rest.build_action_row()
     for emote, options in EMBED_MENU.items():
-        (
-            row.add_button(options["style"], emote)
-            .set_label(options["title"])
-            .set_emoji(emote)
-            .add_to_container()
-        )
+        (row.add_button(options["style"], emote).set_label(options["title"]).set_emoji(emote).add_to_container())
         menu_count += 1
         if menu_count == 5 or last_menu_item == emote:
             menu.append(row)
@@ -213,9 +200,7 @@ async def title(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client
     event = await collect_response(ctx)
     embed_dict["title"] = event.content[:200]
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
-    await ctx.edit_initial_response(
-        content="Title updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Title updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
@@ -226,14 +211,10 @@ async def description(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.
     """
     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata["embed"])
     await ctx.edit_initial_response(content="Set Description for embed:", components=[])
-    event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 4096
-    )
+    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
     embed_dict["description"] = event.content[:4090]
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
-    await ctx.edit_initial_response(
-        content="Description Updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Description Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
@@ -243,27 +224,19 @@ async def change_icon(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Cl
     Adds an image as a thumbnail on an Embed.
     """
     await ctx.edit_initial_response(content="Set Icon for embed:", components=[])
-    event = await collect_response(
-        ctx, validator=lambda _, event: event.message.content.startswith("http")
-    )
+    event = await collect_response(ctx, validator=lambda _, event: event.message.content.startswith("http"))
     client.metadata["embed"].set_thumbnail(event.content)
-    await ctx.edit_initial_response(
-        content="Thumbnail Updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Thumbnail Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
-async def add_server_logo(
-    ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client
-):
+async def add_server_logo(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
     """
     Helper function for Embed Builder.
     Adds the Server Logo as a thumbnail on an Embed.
     """
     client.metadata["embed"].set_thumbnail((await ctx.fetch_guild()).icon_url)
-    await ctx.edit_initial_response(
-        content="Logo Updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Logo Updated!", embed=client.metadata["embed"], components=[])
 
 
 async def image(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
@@ -272,13 +245,9 @@ async def image(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
     Adds/modifies the image on an Embed.
     """
     await ctx.edit_initial_response(content="Set Image for embed:", components=[])
-    event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 2000
-    )
+    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 2000)
     client.metadata["embed"].set_image(event.content)
-    await ctx.edit_initial_response(
-        content="Image Updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Image Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
@@ -288,14 +257,10 @@ async def footer(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client)
     Adds/modifies a footer on an Embed.
     """
     await ctx.edit_initial_response(content="Set Footer for embed:", components=[])
-    event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 2000
-    )
+    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 2000)
     guild = await ctx.fetch_guild()
     client.metadata["embed"].set_footer(text=event.content, icon=guild.icon_url)
-    await ctx.edit_initial_response(
-        content="Footer Updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Footer Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
@@ -307,43 +272,25 @@ async def add_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Clie
     field_name = ""
     field_body = ""
     field_inline = False
-    await ctx.edit_initial_response(
-        "What would you like the Field Title to be?", components=[]
-    )
-    name_event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 256
-    )
+    await ctx.edit_initial_response("What would you like the Field Title to be?", components=[])
+    name_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 256)
     field_name = name_event.content
-    await ctx.edit_initial_response(
-        "What would you like the Field Body to be?", components=[]
-    )
-    body_event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 4096
-    )
+    await ctx.edit_initial_response("What would you like the Field Body to be?", components=[])
+    body_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
     field_body = body_event.content
-    await ctx.edit_initial_response(
-        "Would you like this to be inline? (y/n)", components=[]
-    )
-    inline_event = await collect_response(
-        ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"]
-    )
+    await ctx.edit_initial_response("Would you like this to be inline? (y/n)", components=[])
+    inline_event = await collect_response(ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"])
     if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
         field_inline = True
     elif inline_event.content.lower() in ["no", "n", "false", "f"]:
         field_inline = False
     else:
-        await ctx.edit_initial_response(
-            "Didn't understand that answer, assuming `No`.", embed=None, components=[]
-        )
+        await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
     await name_event.message.delete()
     await body_event.message.delete()
     await inline_event.message.delete()
-    client.metadata["embed"].add_field(
-        name=field_name, value=field_body, inline=field_inline
-    )
-    await ctx.edit_initial_response(
-        content="Field Added!", embed=client.metadata["embed"], components=[]
-    )
+    client.metadata["embed"].add_field(name=field_name, value=field_body, inline=field_inline)
+    await ctx.edit_initial_response(content="Field Added!", embed=client.metadata["embed"], components=[])
 
 
 async def change_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
@@ -366,43 +313,25 @@ async def change_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.C
     )
     field_idx_event = await collect_response(ctx, validator=is_int)
     field_idx = int(field_idx_event.content) - 1
-    await ctx.edit_initial_response(
-        "What would you like the Field Title to be?", components=[]
-    )
-    name_event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 256
-    )
+    await ctx.edit_initial_response("What would you like the Field Title to be?", components=[])
+    name_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 256)
     field_name = name_event.content
-    await ctx.edit_initial_response(
-        "What would you like the Field Body to be?", components=[]
-    )
-    body_event = await collect_response(
-        ctx, validator=lambda _, event: len(event.message.content) < 4096
-    )
+    await ctx.edit_initial_response("What would you like the Field Body to be?", components=[])
+    body_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
     field_body = body_event.content
-    await ctx.edit_initial_response(
-        "Would you like this to be inline? (y/n)", components=[]
-    )
-    inline_event = await collect_response(
-        ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"]
-    )
+    await ctx.edit_initial_response("Would you like this to be inline? (y/n)", components=[])
+    inline_event = await collect_response(ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"])
     if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
         field_inline = True
     elif inline_event.content.lower() in ["no", "n", "false", "f"]:
         field_inline = False
     else:
-        await ctx.edit_initial_response(
-            "Didn't understand that answer, assuming `No`.", embed=None, components=[]
-        )
+        await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
     await name_event.message.delete()
     await body_event.message.delete()
     await inline_event.message.delete()
-    client.metadata["embed"].edit_field(
-        field_idx, field_name, field_body, inline=field_inline
-    )
-    await ctx.edit_initial_response(
-        content="Field Added!", embed=client.metadata["embed"], components=[]
-    )
+    client.metadata["embed"].edit_field(field_idx, field_name, field_body, inline=field_inline)
+    await ctx.edit_initial_response(content="Field Added!", embed=client.metadata["embed"], components=[])
 
 
 async def remove_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
@@ -435,23 +364,17 @@ async def color(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client
     event = await collect_response(ctx)
     embed_dict["color"] = Color(event.content)
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
-    await ctx.edit_initial_response(
-        content="Color updated!", embed=client.metadata["embed"], components=[]
-    )
+    await ctx.edit_initial_response(content="Color updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
 
 
-async def change_text_on_publish(
-    ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client
-):
+async def change_text_on_publish(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
     """
     Helper function for Embed Builder.
     Sets current embed content text for publish.
     """
     await ctx.edit_initial_response(content="Set Text for Publish:", components=[])
-    event = await collect_response(
-        ctx, validator=lambda ctx, event: len(event.content) < 2000
-    )
+    event = await collect_response(ctx, validator=lambda ctx, event: len(event.content) < 2000)
     client.metadata["text"] = event.content
     await ctx.edit_initial_response(content="Text for Publish updated!")
     await event.message.delete()
@@ -473,13 +396,9 @@ async def add_ping(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Cli
     Adds a role to ping on publish.
     """
     while True:
-        await ctx.edit_initial_response(
-            content="Add Ping for Publish. To return to menu, send ❌.", components=[]
-        )
+        await ctx.edit_initial_response(content="Add Ping for Publish. To return to menu, send ❌.", components=[])
         try:
-            async with bot.stream(GuildMessageCreateEvent, timeout=60).filter(
-                ("author.id", ctx.author.id)
-            ) as stream:
+            async with bot.stream(GuildMessageCreateEvent, timeout=60).filter(("author.id", ctx.author.id)) as stream:
                 async for event in stream:
                     if event.content == "❌":
                         await event.message.delete()
@@ -494,14 +413,10 @@ async def add_ping(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Cli
                             break
 
                     if not found_role:
-                        await ctx.edit_initial_response(
-                            content=f"Role `{event.content}` not found! Try again?"
-                        )
+                        await ctx.edit_initial_response(content=f"Role `{event.content}` not found! Try again?")
                     else:
                         client.metadata["roles"].append(found_role)
-                        await ctx.edit_initial_response(
-                            content=f"Added {found_role.mention} to ping list for Publish!"
-                        )
+                        await ctx.edit_initial_response(content=f"Added {found_role.mention} to ping list for Publish!")
 
                     await event.message.delete()
                     await asyncio.sleep(5)
@@ -510,9 +425,7 @@ async def add_ping(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Cli
                         components=[],
                     )
         except asyncio.TimeoutError:
-            await ctx.edit_initial_response(
-                content="Waited for 60 seconds... Timed out."
-            )
+            await ctx.edit_initial_response(content="Waited for 60 seconds... Timed out.")
             return None
 
 
@@ -535,9 +448,7 @@ async def show_status(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Cl
     await asyncio.sleep(5)
 
 
-async def publish_to_channel(
-    ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client
-):
+async def publish_to_channel(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
     """
     Helper function for Embed Builder.
     Publishes embeds to a a provided channel.
@@ -549,9 +460,7 @@ async def publish_to_channel(
     if content_str == "":
         content_str = "-"
 
-    await ctx.edit_initial_response(
-        content="What channel would you like to Publish to:", components=[]
-    )
+    await ctx.edit_initial_response(content="What channel would you like to Publish to:", components=[])
 
     event = await collect_response(ctx, validator=ensure_guild_channel_validator)
 
@@ -566,9 +475,7 @@ async def publish_to_channel(
             break
 
     if found_channel is not None:
-        embed_message = await found_channel.send(
-            content=content_str, embed=client.metadata["embed"]
-        )
+        embed_message = await found_channel.send(content=content_str, embed=client.metadata["embed"])
 
         if client.metadata["pin"]:
             await found_channel.pin_message(embed_message)

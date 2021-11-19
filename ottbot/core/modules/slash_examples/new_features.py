@@ -14,9 +14,7 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("paginate", "Paginate through a list of options!")
-async def command_paginate(
-    ctx: tanjun.abc.Context, bot: OttBot = tanjun.injected(type=OttBot)
-) -> None:
+async def command_paginate(ctx: tanjun.abc.Context, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     values: tuple[str, str, str, str, str, str] = (
         "Page 1",
         "Page 2",
@@ -67,9 +65,7 @@ async def command_paginate(
                     index = len(values) - 1
 
                 await ctx.edit_initial_response(values[index])
-                await event.interaction.create_initial_response(
-                    ResponseType.DEFERRED_MESSAGE_UPDATE, values[index]
-                )
+                await event.interaction.create_initial_response(ResponseType.DEFERRED_MESSAGE_UPDATE, values[index])
 
 
 @component.with_slash_command
@@ -83,20 +79,14 @@ async def cmd_nsfw(ctx: tanjun.abc.SlashContext) -> None:
 
 
 @component.with_slash_command
-@tanjun.with_str_slash_option(
-    "c", "A very important choice", choices=["lmao", "bababooey"]
-)
-@tanjun.as_slash_command(
-    "choice", "An example command where you have a dropdown choice menu"
-)
+@tanjun.with_str_slash_option("c", "A very important choice", choices=["lmao", "bababooey"])
+@tanjun.as_slash_command("choice", "An example command where you have a dropdown choice menu")
 async def cmd_choice(ctx: tanjun.abc.SlashContext, c: str) -> None:
     await ctx.respond(f"**{c}** was a good choice")
 
 
 @component.with_slash_command
-@tanjun.with_str_slash_option(
-    "message", "The message that will be repeated", default=""
-)
+@tanjun.with_str_slash_option("message", "The message that will be repeated", default="")
 @tanjun.as_slash_command("echo", "Echo the message back to the user")
 async def cmd_echo(
     ctx: tanjun.abc.SlashContext,
@@ -115,10 +105,7 @@ async def cmd_echo(
 @tanjun.as_slash_command("button", "A button")
 async def cmd_button(ctx: tanjun.abc.SlashContext):
     button: ActionRowBuilder = (
-        ctx.rest.build_action_row()
-        .add_button(ButtonStyle.PRIMARY, "+")
-        .set_label("+")
-        .add_to_container()
+        ctx.rest.build_action_row().add_button(ButtonStyle.PRIMARY, "+").set_label("+").add_to_container()
     )
 
     await ctx.respond("buttons", component=button)

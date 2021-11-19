@@ -1,5 +1,6 @@
-[tools.black]
+[tool.black]
 line-length = 120
+target-version = ['py310']
 
 [tool.pyright]
 pythonVersion="3.10"

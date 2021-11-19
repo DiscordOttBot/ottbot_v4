@@ -35,6 +35,4 @@ class APIWrapper(FastAPI, IAPIWrapper):
         if all([isinstance(r, APIRouter) for r in routers]):
             self.__routers = routers
         else:
-            raise TypeError(
-                f"Invalid list of routers: {routers}. All elements of the list must be of type APIRouter"
-            )
+            raise TypeError(f"Invalid list of routers: {routers}. All elements of the list must be of type APIRouter")

@@ -1,15 +1,17 @@
 from __future__ import annotations
+import builtins
 import typing as t
 from os import environ
 from pathlib import Path
 
 import dotenv
 
+T = t.TypeVar("T")
 
 dotenv.load_dotenv()
 
 
-class ConfigMeta(type):
+class ConfigMeta(type, t.Generic[T]):
     def resolve_value(cls, value: str) -> t.Callable[..., t.Any] | t.Any:
         _map: dict[str, t.Callable[..., t.Any]] = {
             "bool": bool,
@@ -34,12 +36,41 @@ class ConfigMeta(type):
         except KeyError:
             raise AttributeError(f"{name} is not a key in config.") from None
 
-    def __getitem__(cls, name: str) -> t.Callable[..., t.Any]:
-        return cls.__getattr__(name)
+    @t.overload
+    def __getitem__(cls, key: str) -> str:
+        ...
+
+    @t.overload
+    def __getitem__(cls, key: tuple[str, t.Callable[[t.Any], T]]) -> T:
+        ...
+
+    @t.overload
+    def __getitem__(cls, key: tuple[str, t.Type[set], t.Callable[[t.Any], T]]) -> set[T]:
+        ...
+
+    def __getitem__(
+        cls,
+        name: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, list[t.Callable[[t.Any], T]]],
+    ) -> str | T | set[T]:
+        match name:
+            case (var, cast):
+                return cast(cls.resolve_key(var))
+
+            case (var, builtins.set, cast):
+                return {cast(v) for v in cls.resolve_key(var)}
+            case _:
+                return name
+
+        # try:
+        #     return cls.resolve_key(name)
+        # except KeyError:
+        #     raise AttributeError(f"{name} is not a key in config.") from None
 
 
 class Config(metaclass=ConfigMeta):
     pass
 
 
-print((p := Config["DB_PORT"]), type(p))
+print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
+print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
+print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242

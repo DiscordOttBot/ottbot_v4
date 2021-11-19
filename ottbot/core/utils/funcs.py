@@ -30,11 +30,7 @@ def to_dict(obj) -> dict[str, str]:
 
 def build_loaders(
     checks: list = [],
-) -> tuple[
-    tanjun.Component,
-    t.Callable[[tanjun.Client], None],
-    t.Callable[[tanjun.Client], None],
-]:
+) -> tuple[tanjun.Component, t.Callable[[tanjun.Client], None], t.Callable[[tanjun.Client], None],]:
     """
     Creates function that load and unload a component.
 
@@ -99,9 +95,7 @@ def parse_log_level(level: t.Union[str, int]) -> int:
     raise ValueError(f"Invalid log level: {level}")
 
 
-def get_list_of_files(
-    dir_name: str, ignore_underscores: bool = True
-) -> list[pathlib.Path]:
+def get_list_of_files(dir_name: str, ignore_underscores: bool = True) -> list[pathlib.Path]:
     """
     Returns the partial path separated by '.'s of all the .py
     files in a given directory where the root is given directory.

@@ -86,9 +86,7 @@ class OttBot(hikari.GatewayBot, IBot):
         # TODO: Add database type dependency
 
     async def init_cache(self: _BotT):
-        cache: sake.redis.RedisCache = sake.redis.RedisCache(
-            self, None, address="redis://127.0.0.1"
-        )
+        cache: sake.redis.RedisCache = sake.redis.RedisCache(self, None, address="redis://127.0.0.1")
         try:
             await cache.open()
         except ConnectionRefusedError as e:
@@ -228,7 +226,5 @@ class OttBot(hikari.GatewayBot, IBot):
         """Runs after the bot has been shutdown"""
         ...
 
-    async def on_guild_available(
-        self: _BotT, event: hikari.GuildAvailableEvent
-    ) -> None:
+    async def on_guild_available(self: _BotT, event: hikari.GuildAvailableEvent) -> None:
         ...
