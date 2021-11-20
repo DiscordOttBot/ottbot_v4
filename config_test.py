@@ -1,9 +1,7 @@
-import os
-import dotenv
+# import builtins
 import typing as t
 
-T = t.TypeVar("T")
-G = t.TypeVar("G")
+T = t.TypeVar("T", bound="MetaFoo")
 
 
 class MetaFoo(type, t.Generic[T]):
@@ -16,44 +14,42 @@ class MetaFoo(type, t.Generic[T]):
         ...
 
     @t.overload
-    def __getitem__(cls, key: tuple[str, list[t.Callable[[t.Any], T]]]) -> set[T]:
+    def __getitem__(cls, key: tuple[str, t.Type[set], t.Callable[[t.Any], T]]) -> set[T]:
         ...
-
-    # def __getitem__(cls, key: t.Any) -> t.Any:
-    # return key
 
     def __getitem__(
         cls,
-        key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, list[t.Callable[[t.Any], T]]],
+        key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
     ) -> str | T | set[T]:
-        if isinstance(key, tuple) and len(key) == 2:  # type specified
-            if isinstance(key[1], list):  # type is as set
-                # set logic
-                return set([key[1][0](key[0])])
+        match key:
+            case (name, cast):
+                return cast(name)
 
-            return key[1](key[0])
+            case (name, set, cast):
+                return {cast(e) for e in name.split(",")}
 
-        elif isinstance(key, str):  # No type specified
-            return str(key)
-
-        raise ValueError(
-            f"Usage: Config['ENVVAR'], Config['ENVVAR', type], Config['ENVVAR', [type]]. Invalid key: {key!r}"
-        )
+            case _:
+                return str(key)
 
 
 class Foo(metaclass=MetaFoo):
     ...
 
 
-# f: Foo = Foo()
-print(Foo.__getitem__)
-print(Foo["1"])
-print((f := Foo.__getitem__("1")), type(f))
-print("---")
+if t.TYPE_CHECKING:
+    reveal_type(Foo["hello"])
+    reveal_type(Foo["123", int])
+    reveal_type(Foo["123,456,789", set, int])
+else:
+    print(Foo["hello"])  # "hello"
+    print((f := Foo.__getitem__("1")), type(f))  # "hello" <class 'str'>
+    print("---")
 
-print(Foo["1", int])
-print((f := Foo.__getitem__(("1", int))), type(f))
-print("---")
+    print(Foo["1", int])  # 1
+    print((f := Foo.__getitem__(("1", int))), type(f))  # 1 <class 'int'>
+    print("---")
 
-print(Foo["1", [int]])
-print((f := Foo.__getitem__(("1", [int]))), type(f), type(f.copy().pop()))
+    print(Foo["123,456,789", set, int])  # {123, 456, 789}
+    print(
+        (f := Foo.__getitem__(("1", set, int))), type(f), type(f.copy().pop())
+    )  # {123,356,789} <class 'set'> <class 'int'>

@@ -8,3 +8,5 @@ reportMissingImports=false
 reportInvalidTypeVarUse=false
 reportMissingModuleSource=false
 pythonPlatform="Linux"
+
+[tool.mypy]
