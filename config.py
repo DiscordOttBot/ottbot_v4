@@ -13,7 +13,7 @@ dotenv.load_dotenv()
 
 
 class ConfigMeta(type):
-    def resolve_value(cls, value: str) -> bool | int | float | str | set[t.Any]:
+    def resolve_value(cls, value: str) -> bool | int | float | str | dict | set[t.Any]:
 
         print(f"[resolve_value] {value}")
         _map: dict[str, t.Callable[..., t.Any]] = {
@@ -29,7 +29,7 @@ class ConfigMeta(type):
 
         return _map[(v := value.split(":", maxsplit=1))[0]](v[1])
 
-    def resolve_key(cls, key: str) -> bool | int | float | str | set[t.Any]:
+    def resolve_key(cls, key: str) -> bool | int | float | str | dict | set[t.Any]:
         print(f"[resolve_key] {key}")
         try:
             return cls.resolve_key(environ[key])
