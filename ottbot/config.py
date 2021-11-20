@@ -4,11 +4,12 @@ This file has been pre-checked with a static type checker, but mypy currently do
 TODO: Remove type: ignore when mypy supports `match case` syntax.
 """
 from __future__ import annotations
+
 import builtins
+import json
 import typing as t
 from os import environ
 from pathlib import Path
-import json
 
 import dotenv
 
@@ -38,7 +39,7 @@ class ConfigMeta(type):
         print(f"[resolve_key] {key}")
         try:
             return cls.resolve_key(environ[key])
-        except:
+        except KeyError:
             return cls.resolve_value(key)
 
     # def __getattr__(cls, name: str) -> T:
@@ -81,7 +82,7 @@ class Config(metaclass=ConfigMeta):
     pass
 
 
-if t.TYPE_CHECKING:
-    reveal_type(Config["DB_PORT"])
-    reveal_type(Config["DB_PORT", int])
-    reveal_type(Config["OWNER_IDS", set, int])
+# if t.TYPE_CHECKING:
+#     reveal_type(Config["DB_PORT"])
+#     reveal_type(Config["DB_PORT", int])
+#     reveal_type(Config["OWNER_IDS", set, int])

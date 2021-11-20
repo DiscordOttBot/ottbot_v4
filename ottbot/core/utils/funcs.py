@@ -30,7 +30,7 @@ def to_dict(obj) -> dict[str, str]:
 
 def build_loaders(
     checks: list = [],
-) -> tuple[tanjun.Component, t.Callable[[tanjun.Client], None], t.Callable[[tanjun.Client], None],]:
+) -> tuple[tanjun.Component, t.Callable[[tanjun.Client], None], t.Callable[[tanjun.Client], None]]:
     """
     Creates function that load and unload a component.
 
