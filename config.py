@@ -2,6 +2,7 @@ from __future__ import annotations
 import typing as t
 from os import environ
 from pathlib import Path
+import json
 
 import dotenv
 
@@ -10,8 +11,10 @@ T = t.TypeVar("T")
 dotenv.load_dotenv()
 
 
-class ConfigMeta(type, t.Generic[T]):
+class ConfigMeta(type):
     def resolve_value(cls, value: str) -> t.Callable[..., t.Any] | t.Any:
+
+        print(f"[resolve_value] {value}")
         _map: dict[str, t.Callable[..., t.Any]] = {
             "bool": bool,
             "int": int,
@@ -19,11 +22,22 @@ class ConfigMeta(type, t.Generic[T]):
             "file": lambda x: Path(x).read_text().strip("\n"),
             "str": str,
             "set": lambda x: set([cls.resolve_value(e.strip()) for e in x.split(",")]),
+            "json": lambda x: Path(x)
+            .read_text()
+            .strip("\n")
+            .replace("'", '"')
+            .replace("true", "True")
+            .replace("false", "False")
+            .replace("null", "None")
+            .replace("\n", "")
+            .replace("\t", "")
+            .replace("\r", ""),
         }
 
-        return _map[(v := value.split(":", maxsplit=1))[0]](v[1])
+        return _map[(v := value.split(":", maxsplit=1))[0].lower()](v[1])
 
     def resolve_key(cls, key: str) -> t.Callable[..., t.Any]:
+        print(f"[resolve_key] {key}")
         try:
             return cls.resolve_key(environ[key])
         except:
@@ -51,6 +65,7 @@ class ConfigMeta(type, t.Generic[T]):
         cls,
         name: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
     ) -> str | T | set[T]:
+        print(f"[__getitem__] {name}")
         match name:
             case (var, cast):
                 return t.cast(T, cast(cls.resolve_key(var)))
@@ -60,17 +75,19 @@ class ConfigMeta(type, t.Generic[T]):
                 return t.cast(set[T], {cast(v) for v in cls.resolve_key(var)})
 
             case _:
-                return name
+                return cls.resolve_key(name)
 
 
 class Config(metaclass=ConfigMeta):
     pass
+
 
 if t.TYPE_CHECKING:
     reveal_type(Config["DB_PORT"])
     reveal_type(Config["DB_PORT", int])
     reveal_type(Config["OWNER_IDS", set, int])
 else:
-    print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
-    print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
-    print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242
+    # print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
+    # print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
+    # print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242
+    print(Config["SAMPLE_JSON"])
