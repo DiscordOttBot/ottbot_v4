@@ -53,10 +53,12 @@ class ConfigMeta(type, t.Generic[T]):
     ) -> str | T | set[T]:
         match name:
             case (var, cast):
-                return cast(cls.resolve_key(var))
+                return t.cast(T, cast(cls.resolve_key(var)))
 
             case (var, set, cast):
-                return {cast(v) for v in cls.resolve_key(var)}
+
+                return t.cast(set[T], {cast(v) for v in cls.resolve_key(var)})
+
             case _:
                 return name
 
@@ -64,7 +66,11 @@ class ConfigMeta(type, t.Generic[T]):
 class Config(metaclass=ConfigMeta):
     pass
 
-
-print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
-print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
-print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242
+if t.TYPE_CHECKING:
+    reveal_type(Config["DB_PORT"])
+    reveal_type(Config["DB_PORT", int])
+    reveal_type(Config["OWNER_IDS", set, int])
+else:
+    print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
+    print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
+    print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242
