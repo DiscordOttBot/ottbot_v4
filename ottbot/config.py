@@ -1,3 +1,8 @@
+# type: ignore
+"""
+This file has been pre-checked with a static type checker, but mypy currently does not support `match case` syntax.
+TODO: Remove type: ignore when mypy supports `match case` syntax.
+"""
 from __future__ import annotations
 import builtins
 import typing as t
