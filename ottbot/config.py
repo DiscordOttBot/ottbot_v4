@@ -1,5 +1,4 @@
 from __future__ import annotations
-import builtins
 import typing as t
 from os import environ
 from pathlib import Path
@@ -50,21 +49,16 @@ class ConfigMeta(type, t.Generic[T]):
 
     def __getitem__(
         cls,
-        name: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, list[t.Callable[[t.Any], T]]],
+        name: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
     ) -> str | T | set[T]:
         match name:
             case (var, cast):
                 return cast(cls.resolve_key(var))
 
-            case (var, builtins.set, cast):
+            case (var, set, cast):
                 return {cast(v) for v in cls.resolve_key(var)}
             case _:
                 return name
-
-        # try:
-        #     return cls.resolve_key(name)
-        # except KeyError:
-        #     raise AttributeError(f"{name} is not a key in config.") from None
 
 
 class Config(metaclass=ConfigMeta):

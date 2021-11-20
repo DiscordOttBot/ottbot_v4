@@ -42,7 +42,7 @@ if t.TYPE_CHECKING:
     reveal_type(Foo["123,456,789", set, int])
 else:
     print(Foo["hello"])  # "hello"
-    print((f := Foo.__getitem__("1")), type(f))  # "hello" <class 'str'>
+    print((f := Foo.__getitem__("hello")), type(f))  # "hello" <class 'str'>
     print("---")
 
     print(Foo["1", int])  # 1
