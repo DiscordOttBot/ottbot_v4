@@ -5,6 +5,8 @@ git+https://github.com/AlexanderHOtt/Sake@dependabot/pip/hikari-approx-eq-2.0.0.
 hikari[speedups]
 hikari-lightbulb
 uvloop>=0.16; os_name != 'nt'
+aiofiles
+aiohttp
 
 # Utilities
 python-dotenv

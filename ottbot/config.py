@@ -1,4 +1,5 @@
 # type: ignore
+# mypy: ignore-errors
 """
 This file has been pre-checked with a static type checker, but mypy currently does not support `match case` syntax.
 TODO: Remove type: ignore when mypy supports `match case` syntax.

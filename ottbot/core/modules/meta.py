@@ -45,7 +45,7 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(
         ("Hikari", f"```{hikari.__version__}```", True),
         (
             "Users here",
-            f"```{len([_ async for _ in bot.rest.fetch_members(ctx.guild_id)]):,}```",
+            f"```{len([_ async for _ in bot.rest.fetch_members(ctx.guild_id)] if ctx.guild_id else []):, }```",
             True,
         ),
         ("Total users", f"```{len(bot.cache.get_users_view()):,}```", True),
@@ -85,7 +85,7 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(
             ctx=ctx,
             header=" ",
             title="System stats",
-            thumbnail=bot.get_me().avatar_url,
+            thumbnail=me.avatar_url if (me := bot.get_me()) is not None else "None",
             fields=fields,
         ),
     )

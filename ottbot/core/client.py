@@ -16,7 +16,8 @@ _ClientT = t.TypeVar("_ClientT", bound="OttClient")
 class OttClient(tanjun.Client, IClient):
     """Attachable Client for slash commands"""
 
-    __slots__: t.Iterable[str] = tanjun.Client.__slots__ + (
+    __slots__: t.Iterable[str] = (
+        *tanjun.Client.__slots__,
         "scheduler",
         "bot",
     )

@@ -2,9 +2,10 @@
 
 ## Immediate
 
-- [ ] mypy (why does it always break)
-
+- [x] Config (finally)
 - [ ] Yuyo client
+- [ ] Errors
+- [ ] interactive embed builder
 - [ ] Decide on command (file) structure
   - maybe wait until command groups come out
 - [ ] fix redis
@@ -16,6 +17,7 @@
 
 ## Soon
 
+- [ ] normal commands
 - [ ] poetry
 - [x] nox
 - [ ] migrate to project.toml
@@ -25,3 +27,7 @@
 - [ ] add license
 - [ ] add explination of each part of the project
 - [ ] add logging everywhere
+
+## On Hold
+
+- [ ] mypy (why does it always break)
