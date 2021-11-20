@@ -1,4 +1,5 @@
 from __future__ import annotations
+import builtins
 import typing as t
 from os import environ
 from pathlib import Path
@@ -12,7 +13,7 @@ dotenv.load_dotenv()
 
 
 class ConfigMeta(type):
-    def resolve_value(cls, value: str) -> t.Callable[..., t.Any] | t.Any:
+    def resolve_value(cls, value: str) -> bool | int | float | str | set[t.Any]:
 
         print(f"[resolve_value] {value}")
         _map: dict[str, t.Callable[..., t.Any]] = {
@@ -28,18 +29,18 @@ class ConfigMeta(type):
 
         return _map[(v := value.split(":", maxsplit=1))[0]](v[1])
 
-    def resolve_key(cls, key: str) -> t.Callable[..., t.Any]:
+    def resolve_key(cls, key: str) -> bool | int | float | str | set[t.Any]:
         print(f"[resolve_key] {key}")
         try:
             return cls.resolve_key(environ[key])
         except:
             return cls.resolve_value(key)
 
-    def __getattr__(cls, name: str) -> t.Callable[..., t.Any]:
-        try:
-            return cls.resolve_key(name)
-        except KeyError:
-            raise AttributeError(f"{name} is not a key in config.") from None
+    # def __getattr__(cls, name: str) -> T:
+    #     try:
+    #         return cls.resolve_key(name)
+    #     except KeyError:
+    #         raise AttributeError(f"{name} is not a key in config.") from None
 
     @t.overload
     def __getitem__(cls, key: str) -> str:
@@ -55,19 +56,20 @@ class ConfigMeta(type):
 
     def __getitem__(
         cls,
-        name: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
+        key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
     ) -> str | T | set[T]:
-        print(f"[__getitem__] {name}")
-        match name:
+        print(f"[__getitem__] {key}")
+        match key:
             case (var, cast):
-                return t.cast(T, cast(cls.resolve_key(var)))
+                return cast(cls.resolve_key(var))
 
-            case (var, set, cast):
-
-                return t.cast(set[T], {cast(v) for v in cls.resolve_key(var)})
+            case (var, builtins.set, cast):
+                if isinstance((resolved := cls.resolve_key(var)), t.Iterable):
+                    return {cast(v) for v in resolved}
+                raise TypeError(f"{var} is not iterable.")
 
             case _:
-                return cls.resolve_key(name)
+                return str(cls.resolve_key(str(key)))
 
 
 class Config(metaclass=ConfigMeta):
