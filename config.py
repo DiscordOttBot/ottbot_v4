@@ -19,22 +19,14 @@ class ConfigMeta(type):
             "bool": bool,
             "int": int,
             "float": float,
-            "file": lambda x: Path(x).read_text().strip("\n"),
             "str": str,
+            "dict": lambda x: json.loads(x),
             "set": lambda x: set([cls.resolve_value(e.strip()) for e in x.split(",")]),
-            "json": lambda x: Path(x)
-            .read_text()
-            .strip("\n")
-            .replace("'", '"')
-            .replace("true", "True")
-            .replace("false", "False")
-            .replace("null", "None")
-            .replace("\n", "")
-            .replace("\t", "")
-            .replace("\r", ""),
+            "file": lambda x: Path(x).read_text().strip("\n"),
+            "json": lambda x: json.loads(Path(x).read_text()),
         }
 
-        return _map[(v := value.split(":", maxsplit=1))[0].lower()](v[1])
+        return _map[(v := value.split(":", maxsplit=1))[0]](v[1])
 
     def resolve_key(cls, key: str) -> t.Callable[..., t.Any]:
         print(f"[resolve_key] {key}")
@@ -86,8 +78,3 @@ if t.TYPE_CHECKING:
     reveal_type(Config["DB_PORT"])
     reveal_type(Config["DB_PORT", int])
     reveal_type(Config["OWNER_IDS", set, int])
-else:
-    # print((p := Config["DB_PORT"]), type(p))  # DB_PORT=int:5432
-    # print((p := Config["DB_PORT", int]), type(p))  # DB_PORT=int:5432
-    # print((p := Config["OWNER_IDS", set, int]), type(p), type(p.copy().pop()))  # OWNER_IDS=set:int:425800572671754242
-    print(Config["SAMPLE_JSON"])
