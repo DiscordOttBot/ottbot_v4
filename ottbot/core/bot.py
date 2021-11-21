@@ -4,10 +4,14 @@ import os
 import typing as t
 
 import hikari
+import tanjun
+from ottbot.core import utils
 import sake
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from hikari import presences
+import yuyo
 
+from ottbot import constants
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
 from ottbot.core.client import OttClient
@@ -35,7 +39,7 @@ SERVER_ID: int = 545984256640286730
 class OttBot(hikari.GatewayBot, IBot):
     """Main Bot Class"""
 
-    __slots__: tuple[str, ...] = (
+    __slots__: t.Iterable[str] = (
         *hikari.GatewayBot.__slots__,
         "client",
         "embeds",
@@ -79,11 +83,25 @@ class OttBot(hikari.GatewayBot, IBot):
     def create_client(self: _BotT) -> None:
         """Creates a tanjun client and dynamically links the bot and the client"""
         self.logger.info("Creating client")
+
+        # create yuyo clients
+        component_client = yuyo.ComponentClient.from_gateway_bot(self, event_managed=False).set_constant_id(
+            constants.DELETE_CUSTOM_ID, utils.funcs.delete_button_callback
+        )
+        reaction_client = yuyo.ReactionClient.from_gateway_bot(self, event_managed=False)
+
+        # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
         ).load_modules_()
-        self.client = self.client.set_type_dependency(OttClient, self.client)
-        # TODO: Add database type dependency
+        self.client = (
+            self.client.set_type_dependency(OttClient, self.client)  # bot type dependency is automatically set
+            .set_type_dependency(yuyo.ReactionClient, reaction_client)
+            .set_type_dependency(yuyo.ComponentClient, component_client)
+            .set_type_dependency(AsyncPGDatabase, self.pool)
+            .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
+            .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
+        )
 
     async def init_cache(self: _BotT):
         cache: sake.redis.RedisCache = sake.redis.RedisCache(self, None, address="redis://127.0.0.1")
@@ -204,9 +222,14 @@ class OttBot(hikari.GatewayBot, IBot):
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
 
-        logging.info("Connecting to redis server")
-        await self.pool.connect()
+        self.logger.info("Connecting to redis server")
         await self.init_cache()
+
+        self.logger.info("Connecting to database")
+        try:
+            await self.pool.connect()
+        except ConnectionRefusedError as e:
+            self.logger.error(f"Cannot connect to Database: {e}")
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:
         """Runs once bot is fully connected"""

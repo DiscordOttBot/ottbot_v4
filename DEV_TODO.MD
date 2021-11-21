@@ -4,7 +4,7 @@
 
 - [x] Config (finally)
 - [ ] Yuyo client
-- [ ] Errors
+- [ ] Error handling
 - [ ] interactive embed builder
 - [ ] Decide on command (file) structure
   - maybe wait until command groups come out

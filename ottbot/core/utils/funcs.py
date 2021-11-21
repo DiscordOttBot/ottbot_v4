@@ -4,8 +4,13 @@ import logging
 import os
 import pathlib
 import typing as t
+import hikari
+
+from ottbot import constants
 
 import tanjun
+
+import yuyo
 
 
 def to_dict(obj) -> dict[str, str]:
@@ -148,3 +153,21 @@ def type_check(func):
         return result
 
     return check
+
+
+async def delete_button_callback(ctx: yuyo.ComponentContext) -> None:
+    author_ids = set(
+        map(hikari.Snowflake, ctx.interaction.custom_id.removeprefix(constants.DELETE_CUSTOM_ID).split(","))
+    )
+    if (
+        ctx.interaction.user.id in author_ids
+        or ctx.interaction.member
+        and author_ids.intersection(ctx.interaction.member.role_ids)
+    ):
+        await ctx.defer(hikari.ResponseType.DEFERRED_MESSAGE_UPDATE)
+        await ctx.delete_initial_response()
+
+    else:
+        await ctx.create_initial_response(
+            hikari.ResponseType.MESSAGE_CREATE, "You do not own this message", flags=hikari.MessageFlag.EPHEMERAL
+        )

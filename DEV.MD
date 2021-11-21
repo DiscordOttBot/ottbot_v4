@@ -14,6 +14,10 @@
 # commands
 
 ```
+mypy --install-types
+```
+
+```
 python -m ottbot
 ```
 
