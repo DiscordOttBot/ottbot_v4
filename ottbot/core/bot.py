@@ -4,16 +4,16 @@ import os
 import typing as t
 
 import hikari
-import tanjun
-from ottbot.core import utils
 import sake
+import tanjun
+import yuyo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from hikari import presences
-import yuyo
 
 from ottbot import constants
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
+from ottbot.core import utils
 from ottbot.core.client import OttClient
 from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils import (
@@ -85,10 +85,12 @@ class OttBot(hikari.GatewayBot, IBot):
         self.logger.info("Creating client")
 
         # create yuyo clients
-        component_client = yuyo.ComponentClient.from_gateway_bot(self, event_managed=False).set_constant_id(
+        component_client = yuyo.ComponentClient.from_gateway_bot(
+            self, event_managed=False
+        ).set_constant_id(  # if `event_managed=False` you need to manually start and stop the client
             constants.DELETE_CUSTOM_ID, utils.funcs.delete_button_callback
         )
-        reaction_client = yuyo.ReactionClient.from_gateway_bot(self, event_managed=False)
+        reaction_client = yuyo.ReactionClient.from_gateway_bot(self, event_managed=True)
 
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
@@ -96,12 +98,17 @@ class OttBot(hikari.GatewayBot, IBot):
         ).load_modules_()
         self.client = (
             self.client.set_type_dependency(OttClient, self.client)  # bot type dependency is automatically set
-            .set_type_dependency(yuyo.ReactionClient, reaction_client)
+            .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
         )
+        """
+        Passing `event_managed=True` will link the clients lifetime to the hikari bot's.
+        Using `.add_client_callback()` will link the lifetime to the tanjun command client's lifetime. 
+        Pretty much the same thing.
+        """
 
     async def init_cache(self: _BotT):
         cache: sake.redis.RedisCache = sake.redis.RedisCache(self, None, address="redis://127.0.0.1")

@@ -1,10 +1,8 @@
-import asyncio
+import hikari
 import tanjun
 import yuyo
-import hikari
 
 from ottbot.core.utils.funcs import build_loaders
-
 
 component, load_component, unload_component = build_loaders()
 
@@ -35,24 +33,22 @@ async def cmd_yuyo(
 
 
 @component.with_slash_command
-@tanjun.as_slash_command("yuyoreaction", "An example reaction command")
+@tanjun.as_slash_command("yuyoreaction", "An example reaction client command")
 async def cmd_yuyoreaction(
     ctx: tanjun.abc.SlashContext, reaction_client: yuyo.ReactionClient = tanjun.injected(type=yuyo.ReactionClient)
 ) -> None:
+    async def on_emoji_a(event: hikari.ReactionAddEvent | hikari.ReactionDeleteEvent) -> None:
+        print(event.emoji_name + "\n\n\n\na")
+        if event.emoji_name == "⭐":
+            print("[A]: star")
 
-    await ctx.respond("work in progess")
+    handler = yuyo.ReactionHandler(authors=(ctx.author,))
+    handler.add_callback("🗿", on_emoji_a)
 
-    # fields = iter(
-    #     [
-    #         ("page 1\nok", hikari.UNDEFINED),
-    #         (hikari.UNDEFINED, hikari.Embed(description="page 2")),
-    #         ("page3\nok", hikari.Embed(description="page3")),
-    #     ]
-    # )
+    @handler.with_callback("🗿")
+    async def on_emoji_b(event: hikari.ReactionAddEvent | hikari.ReactionDeleteEvent) -> None:
+        print(event.emoji_name + "\n\n\n\nb")
 
-    # paginator = yuyo.ComponentPaginator(fields, authors=(ctx.author,))
-
-    # if first_entry := await paginator.get_next_entry():
-    #     content, embed = first_entry
-    #     message = await ctx.respond(content=content, embed=embed, ensure_result=True)
-    #     reaction_client.add_handler(message, paginator)
+    message = await ctx.respond("content", ensure_result=True)
+    await handler.open(message)
+    reaction_client.add_handler(message, handler)

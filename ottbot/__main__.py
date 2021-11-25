@@ -1,6 +1,7 @@
 import os
 import sys
 
+import hikari
 import uvicorn
 from fastapi import FastAPI
 
@@ -37,6 +38,7 @@ def api_main() -> None:
 def bot_main() -> None:
     """Main entry point for only running the bot"""
     bot = OttBot(version=__version__, log_level=log_level)
+
     bot.run_()
 
 

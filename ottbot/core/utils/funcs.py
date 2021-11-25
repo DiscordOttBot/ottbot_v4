@@ -4,13 +4,12 @@ import logging
 import os
 import pathlib
 import typing as t
+
 import hikari
+import tanjun
+import yuyo
 
 from ottbot import constants
-
-import tanjun
-
-import yuyo
 
 
 def to_dict(obj) -> dict[str, str]:
@@ -171,3 +170,10 @@ async def delete_button_callback(ctx: yuyo.ComponentContext) -> None:
         await ctx.create_initial_response(
             hikari.ResponseType.MESSAGE_CREATE, "You do not own this message", flags=hikari.MessageFlag.EPHEMERAL
         )
+
+
+# Async lambdas for laters
+# key=lambda x: (await somefunction(x) for _ in '_').__anext__()
+# def head(async_iterator): return async_iterator.__anext__()
+
+# key=lambda x: head(await somefunction(x) for _ in '_')

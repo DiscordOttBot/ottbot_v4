@@ -1,5 +1,7 @@
+import pathlib
 import random
 
+import hikari
 import tanjun
 from hikari.events.message_events import GuildMessageCreateEvent
 
@@ -94,3 +96,12 @@ async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injecte
     usr = await bot.rest.fetch_user(id_)
     await ctx.respond(usr.username)
     await bot.pool.execute("DELETE FROM users WHERE id = $1", ctx.author.id)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("bababooey", "Sends BABABOOEY.MP3")
+async def cmd_bababooey(ctx: tanjun.abc.SlashContext) -> None:
+
+    msg = await ctx.respond("BABABOOEY", ensure_result=True)
+    file = hikari.File(pathlib.Path("./ottbot/data/static/BABABOOEY.mp3"))
+    await msg.edit(attachment=file)

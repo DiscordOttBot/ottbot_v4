@@ -4,6 +4,8 @@
 
 - [x] Config (finally)
 - [ ] Yuyo client
+  - [ ] Reaction client
+  - [x] Component Client
 - [ ] Error handling
 - [ ] interactive embed builder
 - [ ] Decide on command (file) structure

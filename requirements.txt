@@ -14,7 +14,6 @@ APScheduler
 pygount
 colorama
 asyncpg
-aiofiles
 psutil
 distro
 
