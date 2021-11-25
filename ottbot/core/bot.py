@@ -22,7 +22,7 @@ from ottbot.core.utils import (
     Errors,
     HikariFormatter,
 )
-from ottbot.core.utils.funcs import parse_log_level
+from ottbot.core.utils.funcs import parse_log_level, delete_button_callback
 from ottbot.core.utils.lines import Lines
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
@@ -88,7 +88,7 @@ class OttBot(hikari.GatewayBot, IBot):
         component_client = yuyo.ComponentClient.from_gateway_bot(
             self, event_managed=False
         ).set_constant_id(  # if `event_managed=False` you need to manually start and stop the client
-            constants.DELETE_CUSTOM_ID, utils.funcs.delete_button_callback
+            constants.DELETE_CUSTOM_ID, delete_button_callback
         )
         reaction_client = yuyo.ReactionClient.from_gateway_bot(self, event_managed=True)
 

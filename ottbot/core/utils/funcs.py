@@ -172,6 +172,10 @@ async def delete_button_callback(ctx: yuyo.ComponentContext) -> None:
         )
 
 
+def delete_button_callback(event) -> None:
+    raise NotImplementedError
+
+
 # Async lambdas for laters
 # key=lambda x: (await somefunction(x) for _ in '_').__anext__()
 # def head(async_iterator): return async_iterator.__anext__()
