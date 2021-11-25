@@ -10,14 +10,17 @@ class IEmbed(ABC):
     @abstractmethod
     def _init(self, **kwargs: dict[t.Any, t.Any]) -> None:
         """Initialize embed values"""
+        raise NotImplementedError
 
     @abstractmethod
     def _construct(self):
         """Construct base embed"""
+        raise NotImplementedError
 
     @abstractmethod
     def _add_content(self):
         """Add content fields to embed"""
+        raise NotImplementedError
 
     @abstractmethod
     def build(self, **kwargs: dict[t.Any, t.Any]) -> hikari.Embed:
@@ -36,3 +39,4 @@ class IEmbed(ABC):
         Returns:
             - hikari.Embed
         """
+        raise NotImplementedError

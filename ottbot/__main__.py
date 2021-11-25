@@ -1,7 +1,6 @@
 import os
 import sys
 
-import hikari
 import uvicorn
 from fastapi import FastAPI
 

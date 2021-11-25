@@ -92,6 +92,10 @@ class OttBot(hikari.GatewayBot, IBot):
         )
         reaction_client = yuyo.ReactionClient.from_gateway_bot(self, event_managed=True)
 
+        # Passing `event_managed=True` will link the clients lifetime to the hikari bot's.
+        # Using `.add_client_callback()` will link the lifetime to the tanjun command client's lifetime.
+        # Pretty much the same thing.
+
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
@@ -104,11 +108,6 @@ class OttBot(hikari.GatewayBot, IBot):
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
         )
-        """
-        Passing `event_managed=True` will link the clients lifetime to the hikari bot's.
-        Using `.add_client_callback()` will link the lifetime to the tanjun command client's lifetime. 
-        Pretty much the same thing.
-        """
 
     async def init_cache(self: _BotT):
         cache: sake.redis.RedisCache = sake.redis.RedisCache(self, None, address="redis://127.0.0.1")
