@@ -1,3 +1,5 @@
+import asyncio
+import collections.abc as collections_abc
 import functools
 import glob
 import logging
@@ -175,6 +177,113 @@ async def delete_button_callback(ctx: yuyo.ComponentContext) -> None:
 def delete_button_callback(event) -> None:
     raise NotImplementedError
 
+
+async def collect_response(  # pylint: disable=too-many-branches
+    ctx: tanjun.abc.SlashContext,
+    validator: list[str] | collections_abc.Callable | None = None,
+    timeout: int = 60,
+    timeout_msg: str = "Waited for 60 seconds... Timeout.",
+) -> hikari.GuildMessageCreateEvent | None:
+    """
+    Helper function to collect a user response.
+
+    Parameters
+    ==========
+    ctx: SlashContext
+        The context to use.
+    validator: list[str] | Callable | None = None
+        A validator to check against. Validators can be:
+            - list - A list of strings to match against.
+            - Callable/Function - A function accepting (ctx, event) and returning bool.
+            - None - Skips validation and returns True always.
+    timeout int = 60
+        The default wait_for timeout to use.
+    timeout_msg: str = Waited for 60 seconds ... Timeout.
+        The message to display if a timeout occurs
+    """
+
+    def is_author(event: hikari.GuildMessageCreateEvent) -> bool:
+        return ctx.author == event.message.author
+
+    # is_author: collections_abc.Callable[[hikari.GuildMessageCreateEvent], bool] = (
+    #     lambda event: ctx.author == event.message.author
+    # )
+
+    while True:
+        try:
+            event = await ctx.client.events.wait_for(
+                hikari.GuildMessageCreateEvent, predicate=is_author, timeout=timeout
+            )
+        except asyncio.TimeoutError:
+            await ctx.edit_initial_response(timeout_msg)
+            return None
+
+        if event.content == "❌":
+            return None
+
+        if not validator:  # exit if there are no extra checks to be run
+            return event
+
+        if isinstance(validator, list):
+            if any(valid_resp.lower() == event.content.lower() for valid_resp in validator):
+                return event
+            validation_message = await ctx.respond(
+                f"That wasn't a valid response... Expected one these: {' - '.join(validator)}"
+            )
+            await asyncio.sleep(3)
+            await validation_message.delete()
+
+        elif asyncio.iscoroutinefunction(validator):
+            valid = await validator(ctx, event)
+            if valid:
+                return event
+            validation_message = await ctx.respond("That doesn't look like a valid response... Try again?")
+            await asyncio.sleep(3)
+            await validation_message.delete()
+
+        elif callable(validator):
+            if validator(ctx, event):
+                return event
+            validation_message = await ctx.respond("Something about that doesn't look right... Try again?")
+            await asyncio.sleep(3)
+            await validation_message.delete()
+
+
+async def ensure_guild_channel_validator(ctx: tanjun.abc.Context, event) -> bool:
+    """
+    Used as a validator for `collect_response` to ensure a text channel in a guild exists.
+    """
+    guild = ctx.get_guild()
+    if not guild:
+        return False
+    channels = guild.get_channels() if guild else []
+    found_channel = None
+
+    for channel_id in channels:
+        channel = guild.get_channel(channel_id)
+        if str(channel.id) in event.content or channel.name == event.content:
+            found_channel = channel
+            break
+
+    if found_channel:
+        return True
+
+    await ctx.edit_initial_response(content=f"Channel `{event.content}` not found! Try again?")
+    await event.message.delete()
+    await asyncio.sleep(5)
+    return False
+
+def is_int_validator(_, event: hikari.GuildMessageCreateEvent) -> bool:
+    """
+    Used as a validator for `collect_response` to ensure the message content is an integer.
+    """
+    try:
+        if event.content:
+            int(event.content)
+            return True
+    except ValueError:
+        pass
+    return False
 
 # Async lambdas for laters
 # key=lambda x: (await somefunction(x) for _ in '_').__anext__()

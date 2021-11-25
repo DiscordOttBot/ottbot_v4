@@ -22,7 +22,7 @@ from ottbot.core.utils import (
     Errors,
     HikariFormatter,
 )
-from ottbot.core.utils.funcs import parse_log_level, delete_button_callback
+from ottbot.core.utils.funcs import delete_button_callback, parse_log_level
 from ottbot.core.utils.lines import Lines
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
