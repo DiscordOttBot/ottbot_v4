@@ -12,7 +12,7 @@ from ottbot.config import Config
 
 
 def is_bot_owner_check(ctx: tanjun.abc.SlashContext) -> bool:
-    return ctx.author.id in Config["OWNER_IDS"]
+    return int(ctx.author.id) in Config["OWNER_IDS", set, int]
 
 
 class HasAnyRoleCheck(_Check):
@@ -41,7 +41,9 @@ class HasAnyRoleCheck(_Check):
 
         return self._handle_result(any(map(self._check_roles, member_roles)))
 
-    def _check_roles(self, member_role: typing.Union[int, hikari.Role]) -> bool:
+    def _check_roles(self, member_role: typing.Union[int, hikari.Role, None]) -> bool:
+        if member_role is None:
+            return False
         if isinstance(member_role, int):
             return any(member_role == check for check in self.required_roles)
 

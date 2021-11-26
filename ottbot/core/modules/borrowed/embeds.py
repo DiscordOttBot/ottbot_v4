@@ -5,6 +5,7 @@ This module provides an Embed Builder with 2 Slash Commands.
 """
 import asyncio
 from typing import Any, TypeVar
+import typing as t
 
 import hikari
 import tanjun
@@ -20,10 +21,20 @@ from ottbot.core.client import OttClient
 from ottbot.core.utils.checks import with_any_role_check
 from ottbot.core.utils.funcs import collect_response, ensure_guild_channel_validator
 from ottbot.core.utils.funcs import is_int_validator as is_int
+from ottbot.core.utils.validators import message_len_validator
 
 EventT = TypeVar("EventT")
-
-EMBED_MENU: dict[str, dict[str, ButtonStyle]] = {
+InteractiveButtonTypesT = t.Union[
+    t.Literal[ButtonStyle.PRIMARY],
+    t.Literal[1],
+    t.Literal[ButtonStyle.SECONDARY],
+    t.Literal[2],
+    t.Literal[ButtonStyle.SUCCESS],
+    t.Literal[3],
+    t.Literal[ButtonStyle.DANGER],
+    t.Literal[4],
+]
+EMBED_MENU: dict[str, dict[str, str | InteractiveButtonTypesT]] = {
     "📋": {"title": "Title", "style": ButtonStyle.SECONDARY},
     "💬": {"title": "Description", "style": ButtonStyle.SECONDARY},
     "🖼️": {"title": "Change Icon", "style": ButtonStyle.SECONDARY},
@@ -39,7 +50,7 @@ EMBED_MENU: dict[str, dict[str, ButtonStyle]] = {
     "🏓": {"title": "Add Ping", "style": ButtonStyle.SECONDARY},
     "❓": {"title": "Show Status", "style": ButtonStyle.SECONDARY},
 }
-EMBED_OK: dict[str, dict[str, ButtonStyle]] = {
+EMBED_OK: dict[str, dict[str, str | InteractiveButtonTypesT]] = {
     "🆗": {"title": "Publish to Channel", "style": ButtonStyle.PRIMARY},
     "❌": {"title": "Cancel", "style": ButtonStyle.DANGER},
 }
@@ -79,7 +90,9 @@ async def interactive_edit(
         channel = guild.get_channel(channel_id)
         if not channel:
             continue
-        if hasattr(channel, "fetch_message"):
+        # if hasattr(channel, "fetch_message"):
+        if isinstance(channel, hikari.TextableChannel):
+            print("inside fetch message\n\n\n")
             try:
                 message = await channel.fetch_message(message_id)
                 if message:
@@ -135,9 +148,7 @@ async def embed_builder_loop(
         components=[*menu],
     )
     try:
-        async with bot.stream(InteractionCreateEvent, timeout=60).filter(
-            ("interaction.user.id", ctx.author.id)
-        ) as stream:
+        with bot.stream(InteractionCreateEvent, timeout=60).filter(("interaction.user.id", ctx.author.id)) as stream:
             async for event in stream:
                 key = event.interaction.custom_id
                 selected = EMBED_MENU_FULL[key]
@@ -146,7 +157,8 @@ async def embed_builder_loop(
                     return
 
                 await event.interaction.edit_initial_response("Event processed. This can be dismissed.")
-
+                if not isinstance(selected["title"], str):
+                    return
                 await globals()[f"{selected['title'].lower().replace(' ', '_')}"](ctx, bot, client)
                 await ctx.edit_initial_response(
                     "Click/Tap your choice below, then watch the embed update!",
@@ -171,6 +183,10 @@ def build_menu(ctx: SlashContext) -> list[Any]:
     last_menu_item = list(EMBED_MENU)[-1]
     row = ctx.rest.build_action_row()
     for emote, options in EMBED_MENU.items():
+        if not isinstance(options["style"], InteractiveButtonTypesT):
+            raise ValueError(f"{options['style']} must be of type `hikari.ButtonStyle`")
+        if not isinstance(options["title"], str):
+            raise ValueError(f"{options['title']} must be of type `str`")
         (row.add_button(options["style"], emote).set_label(options["title"]).set_emoji(emote).add_to_container())
         menu_count += 1
         if menu_count == 5 or last_menu_item == emote:
@@ -180,6 +196,10 @@ def build_menu(ctx: SlashContext) -> list[Any]:
 
     confirmation_row = ctx.rest.build_action_row()
     for emote, options in EMBED_OK.items():
+        if not isinstance(options["style"], InteractiveButtonTypesT):
+            raise ValueError(f"{options['style']} must be of `hikari.ButtonStyle`")
+        if not isinstance(options["title"], str):
+            raise ValueError(f"{options['title']} must be of type `str`")
         (
             confirmation_row.add_button(options["style"], emote)
             .set_label(options["title"])
@@ -199,7 +219,12 @@ async def title(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client
     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata["embed"])
     await ctx.edit_initial_response(content="Set Title for embed:", components=[])
     event = await collect_response(ctx)
-    embed_dict["title"] = event.content[:200]
+    if event is None:
+        return
+    if event.content is not None:
+        embed_dict["title"] = event.content[:200]
+    else:
+        embed_dict["title"] = "Title"
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
     await ctx.edit_initial_response(content="Title updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -212,8 +237,13 @@ async def description(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.
     """
     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata["embed"])
     await ctx.edit_initial_response(content="Set Description for embed:", components=[])
-    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
-    embed_dict["description"] = event.content[:4090]
+    event = await collect_response(ctx, validator=message_len_validator(4096))
+    if event is None:
+        return
+    if event.content is not None:
+        embed_dict["description"] = event.content[:4090]
+    else:
+        embed_dict["description"] = "Description"
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
     await ctx.edit_initial_response(content="Description Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -225,7 +255,16 @@ async def change_icon(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Cl
     Adds an image as a thumbnail on an Embed.
     """
     await ctx.edit_initial_response(content="Set Icon for embed:", components=[])
-    event = await collect_response(ctx, validator=lambda _, event: event.message.content.startswith("http"))
+
+    def val(_, event: hikari.GuildMessageCreateEvent):
+        if event is not None and event.message.content is not None:
+            return event.message.content.startswith("http")
+        return False
+
+    event = await collect_response(ctx, validator=val)
+
+    if event is None or event.content is None:
+        return
     client.metadata["embed"].set_thumbnail(event.content)
     await ctx.edit_initial_response(content="Thumbnail Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -236,7 +275,10 @@ async def add_server_logo(ctx: SlashContext, _: hikari.GatewayBot, client: tanju
     Helper function for Embed Builder.
     Adds the Server Logo as a thumbnail on an Embed.
     """
-    client.metadata["embed"].set_thumbnail((await ctx.fetch_guild()).icon_url)
+    guild = await ctx.fetch_guild()
+    if guild is None:
+        return
+    client.metadata["embed"].set_thumbnail(guild.icon_url)
     await ctx.edit_initial_response(content="Logo Updated!", embed=client.metadata["embed"], components=[])
 
 
@@ -246,7 +288,11 @@ async def image(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client):
     Adds/modifies the image on an Embed.
     """
     await ctx.edit_initial_response(content="Set Image for embed:", components=[])
-    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 2000)
+
+    event = await collect_response(ctx, validator=message_len_validator(2000))
+
+    if event is None or event.content is None:
+        return
     client.metadata["embed"].set_image(event.content)
     await ctx.edit_initial_response(content="Image Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -258,8 +304,10 @@ async def footer(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Client)
     Adds/modifies a footer on an Embed.
     """
     await ctx.edit_initial_response(content="Set Footer for embed:", components=[])
-    event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 2000)
+    event = await collect_response(ctx, validator=message_len_validator(2000))
     guild = await ctx.fetch_guild()
+    if event is None or event.content is None or guild is None or guild.icon_url is None:
+        return
     client.metadata["embed"].set_footer(text=event.content, icon=guild.icon_url)
     await ctx.edit_initial_response(content="Footer Updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -273,23 +321,33 @@ async def add_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.Clie
     field_name = ""
     field_body = ""
     field_inline = False
+
     await ctx.edit_initial_response("What would you like the Field Title to be?", components=[])
-    name_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 256)
-    field_name = name_event.content
+    name_event = await collect_response(ctx, validator=message_len_validator(256))
+    if name_event is not None and name_event.content is not None:
+        field_name = name_event.content
+
     await ctx.edit_initial_response("What would you like the Field Body to be?", components=[])
-    body_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
-    field_body = body_event.content
+    body_event = await collect_response(ctx, validator=message_len_validator(4096))
+    if body_event is not None and body_event.content is not None:
+        field_body = body_event.content
+
     await ctx.edit_initial_response("Would you like this to be inline? (y/n)", components=[])
     inline_event = await collect_response(ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"])
-    if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
-        field_inline = True
-    elif inline_event.content.lower() in ["no", "n", "false", "f"]:
-        field_inline = False
-    else:
-        await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
-    await name_event.message.delete()
-    await body_event.message.delete()
-    await inline_event.message.delete()
+    if inline_event is not None and inline_event.content is not None:
+        if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
+            field_inline = True
+        elif inline_event.content.lower() in ["no", "n", "false", "f"]:
+            field_inline = False
+        else:
+            await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
+
+    if name_event is not None:
+        await name_event.message.delete()
+    if body_event is not None:
+        await body_event.message.delete()
+    if inline_event is not None:
+        await inline_event.message.delete()
     client.metadata["embed"].add_field(name=field_name, value=field_body, inline=field_inline)
     await ctx.edit_initial_response(content="Field Added!", embed=client.metadata["embed"], components=[])
 
@@ -313,24 +371,38 @@ async def change_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.C
         components=[],
     )
     field_idx_event = await collect_response(ctx, validator=is_int)
+    if field_idx_event is None or field_idx_event.content is None:
+        return
     field_idx = int(field_idx_event.content) - 1
+
     await ctx.edit_initial_response("What would you like the Field Title to be?", components=[])
-    name_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 256)
-    field_name = name_event.content
+
+    name_event = await collect_response(ctx, validator=message_len_validator(256))
+    if name_event is not None and name_event.content is not None:
+        field_name = name_event.content
+
     await ctx.edit_initial_response("What would you like the Field Body to be?", components=[])
-    body_event = await collect_response(ctx, validator=lambda _, event: len(event.message.content) < 4096)
-    field_body = body_event.content
+    body_event = await collect_response(ctx, validator=message_len_validator(4096))
+    if body_event is not None and body_event.content is not None:
+        field_body = body_event.content
+
     await ctx.edit_initial_response("Would you like this to be inline? (y/n)", components=[])
     inline_event = await collect_response(ctx, validator=["yes", "y", "ye", "t", "true", "no", "n", "false", "f"])
-    if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
-        field_inline = True
-    elif inline_event.content.lower() in ["no", "n", "false", "f"]:
-        field_inline = False
-    else:
-        await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
-    await name_event.message.delete()
-    await body_event.message.delete()
-    await inline_event.message.delete()
+    if inline_event is not None and inline_event.content is not None:
+        if inline_event.content.lower() in ["yes", "y", "ye", "t", "true"]:
+            field_inline = True
+        elif inline_event.content.lower() in ["no", "n", "false", "f"]:
+            field_inline = False
+        else:
+            await ctx.edit_initial_response("Didn't understand that answer, assuming `No`.", embed=None, components=[])
+
+    if name_event is not None:
+        await name_event.message.delete()
+    if body_event is not None:
+        await body_event.message.delete()
+    if inline_event is not None:
+        await inline_event.message.delete()
+
     client.metadata["embed"].edit_field(field_idx, field_name, field_body, inline=field_inline)
     await ctx.edit_initial_response(content="Field Added!", embed=client.metadata["embed"], components=[])
 
@@ -350,6 +422,8 @@ async def remove_field(ctx: SlashContext, _: hikari.GatewayBot, client: tanjun.C
         components=[],
     )
     field_idx_event = await collect_response(ctx, validator=is_int)
+    if field_idx_event is None or field_idx_event.content is None:
+        return
     field_idx = int(field_idx_event.content) - 1
     client.metadata["embed"].remove_field(field_idx)
     await ctx.edit_initial_response("Removed field!", embed=client.metadata["embed"])
@@ -362,8 +436,13 @@ async def color(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Client
     """
     embed_dict, *_ = bot.entity_factory.serialize_embed(client.metadata["embed"])
     await ctx.edit_initial_response(content="Set Color for embed:", components=[])
-    event = await collect_response(ctx)
-    embed_dict["color"] = Color(event.content)
+    event = await collect_response(ctx, validator=is_int)
+    if event is None or event.content is None:
+        return
+    try:
+        embed_dict["color"] = Color(int(event.content))
+    except ValueError:
+        ...  # this will be handled by the validator
     client.metadata["embed"] = bot.entity_factory.deserialize_embed(embed_dict)
     await ctx.edit_initial_response(content="Color updated!", embed=client.metadata["embed"], components=[])
     await event.message.delete()
@@ -375,7 +454,9 @@ async def change_text_on_publish(ctx: SlashContext, _: hikari.GatewayBot, client
     Sets current embed content text for publish.
     """
     await ctx.edit_initial_response(content="Set Text for Publish:", components=[])
-    event = await collect_response(ctx, validator=lambda ctx, event: len(event.content) < 2000)
+    event = await collect_response(ctx, validator=message_len_validator(2000))
+    if event is None or event.content is None:
+        return
     client.metadata["text"] = event.content
     await ctx.edit_initial_response(content="Text for Publish updated!")
     await event.message.delete()
@@ -399,13 +480,19 @@ async def add_ping(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Cli
     while True:
         await ctx.edit_initial_response(content="Add Ping for Publish. To return to menu, send ❌.", components=[])
         try:
-            async with bot.stream(GuildMessageCreateEvent, timeout=60).filter(("author.id", ctx.author.id)) as stream:
+            with bot.stream(GuildMessageCreateEvent, timeout=60).filter(("author.id", ctx.author.id)) as stream:
                 async for event in stream:
                     if event.content == "❌":
                         await event.message.delete()
                         return
 
-                    roles = await ctx.get_guild().fetch_roles()
+                    if event.content is None:
+                        return
+
+                    guild = ctx.get_guild()
+                    if guild is None:
+                        return
+                    roles = await guild.fetch_roles()
                     found_role = None
 
                     for role in roles:
@@ -465,17 +552,24 @@ async def publish_to_channel(ctx: SlashContext, _: hikari.GatewayBot, client: ta
 
     event = await collect_response(ctx, validator=ensure_guild_channel_validator)
 
+    if event is None or event.content is None:
+        return
+
     found_channel = None
     guild = ctx.get_guild()
+    if guild is None:
+        return
     channels = guild.get_channels()
 
     for channel_id in channels:
         channel = guild.get_channel(channel_id)
+        if channel is None:
+            continue
         if str(channel.id) in event.content or channel.name == event.content:
             found_channel = channel
             break
 
-    if found_channel is not None:
+    if found_channel is not None and isinstance(found_channel, hikari.TextableGuildChannel):
         embed_message = await found_channel.send(content=content_str, embed=client.metadata["embed"])
 
         if client.metadata["pin"]:

@@ -174,10 +174,6 @@ async def delete_button_callback(ctx: yuyo.ComponentContext) -> None:
         )
 
 
-def delete_button_callback(event) -> None:
-    raise NotImplementedError
-
-
 async def collect_response(  # pylint: disable=too-many-branches
     ctx: tanjun.abc.SlashContext,
     validator: list[str] | collections_abc.Callable | None = None,
@@ -273,6 +269,7 @@ async def ensure_guild_channel_validator(ctx: tanjun.abc.Context, event) -> bool
     await asyncio.sleep(5)
     return False
 
+
 def is_int_validator(_, event: hikari.GuildMessageCreateEvent) -> bool:
     """
     Used as a validator for `collect_response` to ensure the message content is an integer.
@@ -284,6 +281,7 @@ def is_int_validator(_, event: hikari.GuildMessageCreateEvent) -> bool:
     except ValueError:
         pass
     return False
+
 
 # Async lambdas for laters
 # key=lambda x: (await somefunction(x) for _ in '_').__anext__()

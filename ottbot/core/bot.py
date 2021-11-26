@@ -82,7 +82,7 @@ class OttBot(hikari.GatewayBot, IBot):
 
     def create_client(self: _BotT) -> None:
         """Creates a tanjun client and dynamically links the bot and the client"""
-        self.logger.info("Creating client")
+        # self.logger.info("Creating client")
 
         # create yuyo clients
         component_client = yuyo.ComponentClient.from_gateway_bot(
@@ -216,7 +216,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.logger = logger
 
     def subscribe_to_events(self: _BotT) -> None:
-        self.logger.info("Subscribing to events")
+        # self.logger.info("Subscribing to events")
         subscriptions: dict[t.Any, t.Callable[..., t.Coroutine[t.Any, t.Any, None]]] = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,
@@ -228,14 +228,15 @@ class OttBot(hikari.GatewayBot, IBot):
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
 
-        self.logger.info("Connecting to redis server")
+        # self.logger.info("Connecting to redis server")
         await self.init_cache()
 
-        self.logger.info("Connecting to database")
+        # self.logger.info("Connecting to database")
         try:
             await self.pool.connect()
         except ConnectionRefusedError as e:
-            self.logger.error(f"Cannot connect to Database: {e}")
+            # self.logger.error(f"Cannot connect to Database: {e}")
+            ...
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:
         """Runs once bot is fully connected"""

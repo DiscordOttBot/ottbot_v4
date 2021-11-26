@@ -38,7 +38,7 @@ async def cmd_yuyoreaction(
     ctx: tanjun.abc.SlashContext, reaction_client: yuyo.ReactionClient = tanjun.injected(type=yuyo.ReactionClient)
 ) -> None:
     async def on_emoji_a(event: hikari.ReactionAddEvent | hikari.ReactionDeleteEvent) -> None:
-        if event.emoji is not None:
+        if event.emoji_id is not None and event.emoji_name is not None:
             print(event.emoji_name + "\n\n\n\na")
             if event.emoji_name == "⭐":
                 print("[A]: star")

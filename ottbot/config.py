@@ -21,8 +21,6 @@ dotenv.load_dotenv()
 
 class ConfigMeta(type):
     def resolve_value(cls, value: str) -> bool | int | float | str | dict | set[t.Any]:
-
-        print(f"[resolve_value] {value}")
         _map: dict[str, t.Callable[..., t.Any]] = {
             "bool": bool,
             "int": int,
@@ -37,7 +35,6 @@ class ConfigMeta(type):
         return _map[(v := value.split(":", maxsplit=1))[0]](v[1])
 
     def resolve_key(cls, key: str) -> bool | int | float | str | dict | set[t.Any]:
-        print(f"[resolve_key] {key}")
         try:
             return cls.resolve_key(environ[key])
         except KeyError:
@@ -65,7 +62,6 @@ class ConfigMeta(type):
         cls,
         key: str | tuple[str, t.Callable[[t.Any], T]] | tuple[str, t.Type[set], t.Callable[[t.Any], T]],
     ) -> str | T | set[T]:
-        print(f"[__getitem__] {key}")
         match key:
             case (var, cast):
                 return cast(cls.resolve_key(var))
