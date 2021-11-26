@@ -6,7 +6,6 @@ import hikari
 import tanjun
 
 from ottbot.abc.iclient import IClient
-from ottbot.core.bot import OttBot
 
 
 class Doneions(Exception):
@@ -27,13 +26,11 @@ class NGonError(Exception):
 
 
 class Errors:
-    def embed(
-        self, ctx: tanjun.abc.Context, message: str, bot: OttBot = tanjun.injected(type=OttBot)
-    ) -> t.Optional[hikari.Embed]:
+    def embed(self, ctx: tanjun.abc.Context, message: str) -> t.Optional[hikari.Embed]:
         assert isinstance(ctx.client, IClient)
         desc: str = f"❌ {message}"
 
-        embed: hikari.Embed = bot.embeds.build(ctx=ctx, description=desc, footer="None")
+        embed: hikari.Embed = ctx.bot.embeds.build(ctx=ctx, description=desc, footer="None")
 
         return embed
 
