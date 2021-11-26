@@ -15,14 +15,14 @@ from ottbot.abc.ibot import IBot
 from ottbot.config import Config
 from ottbot.core.client import OttClient
 from ottbot.core.db import AsyncPGDatabase
-from ottbot.core.utils import (
-    BetterTimedRotatingFileHandler,
-    Embeds,
-    Errors,
-    HikariFormatter,
-)
+from ottbot.core.utils.embeds import Embeds
+from ottbot.core.utils.errors import Errors
 from ottbot.core.utils.funcs import delete_button_callback, parse_log_level
 from ottbot.core.utils.lines import Lines
+from ottbot.core.utils.rotating_logs import (
+    BetterTimedRotatingFileHandler,
+    HikariFormatter,
+)
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[
