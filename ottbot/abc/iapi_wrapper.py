@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractproperty
 
 from fastapi import APIRouter
 
@@ -7,7 +7,6 @@ from ottbot.core.bot import OttBot
 
 class IAPIWrapper(ABC):
     """Interface for the API Wrapper that holds the discord bot"""
-
 
     @abstractproperty
     def bot(self) -> OttBot:
@@ -23,7 +22,7 @@ class IAPIWrapper(ABC):
     def routers(self) -> list[APIRouter]:
         """Routers property for dynamic type checking"""
         raise NotImplementedError
- 
+
     @routers.setter
     def routers(self, routers: list[APIRouter]) -> None:
         """Routers setter for dynamic checking"""

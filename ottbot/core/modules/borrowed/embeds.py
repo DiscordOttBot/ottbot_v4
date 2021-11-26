@@ -4,8 +4,8 @@ This module provides an Embed Builder with 2 Slash Commands.
 /embed interactive-edit message_id:hikari.Message.id
 """
 import asyncio
-from typing import Any, TypeVar
 import typing as t
+from typing import Any, TypeVar
 
 import hikari
 import tanjun
@@ -18,7 +18,6 @@ from tanjun.abc import SlashContext
 
 from ottbot.core.bot import OttBot
 from ottbot.core.client import OttClient
-from ottbot.core.utils.checks import with_any_role_check
 from ottbot.core.utils.funcs import collect_response, ensure_guild_channel_validator
 from ottbot.core.utils.funcs import is_int_validator as is_int
 from ottbot.core.utils.validators import message_len_validator

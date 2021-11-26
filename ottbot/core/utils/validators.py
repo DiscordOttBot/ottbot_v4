@@ -1,5 +1,5 @@
-import tanjun
 import hikari
+import tanjun
 
 
 def message_len_validator(length: int):

@@ -13,7 +13,6 @@ from hikari import presences
 from ottbot import constants
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
-from ottbot.core import utils
 from ottbot.core.client import OttClient
 from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils import (
@@ -235,7 +234,7 @@ class OttBot(hikari.GatewayBot, IBot):
         try:
             await self.pool.connect()
         except ConnectionRefusedError as e:
-            # self.logger.error(f"Cannot connect to Database: {e}")
+            self.logger.error(f"Cannot connect to Database: {e}")
             ...
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:

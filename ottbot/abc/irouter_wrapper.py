@@ -1,4 +1,3 @@
-import typing as t
 from abc import ABC, abstractproperty
 
 from fastapi import FastAPI
@@ -7,7 +6,7 @@ from ottbot.core.bot import OttBot
 
 
 class IRouterWrapper(ABC):
-    """Inerface for RouterWrapper"""
+    """Interface for RouterWrapper"""
 
     @abstractproperty
     def app(self) -> FastAPI:
