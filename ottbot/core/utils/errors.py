@@ -1,9 +1,12 @@
+# TODO: Update error handler
+
 import typing as t
 
 import hikari
 import tanjun
 
 from ottbot.abc.iclient import IClient
+from ottbot.core.bot import OttBot
 
 
 class Doneions(Exception):
@@ -24,16 +27,15 @@ class NGonError(Exception):
 
 
 class Errors:
-    def embed(self, ctx: tanjun.abc.Context, message: str) -> t.Optional[hikari.Embed]:
+    def embed(
+        self, ctx: tanjun.abc.Context, message: str, bot: OttBot = tanjun.injected(type=OttBot)
+    ) -> t.Optional[hikari.Embed]:
         assert isinstance(ctx.client, IClient)
         desc: str = f"❌ {message}"
 
-        if ctx.client.embeds is not None:
-            embed: hikari.Embed = ctx.client.embeds.build(ctx=ctx, description=desc, footer="None")
+        embed: hikari.Embed = bot.embeds.build(ctx=ctx, description=desc, footer="None")
 
-            return embed
-        else:
-            return None
+        return embed
 
     @staticmethod
     def ngon(message: str) -> NGonError:

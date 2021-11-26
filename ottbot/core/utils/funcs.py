@@ -207,11 +207,17 @@ async def collect_response(  # pylint: disable=too-many-branches
 
     while True:
         try:
-            event = await ctx.client.events.wait_for(
-                hikari.GuildMessageCreateEvent, predicate=is_author, timeout=timeout
-            )
+            if ctx.client.events is not None:
+                event = await ctx.client.events.wait_for(
+                    hikari.GuildMessageCreateEvent, predicate=is_author, timeout=timeout
+                )
+            else:
+                return None
         except asyncio.TimeoutError:
             await ctx.edit_initial_response(timeout_msg)
+            return None
+
+        if event is None or event.content is None:
             return None
 
         if event.content == "❌":
@@ -224,7 +230,7 @@ async def collect_response(  # pylint: disable=too-many-branches
             if any(valid_resp.lower() == event.content.lower() for valid_resp in validator):
                 return event
             validation_message = await ctx.respond(
-                f"That wasn't a valid response... Expected one these: {' - '.join(validator)}"
+                f"That wasn't a valid response... Expected one these: {' - '.join(validator)}", ensure_result=True
             )
             await asyncio.sleep(3)
             await validation_message.delete()
@@ -233,19 +239,23 @@ async def collect_response(  # pylint: disable=too-many-branches
             valid = await validator(ctx, event)
             if valid:
                 return event
-            validation_message = await ctx.respond("That doesn't look like a valid response... Try again?")
+            validation_message = await ctx.respond(
+                "That doesn't look like a valid response... Try again?", ensure_result=True
+            )
             await asyncio.sleep(3)
             await validation_message.delete()
 
         elif callable(validator):
             if validator(ctx, event):
                 return event
-            validation_message = await ctx.respond("Something about that doesn't look right... Try again?")
+            validation_message = await ctx.respond(
+                "Something about that doesn't look right... Try again?", ensure_result=True
+            )
             await asyncio.sleep(3)
             await validation_message.delete()
 
 
-async def ensure_guild_channel_validator(ctx: tanjun.abc.Context, event) -> bool:
+async def ensure_guild_channel_validator(ctx: tanjun.abc.Context, event: hikari.GuildMessageCreateEvent) -> bool:
     """
     Used as a validator for `collect_response` to ensure a text channel in a guild exists.
     """
@@ -257,6 +267,8 @@ async def ensure_guild_channel_validator(ctx: tanjun.abc.Context, event) -> bool
 
     for channel_id in channels:
         channel = guild.get_channel(channel_id)
+        if channel is None or event.content is None:
+            continue
         if str(channel.id) in event.content or channel.name == event.content:
             found_channel = channel
             break
