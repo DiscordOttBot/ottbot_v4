@@ -1,4 +1,3 @@
-import hikari
 import requests
 from fastapi import status
 
@@ -45,7 +44,6 @@ async def get_guild_roles(id_: int):
 #     guild = await router.bot.rest.fetch_guild(id_)
 #     if guild is None:
 #         return status.HTTP_404_NOT_FOUND
-    
 
 
 # @router.get("/{id_}/emojis")
