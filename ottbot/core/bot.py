@@ -23,6 +23,7 @@ from ottbot.core.utils.rotating_logs import (
     BetterTimedRotatingFileHandler,
     HikariFormatter,
 )
+from ottbot.core.utils.hooks import build_on_error, build_on_parser_error
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[
@@ -100,7 +101,12 @@ class OttBot(hikari.GatewayBot, IBot):
             self, declare_global_commands=SERVER_ID, event_managed=True
         ).load_modules_()
         self.client = (
-            self.client.set_type_dependency(OttClient, self.client)  # bot type dependency is automatically set
+            self.client.set_hooks(
+                tanjun.AnyHooks()
+                .set_on_error(build_on_error(self.logger))
+                .set_on_parser_error(build_on_parser_error(self.logger))
+            )
+            .set_type_dependency(OttClient, self.client)  # bot type dependency is automatically set
             .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)

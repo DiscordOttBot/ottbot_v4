@@ -16,6 +16,7 @@ colorama
 asyncpg
 psutil
 distro
+emoji
 
 # REST API
 fastapi

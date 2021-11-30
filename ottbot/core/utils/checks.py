@@ -16,6 +16,8 @@ def is_bot_owner_check(ctx: tanjun.abc.SlashContext) -> bool:
 
 
 class HasAnyRoleCheck(_Check):
+    """Helper class for `with_any_role_check`"""
+
     __slots__ = ("required_roles",)
 
     def __init__(

@@ -14,7 +14,7 @@ import yuyo
 from ottbot import constants
 
 
-def to_dict(obj) -> dict[str, str]:
+def to_dict(obj, ignore_underscores: bool = True) -> dict[str, str]:
     """
     Converts a non-serializable object to a dictionary.
 
@@ -24,7 +24,7 @@ def to_dict(obj) -> dict[str, str]:
     """
     d: dict[str, str] = dict()
     for attr in dir(obj):
-        if not attr.startswith("_"):
+        if not attr.startswith("_") or not ignore_underscores:
             attribute: t.Any = getattr(obj, attr)
             d[attr] = f"{attribute}"
 

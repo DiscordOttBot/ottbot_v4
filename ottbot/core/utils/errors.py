@@ -38,22 +38,3 @@ class Errors:
     def ngon(message: str) -> NGonError:
         """Create an extreemly important error"""
         return NGonError(message)
-
-    @staticmethod
-    def parse(exc: Exception):
-        print(exc)
-        raise exc
-
-    async def parse_tanjun(self, exc: t.Union[tanjun.CommandError, Exception], ctx: tanjun.abc.Context) -> None:
-        """Parse tanjun errors"""
-        if isinstance(exc, (tanjun.NotEnoughArgumentsError, tanjun.TooManyArgumentsError)):
-            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))  # type: ignore
-            raise exc
-
-        elif isinstance(exc, tanjun.MissingDependencyError):
-            await ctx.respond(self.embed(ctx, f"**ERROR**```{exc.message}```"))  # type: ignore
-            raise exc
-
-        else:
-            print(exc)
-            raise exc

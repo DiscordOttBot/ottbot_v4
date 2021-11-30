@@ -6,10 +6,13 @@
 - [x] Yuyo client
   - [x] Reaction client
   - [x] Component Client
-- [ ] Error handling
-- [ ] interactive embed builder
-- [ ] Decide on command (file) structure
-  - maybe wait until command groups come out
+- [x] Error handling
+- [x] interactive embed builder
+- [x] Decide on command (file) structure
+  - done
+  - in-progress
+  - test
+  - [ ] maybe wait until command groups come out
 - [ ] fix redis (waiting on Sake rewrite)
 - [x] make example commands w/ buttons
 - [ ] look into db code (orm)
@@ -17,6 +20,8 @@
 - [ ] stream status (btc, eth, ...)
 - [ ] Database Schema + logic
 - [x] reload command
+- [ ] reaction roles
+- [ ] rtfm code / command
 
 ## Soon
 
