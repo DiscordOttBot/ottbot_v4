@@ -149,13 +149,13 @@ async def embed_builder_loop(
     try:
         with bot.stream(InteractionCreateEvent, timeout=60).filter(("interaction.user.id", ctx.author.id)) as stream:
             async for event in stream:
-                key = event.interaction.custom_id
+                key = event.interaction.custom_id  # type: ignore
                 selected = EMBED_MENU_FULL[key]
                 if selected["title"] == "Cancel":
                     await ctx.edit_initial_response(content="Exiting!", components=[])
                     return
 
-                await event.interaction.edit_initial_response("Event processed. This can be dismissed.")
+                await event.interaction.edit_initial_response("Event processed. This can be dismissed.")  # type: ignore
                 if not isinstance(selected["title"], str):
                     return
                 await globals()[f"{selected['title'].lower().replace(' ', '_')}"](ctx, bot, client)
@@ -495,7 +495,7 @@ async def add_ping(ctx: SlashContext, bot: hikari.GatewayBot, client: tanjun.Cli
                     found_role = None
 
                     for role in roles:
-                        if role.id in event.content or role.name in event.content:
+                        if str(role.id) in event.content or role.name in event.content:
                             found_role = role
                             break
 

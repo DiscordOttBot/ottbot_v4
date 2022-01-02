@@ -3,9 +3,9 @@
 import typing as t
 
 import hikari
-from ottbot.abc.ibot import IBot
 import tanjun
 
+from ottbot.abc.ibot import IBot
 from ottbot.abc.iclient import IClient
 
 

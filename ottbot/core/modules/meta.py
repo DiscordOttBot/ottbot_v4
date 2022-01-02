@@ -1,6 +1,7 @@
 import time
 from datetime import timedelta
 from platform import python_version
+import typing as t
 
 import distro
 import hikari
@@ -39,7 +40,7 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(
 
     code_p, docs_p, blank_p = bot.lines.grab_percents()
 
-    fields = [
+    fields: t.Optional[list[tuple[str | int, str | int, bool]]] = [
         ("OttBot", f"```{bot.version}```", True),
         ("Python", f"```{python_version()}```", True),
         ("Hikari", f"```{hikari.__version__}```", True),

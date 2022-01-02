@@ -20,6 +20,7 @@ def lint_code(session: nox.Session):
     session.run("flake8", "ottbot")
 
     # session.run("mypy", "--install-types")
-    session.run("mypy", "ottbot")
+    with open("mypy.log", "r") as f:
+        session.run("mypy", "ottbot", stdout=f)
 
     session.run("pyright", "ottbot")

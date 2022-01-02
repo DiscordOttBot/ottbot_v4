@@ -1,7 +1,7 @@
 import hikari
 import tanjun
 import yuyo
-
+import typing as t
 from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()
@@ -12,7 +12,7 @@ component, load_component, unload_component = build_loaders()
 async def cmd_yuyo(
     ctx: tanjun.abc.SlashContext, component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient)
 ) -> None:
-    fields = iter(
+    fields: t.Iterator[tuple[str | hikari.UndefinedType, hikari.Embed | hikari.UndefinedType]] = iter(
         [
             ("page 1\nok", hikari.UNDEFINED),
             (hikari.UNDEFINED, hikari.Embed(description="page 2")),

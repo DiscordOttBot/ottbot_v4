@@ -36,8 +36,8 @@ class HasAnyRoleCheck(_Check):
 
         guild_roles = ctx.cache.get_roles_view_for_guild(ctx.member.guild_id) if ctx.cache else None
         if not guild_roles:
-            guild_roles = await ctx.rest.fetch_roles(ctx.member.guild_id)
-            member_roles = [role for role in guild_roles if role.id in ctx.member.role_ids]
+            guild_roles = await ctx.rest.fetch_roles(ctx.member.guild_id)  # type: ignore
+            member_roles = [role for role in guild_roles if role.id in ctx.member.role_ids]  # type: ignore
         else:
             member_roles = [guild_roles.get(role) for role in ctx.member.role_ids]
 
