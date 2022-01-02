@@ -1,4 +1,5 @@
 import nox
+import sys
 
 
 @nox.session(reuse_venv=True)
@@ -17,11 +18,8 @@ def lint_code(session: nox.Session):
     session.install("pyright")
 
     session.run("flake8", "ottbot")
-    
-    session.run("mv", "ottbot/config.py", "./config.py", external=True)
-    session.run("mypy", "--install-types")
+
+    # session.run("mypy", "--install-types")
     session.run("mypy", "ottbot")
-    session.run("mv", "config.py", "ottbot/config.py", external=True)
-    
+
     session.run("pyright", "ottbot")
- 

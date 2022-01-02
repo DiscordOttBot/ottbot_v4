@@ -1,8 +1,6 @@
-import hikari
 import tanjun
-
+import typing as t
 from ottbot.core.utils.funcs import build_loaders
-
 
 component, load_component, unload_component = build_loaders()
 
@@ -22,7 +20,7 @@ component, load_component, unload_component = build_loaders()
 @tanjun.as_slash_command("error", "Command that triggers a bot error")
 async def cmd_example(ctx: tanjun.abc.SlashContext, err: str) -> None:
 
-    error_dict: dict[str, BaseException] = {
+    error_dict: dict[str, t.Type[Exception]] = {
         "NotEnoughArgumentsError": tanjun.NotEnoughArgumentsError("Test Error", "asdf"),
         "TooManyArgumentsError": tanjun.TooManyArgumentsError("Test Error", "asdf"),
         "MissingDependencyError": tanjun.MissingDependencyError("Test Error"),

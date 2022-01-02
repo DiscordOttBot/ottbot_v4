@@ -1,10 +1,10 @@
-from emoji import emoji_count
 import hikari
-from hikari.events.reaction_events import GuildReactionAddEvent
 import tanjun
+from emoji import emoji_count
+from hikari.events.reaction_events import GuildReactionAddEvent
 
-from ottbot.core.utils.funcs import build_loaders
 from ottbot.core.bot import OttBot
+from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()
 

@@ -3,11 +3,15 @@ from abc import ABC, abstractmethod
 
 import hikari
 
+from ottbot.abc.iembeds import IEmbeds
+
 _IBotT = t.TypeVar("_IBotT", bound="IBot")
 
 
 class IBot(ABC):
     """Interface class for the discord Bot"""
+
+    embeds: IEmbeds
 
     @abstractmethod
     def create_client(self: _IBotT) -> None:

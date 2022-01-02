@@ -3,12 +3,32 @@ from abc import ABC, abstractmethod
 
 import hikari
 
+import tanjun
+import datetime
 
-class IEmbed(ABC):
+FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
+ResourceishT = t.Optional[hikari.Resourceish]
+
+
+class IEmbeds(ABC):
     """Interface for the Bot's Embed factory"""
 
     @abstractmethod
-    def _init(self, **kwargs: dict[t.Any, t.Any]) -> None:
+    def _init(
+        self,
+        ctx: tanjun.abc.Context,
+        title: str | None = None,
+        description: str | None = None,
+        fields: FieldsT = None,
+        footer: str | None = None,
+        header: str | None = None,
+        header_url: str | None = None,
+        header_icon: ResourceishT = None,
+        thumbnail: ResourceishT = None,
+        image: ResourceishT = None,
+        color: hikari.Colorish | None = None,
+        timestamp: datetime.datetime | None = None,
+    ) -> None:
         """Initialize embed values"""
         raise NotImplementedError
 
@@ -23,7 +43,21 @@ class IEmbed(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def build(self, **kwargs: dict[t.Any, t.Any]) -> hikari.Embed:
+    def build(
+        self,
+        ctx: tanjun.abc.Context,
+        title: str | None = None,
+        description: str | None = None,
+        fields: FieldsT = None,
+        footer: str | None = None,
+        header: str | None = None,
+        header_url: str | None = None,
+        header_icon: ResourceishT | None = None,
+        thumbnail: ResourceishT = None,
+        image: ResourceishT = None,
+        color: hikari.Colorish | str | None = None,
+        timestamp: datetime.datetime | None = None,
+    ) -> hikari.Embed:
         """Builds an embed from given kwargs.
         kwargs:
             - ctx: required

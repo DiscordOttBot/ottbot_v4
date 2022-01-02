@@ -3,6 +3,7 @@
 import typing as t
 
 import hikari
+from ottbot.abc.ibot import IBot
 import tanjun
 
 from ottbot.abc.iclient import IClient
@@ -26,11 +27,13 @@ class NGonError(Exception):
 
 
 class Errors:
-    def embed(self, ctx: tanjun.abc.Context, message: str) -> t.Optional[hikari.Embed]:
+    def embed(
+        self, ctx: tanjun.abc.Context, message: str, bot: IBot = tanjun.injected(type=IBot)
+    ) -> t.Optional[hikari.Embed]:
         assert isinstance(ctx.client, IClient)
         desc: str = f"❌ {message}"
 
-        embed: hikari.Embed = ctx.bot.embeds.build(ctx=ctx, description=desc, footer="None")
+        embed: hikari.Embed = bot.embeds.build(ctx=ctx, description=desc, footer="None")
 
         return embed
 

@@ -1,10 +1,12 @@
+import traceback
+import typing as t
+from logging import Logger
+
 import hikari
 import tanjun
-from logging import Logger
+
 from ottbot import constants
-import typing as t
 from ottbot.core.utils.funcs import to_dict
-import traceback
 
 
 def _embed(ctx: tanjun.abc.Context, message: str) -> hikari.Embed:

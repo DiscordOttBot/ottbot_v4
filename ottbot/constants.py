@@ -1,4 +1,5 @@
 import typing as t
+
 from hikari.colors import Color
 
 DELETE_CUSTOM_ID: str = "AUTHOR_DELETE_BUTTON:"

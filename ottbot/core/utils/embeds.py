@@ -4,42 +4,53 @@ import datetime
 import typing as t
 
 import hikari
-import lightbulb
 import tanjun
 import tanjun.abc
 
-from ottbot.abc.iembeds import IEmbed
+from ottbot.abc.iembeds import IEmbeds
 
 FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
-CtxT = t.Union[lightbulb.Context, tanjun.abc.Context]
 ResourceishT = t.Optional[hikari.Resourceish]
-
 ESCAPE_NAME: t.Final = "None"
 
 
-class Embeds(IEmbed):
+class Embeds(IEmbeds):
     """Embed factory"""
 
-    def _init(self, **kwargs: t.Any) -> None:
+    def _init(
+        self,
+        ctx: tanjun.abc.Context,
+        title: str | None = None,
+        description: str | None = None,
+        fields: FieldsT = None,
+        footer: str | None = None,
+        header: str | None = None,
+        header_url: str | None = None,
+        header_icon: ResourceishT = None,
+        thumbnail: ResourceishT = None,
+        image: ResourceishT = None,
+        color: hikari.Colorish | None = None,
+        timestamp: datetime.datetime | None = None,
+    ) -> None:
         """Initialize embed values"""
 
-        self.fields: FieldsT = kwargs.get("fields")
-        self._ctx: t.Union[CtxT, t.Any, None] = kwargs.get("ctx")
-        self.title: t.Optional[str] = kwargs.get("title")
-        self.desc: t.Optional[str] = kwargs.get("description")
-        self.footer: t.Optional[str] = kwargs.get("footer")
-        self.header: t.Optional[str] = kwargs.get("header")
-        self.header_url: t.Optional[str] = kwargs.get("header_url")
-        self.header_icon: ResourceishT = kwargs.get("header_icon")
-        self.thumbnail: ResourceishT = kwargs.get("thumbnail")
-        self.image: ResourceishT = kwargs.get("image")
-        self.color: t.Optional[hikari.Colorish] = kwargs.get("color")
-        self.time: datetime.datetime = kwargs.get("timestamp", datetime.datetime.now().astimezone())
+        self.fields: FieldsT = fields
+        self._ctx = ctx
+        self.title = title
+        self.desc = description
+        self.footer = footer
+        self.header = header
+        self.header_url = header_url
+        self.header_icon = header_icon
+        self.thumbnail = thumbnail
+        self.image = image
+        self.color = color
+        self.time: datetime.datetime = timestamp if timestamp is not None else datetime.datetime.now().astimezone()
 
     def _construct(self) -> hikari.Embed:
         """Construct base embed"""
 
-        if isinstance(self._ctx, tanjun.abc.Context) or isinstance(self._ctx, lightbulb.Context):
+        if isinstance(self._ctx, tanjun.abc.Context):
             embed = hikari.Embed(
                 title=self.title,
                 description=self.desc,
@@ -73,24 +84,37 @@ class Embeds(IEmbed):
             for name, value, inline in self.fields:
                 embed.add_field(name=name, value=value, inline=inline)
 
-    def build(self, **kwargs: t.Any) -> hikari.Embed:
-        """Builds an embed from given kwargs.
-        kwargs:
-            - ctx: required
-            - title: optional
-            - description: optional
-            - fields: optional
-            - footer: optional
-            - header: optional
-            - header_icon: optional
-            - thumbnail: optional
-            - image: optional
-            - color: optional
-        Returns:
-            - hikari.Embed
-        """
+    def build(
+        self,
+        ctx: tanjun.abc.Context,
+        title: str | None = None,
+        description: str | None = None,
+        fields: FieldsT = None,
+        footer: str | None = None,
+        header: str | None = None,
+        header_url: str | None = None,
+        header_icon: ResourceishT | None = None,
+        thumbnail: ResourceishT = None,
+        image: ResourceishT = None,
+        color: hikari.Colorish | str | None = None,
+        timestamp: datetime.datetime | None = None,
+    ) -> hikari.Embed:
+        """Builds an embed from given kwargs."""
 
-        self._init(**kwargs)
+        self._init(
+            ctx=ctx,
+            title=title,
+            description=description,
+            fields=fields,
+            footer=footer,
+            header=header,
+            header_url=header_url,
+            header_icon=header_icon,
+            thumbnail=thumbnail,
+            image=image,
+            color=color,
+            timestamp=timestamp,
+        )
         embed = self._construct()
         self._add_content(embed)
 

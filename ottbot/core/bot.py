@@ -18,12 +18,12 @@ from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils.embeds import Embeds
 from ottbot.core.utils.errors import Errors
 from ottbot.core.utils.funcs import delete_button_callback, parse_log_level
+from ottbot.core.utils.hooks import build_on_error, build_on_parser_error
 from ottbot.core.utils.lines import Lines
 from ottbot.core.utils.rotating_logs import (
     BetterTimedRotatingFileHandler,
     HikariFormatter,
 )
-from ottbot.core.utils.hooks import build_on_error, build_on_parser_error
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[
@@ -110,6 +110,7 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
+            .set_type_dependency(IBot, self)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
         )
