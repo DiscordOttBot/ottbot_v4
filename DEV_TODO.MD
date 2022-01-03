@@ -12,8 +12,8 @@
   - done
   - in-progress
   - test
-  - [ ] maybe wait until command groups come out
-- [ ] fix redis (waiting on Sake rewrite)
+- [ ] command groups
+- [x] fix redis (waiting on Sake rewrite)
 - [x] make example commands w/ buttons
 - [ ] look into db code (orm)
 - [ ] dashboard
