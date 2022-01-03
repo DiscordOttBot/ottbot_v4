@@ -47,6 +47,7 @@ class OttBot(hikari.GatewayBot, IBot):
         "guilds",
         "log_level",
         "version",
+        "cache",
         "_dynamic",
         "_static",
         "_log",
@@ -68,6 +69,7 @@ class OttBot(hikari.GatewayBot, IBot):
 
         self.guilds: list[hikari.OwnGuild] = []
         self.init_logger()
+        self.cache = sake.redis.RedisCache(app=self, event_manager=None, address="redis://127.0.0.1")
 
         super().__init__(
             token=self._get_token(),
@@ -96,6 +98,8 @@ class OttBot(hikari.GatewayBot, IBot):
         # Using `.add_client_callback()` will link the lifetime to the tanjun command client's lifetime.
         # Pretty much the same thing.
 
+        cache = sake.redis.RedisCache(app=self, event_manager=self.event_manager, address="redis://127.0.0.1")
+
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
@@ -110,19 +114,20 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
-            .set_type_dependency(IBot, self)
+            .set_type_dependency(sake.redis.RedisCache, self.cache)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
         )
 
     async def init_cache(self: _BotT):
-        cache: sake.redis.RedisCache = sake.redis.RedisCache(self, None, address="redis://127.0.0.1")
-        try:
-            await cache.open()
-        except ConnectionRefusedError as e:
-            logging.warning(f"Redis Error: {e}")
-        except Exception as e:
-            logging.critical(e)
+        # cache = sake.redis.RedisCache(app=self, event_manager=self.event_manager, address="redis://127.0.0.1")
+        # try:
+        #     await cache.open()
+        # except ConnectionRefusedError as e:
+        #     logging.warning(f"Redis Error: {e}")
+        # except Exception as e:
+        #     logging.critical(e)
+        ...
 
     def run_(
         self,
@@ -234,8 +239,12 @@ class OttBot(hikari.GatewayBot, IBot):
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
 
-        # self.logger.info("Connecting to redis server")
-        await self.init_cache()
+        try:
+            await self.cache.open()
+        except ConnectionRefusedError as e:
+            logging.warning(f"Redis Error: {e}")
+        except Exception as e:
+            logging.critical(e)
 
         # self.logger.info("Connecting to database")
         try:
@@ -246,6 +255,10 @@ class OttBot(hikari.GatewayBot, IBot):
 
     async def on_started(self: _BotT, event: hikari.StartedEvent) -> None:
         """Runs once bot is fully connected"""
+
+        # self.logger.info("Connecting to redis server")
+        await self.init_cache()
+
         self.client.scheduler.start()
 
         # async for guild in self.rest.fetch_my_guilds():
@@ -256,7 +269,8 @@ class OttBot(hikari.GatewayBot, IBot):
     async def on_stopping(self: _BotT, event: hikari.StoppingEvent) -> None:
         """Runs at the beginning of shutdown sequence"""
         self.client.scheduler.shutdown()
-        self.dispatch
+        # self.dispatch
+        await self.cache
 
     async def on_stopped(self: _BotT, event: hikari.StoppingEvent) -> None:
         """Runs after the bot has been shutdown"""

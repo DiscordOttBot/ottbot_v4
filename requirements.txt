@@ -2,6 +2,7 @@
 hikari
 hikari-tanjun
 hikari-sake
+hikari-yuyo
 hikari[speedups]
 # hikari-lightbulb
 uvloop>=0.16; os_name != 'nt'
@@ -9,6 +10,8 @@ aiofiles
 aiohttp
 
 # Utilities
+aioredis
+hiredis
 python-dotenv
 APScheduler
 pygount

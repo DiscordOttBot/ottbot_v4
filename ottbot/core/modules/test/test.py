@@ -105,3 +105,14 @@ async def cmd_bababooey(ctx: tanjun.abc.SlashContext) -> None:
     msg = await ctx.respond("BABABOOEY", ensure_result=True)
     file = hikari.File(pathlib.Path("./ottbot/data/static/BABABOOEY.mp3"))
     await msg.edit(attachment=file)
+
+
+@component.with_slash_command
+@tanjun.with_member_slash_option("member", "The member test on")
+@tanjun.as_slash_command("nick_test", "test nickname permissions")
+async def cmd_nick_test(
+    ctx: tanjun.abc.SlashContext, member: hikari.Member, bot: OttBot = tanjun.injected(type=OttBot)
+) -> None:
+    await member.edit(nick="asdf")
+    await member.edit(nick=hikari.UNDEFINED)
+    await ctx.respond("User Updated")
