@@ -24,16 +24,23 @@ from ottbot.core.utils.validators import message_len_validator
 
 EventT = TypeVar("EventT")
 InteractiveButtonTypesT = t.Union[
-    t.Literal[ButtonStyle.PRIMARY],
+    # t.Literal[ButtonStyle.PRIMARY],
     t.Literal[1],
-    t.Literal[ButtonStyle.SECONDARY],
+    # t.Literal[ButtonStyle.SECONDARY],
     t.Literal[2],
-    t.Literal[ButtonStyle.SUCCESS],
+    # t.Literal[ButtonStyle.SUCCESS],
     t.Literal[3],
-    t.Literal[ButtonStyle.DANGER],
+    # t.Literal[ButtonStyle.DANGER],
     t.Literal[4],
 ]
-EMBED_MENU: dict[str, dict[str, str | InteractiveButtonTypesT]] = {
+
+
+class EmbedStyle(t.TypedDict):
+    title: str
+    style: InteractiveButtonTypesT
+
+
+EMBED_MENU: dict[str, EmbedStyle] = {
     "📋": {"title": "Title", "style": ButtonStyle.SECONDARY},
     "💬": {"title": "Description", "style": ButtonStyle.SECONDARY},
     "🖼️": {"title": "Change Icon", "style": ButtonStyle.SECONDARY},
@@ -49,7 +56,8 @@ EMBED_MENU: dict[str, dict[str, str | InteractiveButtonTypesT]] = {
     "🏓": {"title": "Add Ping", "style": ButtonStyle.SECONDARY},
     "❓": {"title": "Show Status", "style": ButtonStyle.SECONDARY},
 }
-EMBED_OK: dict[str, dict[str, str | InteractiveButtonTypesT]] = {
+
+EMBED_OK: dict[str, EmbedStyle] = {
     "🆗": {"title": "Publish to Channel", "style": ButtonStyle.PRIMARY},
     "❌": {"title": "Cancel", "style": ButtonStyle.DANGER},
 }
@@ -182,10 +190,6 @@ def build_menu(ctx: SlashContext) -> list[Any]:
     last_menu_item = list(EMBED_MENU)[-1]
     row = ctx.rest.build_action_row()
     for emote, options in EMBED_MENU.items():
-        if not isinstance(options["style"], InteractiveButtonTypesT):
-            raise ValueError(f"{options['style']} must be of type `hikari.ButtonStyle`")
-        if not isinstance(options["title"], str):
-            raise ValueError(f"{options['title']} must be of type `str`")
         (row.add_button(options["style"], emote).set_label(options["title"]).set_emoji(emote).add_to_container())
         menu_count += 1
         if menu_count == 5 or last_menu_item == emote:
@@ -195,15 +199,11 @@ def build_menu(ctx: SlashContext) -> list[Any]:
 
     confirmation_row = ctx.rest.build_action_row()
     for emote, options in EMBED_OK.items():
-        if not isinstance(options["style"], InteractiveButtonTypesT):
-            raise ValueError(f"{options['style']} must be of `hikari.ButtonStyle`")
-        if not isinstance(options["title"], str):
-            raise ValueError(f"{options['title']} must be of type `str`")
         (
             confirmation_row.add_button(options["style"], emote)
             .set_label(options["title"])
-            .set_emoji(emote)
-            .add_to_container()
+            .set_emoji(emote)  # type: ignore
+            .add_to_container()  # type: ignore
         )
     menu.append(confirmation_row)
 

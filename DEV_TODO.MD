@@ -22,6 +22,7 @@
 - [x] reload command
 - [ ] reaction roles
 - [ ] rtfm code / command
+- [ ] auto complete
 
 ## Soon
 

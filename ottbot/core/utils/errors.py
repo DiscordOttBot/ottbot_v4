@@ -27,13 +27,14 @@ class NGonError(Exception):
 
 
 class Errors:
-    def embed(
-        self, ctx: tanjun.abc.Context, message: str, bot: IBot = tanjun.injected(type=IBot)
-    ) -> t.Optional[hikari.Embed]:
-        assert isinstance(ctx.client, IClient)
-        desc: str = f"❌ {message}"
+    def __init__(self, bot: IBot):
+        self.bot = bot
 
-        embed: hikari.Embed = bot.embeds.build(ctx=ctx, description=desc, footer="None")
+    def embed(self, ctx: tanjun.abc.Context, message: str) -> t.Optional[hikari.Embed]:
+        assert isinstance(ctx.client, IClient)
+        desc = f"❌ {message}"
+
+        embed = self.bot.embeds.build(ctx=ctx, description=desc, footer="None")
 
         return embed
 

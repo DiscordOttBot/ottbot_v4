@@ -1,7 +1,9 @@
+import typing as t
+
 import hikari
 import tanjun
 import yuyo
-import typing as t
+
 from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()

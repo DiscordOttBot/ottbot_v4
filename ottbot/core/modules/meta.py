@@ -1,7 +1,7 @@
 import time
+import typing as t
 from datetime import timedelta
 from platform import python_version
-import typing as t
 
 import distro
 import hikari

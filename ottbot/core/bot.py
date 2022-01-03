@@ -61,7 +61,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.log_level: str = log_level
 
         self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
-        self.errors: Errors = Errors()
+        self.errors: Errors = Errors(self)
         self.embeds: Embeds = Embeds()
         self.lines: Lines = Lines()
         self.pool: AsyncPGDatabase = AsyncPGDatabase()
