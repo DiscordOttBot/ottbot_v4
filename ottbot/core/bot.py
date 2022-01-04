@@ -3,6 +3,7 @@ import logging
 import os
 import typing as t
 
+import asyncio
 import hikari
 import sake
 import tanjun
@@ -47,7 +48,6 @@ class OttBot(hikari.GatewayBot, IBot):
         "guilds",
         "log_level",
         "version",
-        "cache",
         "_dynamic",
         "_static",
         "_log",
@@ -69,7 +69,6 @@ class OttBot(hikari.GatewayBot, IBot):
 
         self.guilds: list[hikari.OwnGuild] = []
         self.init_logger()
-        self.cache = sake.redis.RedisCache(app=self, event_manager=None, address="redis://127.0.0.1")
 
         super().__init__(
             token=self._get_token(),
@@ -114,7 +113,9 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
-            .set_type_dependency(sake.redis.RedisCache, self.cache)
+            .set_type_dependency(sake.redis.RedisCache, cache)
+            .add_client_callback(tanjun.ClientCallbackNames.STARTING, cache.open)
+            .add_client_callback(tanjun.ClientCallbackNames.CLOSING, cache.close)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
         )
@@ -239,12 +240,12 @@ class OttBot(hikari.GatewayBot, IBot):
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
 
-        try:
-            await self.cache.open()
-        except ConnectionRefusedError as e:
-            logging.warning(f"Redis Error: {e}")
-        except Exception as e:
-            logging.critical(e)
+        # try:
+        #     await self.cache.open()
+        # except ConnectionRefusedError as e:
+        #     logging.warning(f"Redis Error: {e}")
+        # except Exception as e:
+        #     logging.critical(e)
 
         # self.logger.info("Connecting to database")
         try:
@@ -270,7 +271,7 @@ class OttBot(hikari.GatewayBot, IBot):
         """Runs at the beginning of shutdown sequence"""
         self.client.scheduler.shutdown()
         # self.dispatch
-        await self.cache
+        # await self.cache
 
     async def on_stopped(self: _BotT, event: hikari.StoppingEvent) -> None:
         """Runs after the bot has been shutdown"""

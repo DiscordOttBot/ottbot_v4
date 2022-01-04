@@ -12,7 +12,7 @@
   - done
   - in-progress
   - test
-- [ ] command groups
+- [x] command groups
 - [x] fix redis (waiting on Sake rewrite)
 - [x] make example commands w/ buttons
 - [ ] look into db code (orm)
@@ -36,6 +36,7 @@
 - [ ] add license
 - [ ] add explination of each part of the project
 - [ ] add logging everywhere
+- [ ] remove all `type: ignore
 
 ## On Hold
 

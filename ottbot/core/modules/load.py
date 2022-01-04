@@ -9,7 +9,7 @@ component, load_component, unload_component = build_loaders(checks=[is_bot_owner
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("module", "Module to load", default="")
-@tanjun.as_slash_command("load", "Load a module")
+@tanjun.as_slash_command("load", "Load a module", default_to_ephemeral=True)
 async def cmd_load(
     ctx: tanjun.abc.SlashContext,
     module: str,
@@ -22,7 +22,7 @@ async def cmd_load(
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("module", "Module to unload", default="")
-@tanjun.as_slash_command("unload", "Unload a module")
+@tanjun.as_slash_command("unload", "Unload a module", default_to_ephemeral=True)
 async def cmd_unload(
     ctx: tanjun.abc.SlashContext,
     module: str,
@@ -39,7 +39,7 @@ async def cmd_unload(
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("module", "Module to update", default="")
-@tanjun.as_slash_command("update", "Update slash commands in module(s)")
+@tanjun.as_slash_command("update", "Update slash commands in module(s)", default_to_ephemeral=True)
 async def cmd_update(
     ctx: tanjun.abc.SlashContext,
     module: str,
@@ -58,7 +58,7 @@ async def cmd_update(
 
 @component.with_slash_command
 @tanjun.with_str_slash_option("module", "Module to update", default="")
-@tanjun.as_slash_command("reload", "Reload slash commands in module(s)")
+@tanjun.as_slash_command("reload", "Reload slash commands in module(s)", default_to_ephemeral=True)
 async def cmd_reload(
     ctx: tanjun.abc.SlashContext,
     module: str,

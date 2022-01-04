@@ -65,7 +65,7 @@ class Embeds(IEmbeds):
                 text=(
                     None
                     if self.footer == ESCAPE_NAME
-                    else (self.footer or f"Invoked by: {self._ctx.author.username}" if self._ctx is not None else "")
+                    else (self.footer or f"Invoked by {self._ctx.author.username}" if self._ctx is not None else "")
                 ),
                 icon=(
                     None
