@@ -1,6 +1,7 @@
 import os
 import subprocess
 import tanjun
+import asyncio
 
 from ottbot.core.utils.funcs import build_loaders
 from ottbot.core.bot import OttBot
@@ -32,7 +33,7 @@ def generate_image(bot: OttBot, latex: str, name: str, resolution: str):
             tex.close()
     RES_TO_DPI = {"low": "200", "medium": "1000", "high": "2000"}
     latexsuccess = subprocess.run(
-        ["latex", "-interaction=nonstopmode", latex_file], cwd=bot._dynamic, stdout=subprocess.PIPE
+        ["latex", "-no-shell-escape", "-interaction=nonstopmode", latex_file], cwd=bot._dynamic, stdout=subprocess.PIPE
     )
     if latexsuccess.returncode == 0:
         subprocess.run(["dvipng", "-q*", "-D", RES_TO_DPI[resolution], "-T", "tight", dvi_file], cwd=bot._dynamic)

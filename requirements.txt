@@ -21,6 +21,8 @@ psutil
 distro
 emoji
 pypresence
+pyqrcode
+pypng
 
 # REST API
 fastapi

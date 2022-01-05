@@ -755,6 +755,8 @@ UP FOR DEBATE
     lmao -> alucard api
     quote
 
+    translate
+
 UNKNOWN/TODO
 
     ## Admin
