@@ -126,3 +126,10 @@ async def cmd_slap(
             member = await bot.rest.fetch_member(ctx.guild_id, user)
 
     await ctx.respond(f"{ctx.author.mention} slapped {member.mention}" + (f" for {reason}" if reason else ""))
+
+
+@component.with_slash_command
+@tanjun.with_str_slash_option("message", "The message to repeat")
+@tanjun.as_slash_command("echo", "Repeats the given message")
+async def cmd_echo(ctx: tanjun.abc.SlashContext, message: str) -> None:
+    await ctx.respond(message)
