@@ -1,4 +1,7 @@
+import asyncio
 import random
+
+import hikari
 
 import tanjun
 from ottbot.core.utils.funcs import build_loaders
@@ -71,10 +74,30 @@ async def cmd_cf(ctx: tanjun.abc.SlashContext) -> None:
 @tanjun.as_slash_command("rand", "Get a random number")
 async def cmd_rand(ctx: tanjun.abc.SlashContext, min: int, max: int) -> None:
     await ctx.respond(random.randint(min, max))
-    
+
+
 @component.with_slash_command
 @tanjun.as_slash_command("float", "Get a decimal between 0 and 1")
 async def cmd_float(ctx: tanjun.abc.SlashContext) -> None:
     await ctx.respond(random.random())
 
 
+@component.with_slash_command
+@tanjun.with_str_slash_option("ids", "A list of member ids to choose from seperated by spaces")
+@tanjun.with_int_slash_option("count", "The number of members to count down to", default=1)
+@tanjun.as_slash_command("wheel", "Spin a wheel to select an item from a list")
+async def cmd_wheel(
+    ctx: tanjun.abc.SlashContext, ids: str, count: int, bot: OttBot = tanjun.injected(type=OttBot)
+) -> None:
+    members = [await bot.rest.fetch_member(ctx.guild_id, int(id)) for id in ids[1:-1].split(" ")]
+    if len(members) < count:
+        await ctx.respond("Not enough members to choose from.")
+
+    while len(members) > count:
+        random.shuffle(members)
+        chosen = members.pop()
+        await ctx.respond(f"{chosen.display_name} is safe")
+        asyncio.sleep(1)
+    await ctx.respond(
+        f"{', '.join([m.display_name for m in members])} {'was' if len(members) == 1 else 'were'} not choosen"
+    )
