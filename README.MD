@@ -134,7 +134,7 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -174,7 +174,7 @@ A big shout out to:
 [issues-shield]: https://img.shields.io/github/issues/AlexanderHOtt/ottbot_v4.svg?style=for-the-badge
 [issues-url]: https://github.com/AlexanderHOtt/ottbot_v4/issues
 [license-shield]: https://img.shields.io/github/license/AlexanderHOtt/ottbot_v4.svg?style=for-the-badge
-[license-url]: https://github.com/AlexanderHOtt/ottbot_v4/blob/master/LICENSE.txt
+[license-url]: https://github.com/AlexanderHOtt/ottbot_v4/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: https://example.com
