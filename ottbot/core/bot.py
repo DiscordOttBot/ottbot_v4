@@ -18,7 +18,7 @@ from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils.embeds import Embeds
 from ottbot.core.utils.errors import Errors
 from ottbot.core.utils.funcs import delete_button_callback, parse_log_level
-from ottbot.core.utils.hooks import build_on_error, build_on_parser_error
+from ottbot.core.utils.hooks import build_on_error, build_on_parser_error, on_general_error
 from ottbot.core.utils.lines import Lines
 from ottbot.core.utils.rotating_logs import (
     BetterTimedRotatingFileHandler,
@@ -233,6 +233,7 @@ class OttBot(hikari.GatewayBot, IBot):
             hikari.StartedEvent: self.on_started,
             hikari.StoppingEvent: self.on_stopping,
             hikari.StoppedEvent: self.on_stopped,
+            hikari.ExceptionEvent: on_general_error,
         }
         [self.event_manager.subscribe(key, subscriptions[key]) for key in subscriptions]
 

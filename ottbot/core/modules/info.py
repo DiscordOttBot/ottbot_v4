@@ -4,6 +4,7 @@ import tanjun
 from ottbot.core.utils.funcs import build_loaders
 from ottbot.core.bot import OttBot
 from ottbot.constants import ZWJ
+
 component, load_component, unload_component = build_loaders()
 
 
@@ -23,7 +24,7 @@ async def cmd_spotlight(
             messages.append(m)
         if len(messages) >= 10:
             break
-        
+
     link = "[Jump](https://discord.com/channels/{}/{}/{})"
     fields = [
         (
@@ -47,4 +48,3 @@ async def cmd_spotlight(
         fields=fields if messages else [("Messages", "No messages found", False)],
     )
     await ctx.respond(ZWJ, embed=embed)
-

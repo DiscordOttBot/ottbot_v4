@@ -1,4 +1,5 @@
 import asyncio
+import pathlib
 import random
 
 import hikari
@@ -133,3 +134,19 @@ async def cmd_slap(
 @tanjun.as_slash_command("echo", "Repeats the given message")
 async def cmd_echo(ctx: tanjun.abc.SlashContext, message: str) -> None:
     await ctx.respond(message)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("bababooey", "Sends BABABOOEY.MP3")
+async def cmd_bababooey(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+    msg = await ctx.respond("BABABOOEY", ensure_result=True)
+    file = hikari.File(pathlib.Path(f"{bot._static}/BABABOOEY.mp3"))
+    await msg.edit(attachment=file)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("bell", "Sends BELL.MP3")
+async def cmd_bell(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+    msg = await ctx.respond(ZWJ, ensure_result=True)
+    file = hikari.File(pathlib.Path(f"{bot._static}/BELL.mp3"))
+    await msg.edit(attachment=file)
