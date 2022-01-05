@@ -71,3 +71,10 @@ async def cmd_cf(ctx: tanjun.abc.SlashContext) -> None:
 @tanjun.as_slash_command("rand", "Get a random number")
 async def cmd_rand(ctx: tanjun.abc.SlashContext, min: int, max: int) -> None:
     await ctx.respond(random.randint(min, max))
+    
+@component.with_slash_command
+@tanjun.as_slash_command("float", "Get a decimal between 0 and 1")
+async def cmd_float(ctx: tanjun.abc.SlashContext) -> None:
+    await ctx.respond(random.random())
+
+
