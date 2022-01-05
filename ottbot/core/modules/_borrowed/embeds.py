@@ -9,11 +9,10 @@ from typing import Any, TypeVar
 
 import hikari
 import tanjun
-from hikari import InteractionCreateEvent
+from hikari import ButtonStyle, InteractionCreateEvent
 from hikari.colors import Color
 from hikari.embeds import Embed
 from hikari.events.message_events import GuildMessageCreateEvent
-from hikari.messages import ButtonStyle
 from tanjun.abc import SlashContext
 
 from ottbot.core.bot import OttBot
@@ -23,16 +22,10 @@ from ottbot.core.utils.funcs import is_int_validator as is_int
 from ottbot.core.utils.validators import message_len_validator
 
 EventT = TypeVar("EventT")
-InteractiveButtonTypesT = t.Union[
-    t.Literal[ButtonStyle.PRIMARY],
-    t.Literal[1],
-    t.Literal[ButtonStyle.SECONDARY],
-    t.Literal[2],
-    t.Literal[ButtonStyle.SUCCESS],
-    t.Literal[3],
-    t.Literal[ButtonStyle.DANGER],
-    t.Literal[4],
+InteractiveButtonTypesT = t.Literal[
+    1, 2, 3, 4, ButtonStyle.PRIMARY, ButtonStyle.SECONDARY, ButtonStyle.SUCCESS, ButtonStyle.DANGER
 ]
+
 
 
 class EmbedStyle(t.TypedDict):

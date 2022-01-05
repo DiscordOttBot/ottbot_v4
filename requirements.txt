@@ -25,6 +25,8 @@ emoji
 fastapi
 uvicorn
 requests
+types-ujson
+types-orjson
 
 # Dev
 mypy
@@ -33,3 +35,4 @@ black==21.11b1
 isort
 codespell
 nox
+pyright

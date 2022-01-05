@@ -9,7 +9,7 @@ import tanjun.abc
 
 from ottbot.abc.iembeds import IEmbeds
 
-FieldsT = t.Optional[list[tuple[t.Union[str, int], t.Union[str, int], bool]]]
+FieldsT = t.Optional[list[tuple[t.Any, t.Any, bool]]]
 ResourceishT = t.Optional[hikari.Resourceish]
 ESCAPE_NAME: t.Final = "None"
 

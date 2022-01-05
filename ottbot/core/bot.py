@@ -3,7 +3,6 @@ import logging
 import os
 import typing as t
 
-import asyncio
 import hikari
 import sake
 import tanjun

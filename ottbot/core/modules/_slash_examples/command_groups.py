@@ -1,10 +1,10 @@
 import asyncio
+import typing as t
+
 import hikari
 import tanjun
 
 from ottbot.core.utils.funcs import build_loaders
-
-import typing as t
 
 component, load_component, unload_component = build_loaders()
 
@@ -47,7 +47,7 @@ async def hi_command(ctx: tanjun.abc.Context, name: t.Optional[str], member: hik
 @component.with_command
 @tanjun.as_slash_command("defer", "Lower level command which explicitly defers")
 async def defer_command(ctx: tanjun.abc.SlashContext) -> None:
-    
+
     # Note that if we want the response that's later edited in to be ephemeral
     # then we can pass `flags=hikari.MessageFlags.EPHEMERAL` to `SlashContext.defer`.
     await ctx.defer(flags=hikari.MessageFlag.EPHEMERAL)

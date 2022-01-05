@@ -303,7 +303,7 @@ def is_int_validator(_, event: hikari.GuildMessageCreateEvent) -> bool:
 # key=lambda x: head(await somefunction(x) for _ in '_')
 
 
-def strfdelta(tdelta, fmt="{D:02}d {H:02}h {M:02}m {S:02}s", inputtype="timedelta"):
+def strfdelta(tdelta, fmt="{D:02}d {H:02}h {M:02}m {S:02}s", inputtype="timedelta") -> str:
     """Convert a datetime.timedelta object or a regular number to a custom-
     formatted string, just like the stftime() method does for datetime.datetime
     objects.
@@ -339,7 +339,8 @@ def strfdelta(tdelta, fmt="{D:02}d {H:02}h {M:02}m {S:02}s", inputtype="timedelt
         remainder = int(tdelta) * 86400
     elif inputtype in ["w", "weeks"]:
         remainder = int(tdelta) * 604800
-
+    else:
+        raise ValueError("Unknown input type")
     f = Formatter()
     desired_fields = [field_tuple[1] for field_tuple in f.parse(fmt)]
     possible_fields = ("W", "D", "H", "M", "S")
@@ -354,7 +355,7 @@ def strfdelta(tdelta, fmt="{D:02}d {H:02}h {M:02}m {S:02}s", inputtype="timedelt
 ORDINAL_ENDINGS = {"1": "st", "2": "nd", "3": "rd"}
 
 
-def ordinal(number):
+def ordinal(number: int) -> str:
     if str(number)[-2:] not in ("11", "12", "13"):
         return f"{number:,}{ORDINAL_ENDINGS.get(str(number)[-1], 'th')}"
     else:

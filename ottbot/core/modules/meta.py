@@ -4,15 +4,14 @@ import typing as t
 from datetime import timedelta
 from platform import python_version
 
-import hikari
-from hikari import permissions
-
 import distro
+import hikari
 import tanjun
+from psutil import Process, virtual_memory
+
 from ottbot.constants import ZWJ
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders, ordinal, strfdelta
-from psutil import Process, virtual_memory
 
 component, load_component, unload_component = build_loaders()
 
@@ -96,20 +95,28 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(
 
 
 @component.with_slash_command
-@tanjun.with_member_slash_option("user", "The user to get infomation about", default=None)
+@tanjun.with_member_slash_option("user", "The user to get information about", default=None)
 @tanjun.as_slash_command("user_info", "Information about a user")
 async def cmd_user_info(
     ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.injected(type=OttBot)
 ) -> None:
+    if ctx.guild_id is None:
+        return
     if user is None:
         user = await bot.rest.fetch_member(ctx.guild_id, ctx.author)
 
     guild = await ctx.fetch_guild()
+    if guild is None:
+        return
     user_roles = await user.fetch_roles()
     guild_roles = await bot.rest.fetch_roles(ctx.guild_id)
 
     presence = user.get_presence()
+    if presence is None:
+        return
     top_role = user.get_top_role()
+    if top_role is None:
+        return
     permissions = tanjun.utilities.calculate_permissions(user, guild, {role.id: role for role in user_roles})
 
     administrator = (permissions & hikari.Permissions.ADMINISTRATOR) == hikari.Permissions.ADMINISTRATOR
@@ -170,6 +177,8 @@ async def cmd_user_info(
 @tanjun.as_slash_command("server_info", "Information about the current server information")
 async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     guild = await ctx.fetch_guild()
+    if guild is None:
+        return
     guild_roles = await guild.fetch_roles()
     guild_members = guild.get_members()
     guild_channels = guild.get_channels()
@@ -183,7 +192,7 @@ async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inj
     GUILD_LEVEL_TO_MAX_EMOJIS = {0: 50, 1: 100, 2: 150, 3: 250}
 
     fields = [
-        ("ID", ctx.guild_id, False),
+        ("ID", f"{ctx.guild_id}", False),
         ("Owner", f"<@{guild.owner_id}>", False),
         ("Top role", sorted(guild_roles, key=lambda r: r.position)[-1].mention, True),
         ("Members", f"{len(guild_members):,}", True),
@@ -213,15 +222,14 @@ async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inj
         (
             "Statuses",
             (
-                f"🟢 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and m.get_presence() and m.get_presence().visible_status == hikari.Status.ONLINE]):,} "
-                f"🟠 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and m.get_presence() and m.get_presence().visible_status == hikari.Status.IDLE]):,} "
-                f"🔴 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and m.get_presence() and m.get_presence().visible_status == hikari.Status.DO_NOT_DISTURB]):,} "
+                f"🟢 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and (pres1 := m.get_presence()) is not None and pres1.visible_status == hikari.Status.ONLINE]):,} "  # noqa: E501
+                f"🟠 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and (pres2 := m.get_presence()) is not None and pres2.visible_status == hikari.Status.IDLE]):,} "  # noqa: E501
+                f"🔴 {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and (pres3 := m.get_presence()) is not None and pres3.visible_status == hikari.Status.DO_NOT_DISTURB]):,} "  # noqa: E501
                 f"⚪ {len([m for _, m in guild_members.items() if isinstance(m, hikari.Member) and m.get_presence() is None]):,}"
             ),
             False,
         ),
     ]
-    [print(m.get_presence()) for _, m in guild_members.items() if isinstance(m, hikari.Member)]
     embed = bot.embeds.build(
         ctx=ctx,
         title="Server Information",
@@ -232,7 +240,7 @@ async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inj
 
     await ctx.respond(embed=embed)
 
-    # TODO: Channel/Catagory Info
+    # TODO: Channel/Category Info
     # TODO: Role Info
     # TODO: Message Info
     # TODO: Paginator -> detailed server info

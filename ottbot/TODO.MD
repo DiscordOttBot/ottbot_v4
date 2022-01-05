@@ -1,10 +1,5 @@
 # Current Errors / bugs
 
-- [ ] mypy
-- [ ] bot.run()
-  - bot.run() -> super.run() -> bot.start() -> super.start()
-  - calling bot.start() after bot.run() causes errors
-
 # Immediate
 
 - [ ] Built-in ReST API
@@ -13,7 +8,7 @@
   - [x] Error Handler
   - [x] Logging system
   - [x] Embed Factory
-  - [ ] Async Database Wrapper
+  - [x] Async Database Wrapper
     - [ ] database schema
 
 # Soon™
