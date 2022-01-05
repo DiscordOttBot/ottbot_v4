@@ -21,14 +21,19 @@ def build_on_error(logger: Logger) -> t.Callable[[tanjun.abc.Context, BaseExcept
     async def on_error(ctx: tanjun.abc.Context, exc: BaseException) -> None:
         log_exc(ctx, exc, logger)
 
-        if isinstance(exc, hikari.ExceptionEvent):
+        if isinstance(exc, hikari.BadRequestError):
+            logger.error(f"Hikari Error\n{exc!r}\n{ctx!r}")
+            await ctx.respond(_embed(ctx, f"**Hikari Error** ```{exc.args[0]}```"))
+            raise exc
+
+        elif isinstance(exc, hikari.ExceptionEvent):
             await ctx.respond(
                 _embed(ctx, f"**HIKARI ERROR**```{exc.args[0] if len(exc.args) > 0  else 'No error message'}```")
             )
             print(exc.args)
             raise exc
 
-        if isinstance(exc, Exception):
+        elif isinstance(exc, Exception):
             await ctx.respond(_embed(ctx, f"**ERROR**```{exc.args[0] if len(exc.args) > 0 else 'No error message'}```"))
 
             print(exc.args)

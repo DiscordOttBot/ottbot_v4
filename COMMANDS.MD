@@ -7,7 +7,6 @@
     - [/serverinfo](#serverinfo)
     - [/userinfo](#userinfo)
     - [/stats](#stats)
-    - [/seen \<user\>](#seen-user)
     - [/spotlight \<user\>](#spotlight-user)
   - [Xp](#xp)
     - [/leaderboard](#leaderboard)
@@ -139,7 +138,7 @@ Displays statistics about the bot.
 <embed>
 ```
 
-### /seen \<user\>
+<!-- ### /seen \<user\>
 
 Displays the approximate time the user was last online.
 
@@ -149,7 +148,7 @@ Displays the approximate time the user was last online.
 /seen @user
 
 user was last online 1:00:00 hour ago
-```
+``` -->
 
 ### /spotlight \<user\>
 
@@ -754,4 +753,7 @@ UNKNOWN/TODO
     ISS tracker
     whois
     IRL event tracking: Leap day/second, ISS tracker
+
+RETHINK
+    seen
  -->

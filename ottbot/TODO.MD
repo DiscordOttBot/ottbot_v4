@@ -24,4 +24,4 @@
 
 - [ ] Good looking web dashboard
 - [ ] advertisement / voting system
-- [ ] music features
+- [ ] voice features
