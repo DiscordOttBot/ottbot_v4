@@ -473,10 +473,32 @@ Gives the [mute role](#muterole) to the user.
 Gives the [shadow ban role](#shadowbanrole) to the user.
 
 `user`: The user that will be muted.  
-`duration` _default=until tf2 gets an update (forever)_: The duration in minutes the user us banned.
+`duration` _default=until tf2 gets an update (forever)_: The duration in minutes the user is banned.
 
 ```
 /shadowban @user1 1
+```
+
+### /timeout \<@user> [duration]
+
+Uses the build in timeout feature to timeout a user.
+
+`user`: The user to timeout.  
+`duration`: The duration in minutes the user timed out.
+
+```
+/timeout @user1 10
+```
+
+### /warn \<@user> [reason]
+
+Add a guild-wide warning to the user's account.
+
+`user`: The user that will be warned.
+`reason`: The reason why the user was warned.
+
+```
+/warn @user1 spamming
 ```
 
 ### /lock [channel] [duration]
