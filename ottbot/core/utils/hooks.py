@@ -98,3 +98,6 @@ def log_exc(ctx: tanjun.abc.Context, exc: BaseException, logger: Logger) -> None
     error_msg += "".join(traceback.format_tb(exc.__traceback__))
 
     logger.error(error_msg)
+
+
+# @bot.listen(hikari.ExceptionEvent[hikari.BadRequestError])

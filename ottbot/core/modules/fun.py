@@ -53,7 +53,14 @@ async def cmd_dice(ctx: tanjun.abc.SlashContext, count: int, sides: int) -> None
         await ctx.respond("No more than 100 dice can be rolled at once.")
     elif sides > 100:
         await ctx.respond("The dice cannot have more than 100 sides.")
-    
+
     await ctx.respond(
         f"{' + '.join((l := [f'{random.randint(1, sides)}' for _ in range(count)]))} = {sum([int(n) for n in l])}"
     )
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("cf", "Flip a coin")
+async def cmd_cf(ctx: tanjun.abc.SlashContext) -> None:
+    await ctx.respond("Heads" if random.randint(0, 1) == 0 else "Tails")
+
