@@ -101,3 +101,28 @@ async def cmd_wheel(
     await ctx.respond(
         f"{', '.join([m.display_name for m in members])} {'was' if len(members) == 1 else 'were'} not choosen"
     )
+
+
+@component.with_slash_command
+@tanjun.with_member_slash_option(
+    "member", "The member to choose from, defaults to the previous message's author", default=None
+)
+@tanjun.with_str_slash_option("reason", "The reason for slapping the member", default=None)
+@tanjun.as_slash_command("slap", "Slap someone")
+async def cmd_slap(
+    ctx: tanjun.abc.SlashContext,
+    member: hikari.Member | None,
+    reason: str | None,
+    bot: OttBot = tanjun.injected(type=OttBot),
+) -> None:
+    if member is None:
+        msgs: list[hikari.Message] = []
+        async for m in bot.cache.get_messages_view().iterator():
+            if m.channel_id == ctx.channel_id:
+                msgs.append(m)
+        user = max(msgs, key=lambda m: m.created_at).author
+        member = bot.cache.get_member(ctx.guild_id, user)
+        if member is None:
+            member = await bot.rest.fetch_member(ctx.guild_id, user)
+
+    await ctx.respond(f"{ctx.author.mention} slapped {member.mention}" + (f" for {reason}" if reason else ""))
