@@ -4,6 +4,7 @@ import os
 import typing as t
 from glob import glob
 
+import aiohttp
 import hikari
 from hikari import presences
 
@@ -96,6 +97,8 @@ class OttBot(hikari.GatewayBot, IBot):
 
         cache = sake.redis.RedisCache(app=self, event_manager=self.event_manager, address="redis://127.0.0.1")
 
+        session = aiohttp.ClientSession()
+
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=SERVER_ID, event_managed=True
@@ -111,10 +114,12 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
             .set_type_dependency(sake.redis.RedisCache, cache)
+            .set_type_dependency(aiohttp.ClientSession, session)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, cache.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, cache.close)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
+            .add_client_callback(tanjun.ClientCallbackNames.CLOSING, session.close)
         )
 
     async def init_cache(self: _BotT):

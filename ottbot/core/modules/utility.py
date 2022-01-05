@@ -51,3 +51,11 @@ async def cmd_qr(
     else:
         await ctx.respond("Invalid format")
     bot.clean_dynamic_dir()
+
+
+# TODO: Add /code command when discord allows multi line slash commands
+# @component.with_slash_command
+# @tanjun.with_str_slash_option("language", "The language of the ")
+# @tanjun.as_slash_command("code", "Run code")
+# async def cmd_code(ctx: tanjun.abc.SlashContext) -> None:
+#     await ctx.respond("test")
