@@ -101,6 +101,6 @@ def log_exc(ctx: tanjun.abc.Context, exc: BaseException, logger: Logger) -> None
 
 
 # @bot.listen(hikari.ExceptionEvent[hikari.BadRequestError])
-def on_general_error(event: hikari.ExceptionEvent):
+async def on_general_error(event: hikari.ExceptionEvent):
     if isinstance(event.exception, hikari.BadRequestError):
         ...
