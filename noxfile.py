@@ -1,3 +1,5 @@
+import subprocess
+
 import nox
 
 
@@ -12,14 +14,16 @@ def format_code(session):
 
 @nox.session(reuse_venv=True)
 def lint_code(session: nox.Session):
-    
-    # session.install("flake8")
+
+    session.install("flake8")
     session.install("mypy==0.930")
     session.install("pyright")
     session.install("-r", "requirements.txt")
-    # session.run("flake8", "ottbot")
-    session.run("mypy", "--version")
+
+    session.run("flake8", "ottbot")
+
     session.run("mypy", "--install-types")
-    session.run("mypy", "ottbot", "--pretty")
+    with open("mypy.log", "w") as f:
+        session.run("mypy", "ottbot", "--pretty", stdout=f)
 
     session.run("pyright", "ottbot")

@@ -27,7 +27,6 @@ InteractiveButtonTypesT = t.Literal[
 ]
 
 
-
 class EmbedStyle(t.TypedDict):
     title: str
     style: InteractiveButtonTypesT
