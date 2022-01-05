@@ -64,3 +64,10 @@ async def cmd_dice(ctx: tanjun.abc.SlashContext, count: int, sides: int) -> None
 async def cmd_cf(ctx: tanjun.abc.SlashContext) -> None:
     await ctx.respond("Heads" if random.randint(0, 1) == 0 else "Tails")
 
+
+@component.with_slash_command
+@tanjun.with_int_slash_option("min", "The minimum number", default=1)
+@tanjun.with_int_slash_option("max", "The maximum number", default=100)
+@tanjun.as_slash_command("rand", "Get a random number")
+async def cmd_rand(ctx: tanjun.abc.SlashContext, min: int, max: int) -> None:
+    await ctx.respond(random.randint(min, max))
