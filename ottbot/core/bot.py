@@ -6,12 +6,12 @@ from glob import glob
 
 import aiohttp
 import hikari
-from hikari import presences
-
 import sake
 import tanjun
 import yuyo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from hikari import presences
+
 from ottbot import constants
 from ottbot.abc.ibot import IBot
 from ottbot.config import Config
@@ -20,9 +20,16 @@ from ottbot.core.db import AsyncPGDatabase
 from ottbot.core.utils.embeds import Embeds
 from ottbot.core.utils.errors import Errors
 from ottbot.core.utils.funcs import delete_button_callback, parse_log_level
-from ottbot.core.utils.hooks import build_on_error, build_on_parser_error, on_general_error
+from ottbot.core.utils.hooks import (
+    build_on_error,
+    build_on_parser_error,
+    on_general_error,
+)
 from ottbot.core.utils.lines import Lines
-from ottbot.core.utils.rotating_logs import BetterTimedRotatingFileHandler, HikariFormatter
+from ottbot.core.utils.rotating_logs import (
+    BetterTimedRotatingFileHandler,
+    HikariFormatter,
+)
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[

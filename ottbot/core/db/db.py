@@ -97,4 +97,5 @@ class AsyncPGDatabase:
     async def scriptexec(self, path: str, conn: asyncpg.Connection) -> None:
         """Execute an sql script at a given path."""
         async with aiofiles.open(path, "r", encoding="utf-8") as script:
+            print("\n\n\n\n\nexecuting sql script\n\n\n\n\n")
             await conn.execute((await script.read()))

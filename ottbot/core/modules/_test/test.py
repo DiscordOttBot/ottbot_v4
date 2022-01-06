@@ -109,3 +109,5 @@ async def cmd_nick_test(
     await member.edit(nick="asdf")
     await member.edit(nick=hikari.UNDEFINED)
     await ctx.respond("User Updated")
+    
+    

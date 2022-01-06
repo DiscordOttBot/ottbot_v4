@@ -9,10 +9,13 @@ import typing as t
 from string import Formatter
 
 import hikari
+
+import sake
 import tanjun
 import yuyo
-
 from ottbot import constants
+
+T = t.TypeVar("T")
 
 
 def to_dict(obj, ignore_underscores: bool = True) -> dict[str, str]:
@@ -360,3 +363,46 @@ def ordinal(number: int) -> str:
         return f"{number:,}{ORDINAL_ENDINGS.get(str(number)[-1], 'th')}"
     else:
         return f"{number:,}th"
+
+
+@t.overload
+def obtain_item(
+    type: hikari.Member,
+    cache: hikari.api.Cache,
+    redis: sake.redis.RedisCache,
+    rest: hikari.api.RESTClient,
+    id: int,
+    secondary_id: int,
+) -> hikari.Member:
+    ...
+
+
+async def obtain_item(
+    type: T,
+    cache: hikari.api.Cache,
+    redis: sake.redis.RedisCache,
+    rest: hikari.api.RESTClient,
+    id: int,
+    secondary_id: int | None = None,
+) -> T:
+    match type:
+        case hikari.Guild:
+            guild = cache.get_guild(id)
+            if guild is not None:
+                return guild
+            try:
+                guild = await redis.get_guild(id)
+                return guild
+            except sake.errors.EntryNotFound:
+                guild = await rest.fetch_guild(id)
+                return guild
+        case hikari.Member:
+            member = cache.get_member(secondary_id, id)
+            if member is not None:
+                return member
+            try:
+                member = await redis.get_member(secondary_id, id)
+                return member
+            except sake.errors.EntryNotFound:
+                member = await rest.fetch_member(secondary_id, id)
+                return member

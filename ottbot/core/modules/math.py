@@ -1,11 +1,12 @@
+import asyncio
 import os
 import subprocess
-import tanjun
-import asyncio
 
-from ottbot.core.utils.funcs import build_loaders
-from ottbot.core.bot import OttBot
+import tanjun
+
 from ottbot.constants import ZWJ
+from ottbot.core.bot import OttBot
+from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()
 
