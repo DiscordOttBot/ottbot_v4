@@ -14,6 +14,8 @@ component, load_component, unload_component = build_loaders()
 async def cmd_spotlight(
     ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.injected(type=OttBot)
 ) -> None:
+    if ctx.guild_id is None:
+        return
     if user is None:
         user = await bot.rest.fetch_member(ctx.guild_id, ctx.author)
     messages: list[hikari.Message] = []

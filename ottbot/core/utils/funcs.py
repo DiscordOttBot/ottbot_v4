@@ -9,10 +9,10 @@ import typing as t
 from string import Formatter
 
 import hikari
-
 import sake
 import tanjun
 import yuyo
+
 from ottbot import constants
 
 T = t.TypeVar("T")
@@ -366,7 +366,7 @@ def ordinal(number: int) -> str:
 
 
 @t.overload
-def obtain_item(
+async def obtain_item(
     type: hikari.Member,
     cache: hikari.api.Cache,
     redis: sake.redis.RedisCache,
@@ -377,8 +377,20 @@ def obtain_item(
     ...
 
 
+@t.overload
 async def obtain_item(
-    type: T,
+    type: t.Type[T],
+    cache: hikari.api.Cache,
+    redis: sake.redis.RedisCache,
+    rest: hikari.api.RESTClient,
+    id: int,
+    secondary_id: int | None = None,
+) -> T:
+    ...
+
+
+async def obtain_item(
+    type: t.Type[T],
     cache: hikari.api.Cache,
     redis: sake.redis.RedisCache,
     rest: hikari.api.RESTClient,

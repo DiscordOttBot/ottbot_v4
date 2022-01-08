@@ -1,4 +1,3 @@
-import asyncio
 import os
 import subprocess
 
@@ -58,4 +57,4 @@ async def cmd_latex(
         await msg.edit(attachment=f"{bot._dynamic}/{path}")
         bot.clean_dynamic_dir()
     else:
-        await ctx.send("Error creating latex file")
+        await ctx.respond("Error creating latex file")

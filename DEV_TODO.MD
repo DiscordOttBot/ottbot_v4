@@ -40,4 +40,6 @@
 
 ## On Hold
 
+- [ ] Activities
+  - https://github.com/advaith1/activities
 - [ ] mypy (why does it always break)

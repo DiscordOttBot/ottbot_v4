@@ -17,6 +17,8 @@ component, load_component, unload_component = build_loaders()
 @tanjun.as_slash_command("8ball", "Ask the magic 8ball a question")
 async def cmd_8ball(ctx: tanjun.abc.SlashContext, question: str, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     """Ask the magic 8ball a question"""
+    if ctx.guild_id is None:
+        return
     member = await bot.rest.fetch_member(ctx.guild_id, ctx.author)
     responses = [
         "It is certain.",
@@ -84,12 +86,15 @@ async def cmd_float(ctx: tanjun.abc.SlashContext) -> None:
 
 
 @component.with_slash_command
-@tanjun.with_str_slash_option("ids", "A list of member ids to choose from seperated by spaces")
+@tanjun.with_str_slash_option("ids", "A list of member ids to chpose from separated by spaces")
 @tanjun.with_int_slash_option("count", "The number of members to count down to", default=1)
 @tanjun.as_slash_command("wheel", "Spin a wheel to select an item from a list")
 async def cmd_wheel(
     ctx: tanjun.abc.SlashContext, ids: str, count: int, bot: OttBot = tanjun.injected(type=OttBot)
 ) -> None:
+    if ctx.guild_id is None:
+        return
+
     members = [await bot.rest.fetch_member(ctx.guild_id, int(id)) for id in ids[1:-1].split(" ")]
     if len(members) < count:
         await ctx.respond("Not enough members to choose from.")
@@ -98,9 +103,9 @@ async def cmd_wheel(
         random.shuffle(members)
         chosen = members.pop()
         await ctx.respond(f"{chosen.display_name} is safe")
-        asyncio.sleep(1)
+        await asyncio.sleep(1)
     await ctx.respond(
-        f"{', '.join([m.display_name for m in members])} {'was' if len(members) == 1 else 'were'} not choosen"
+        f"{', '.join([m.display_name for m in members])} {'was' if len(members) == 1 else 'were'} not chosen"
     )
 
 
@@ -116,6 +121,9 @@ async def cmd_slap(
     reason: str | None,
     bot: OttBot = tanjun.injected(type=OttBot),
 ) -> None:
+    if ctx.guild_id is None:
+        return
+
     if member is None:
         msgs: list[hikari.Message] = []
         async for m in bot.cache.get_messages_view().iterator():

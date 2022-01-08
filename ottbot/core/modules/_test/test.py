@@ -1,12 +1,12 @@
-import pathlib
 import random
 
 import hikari
+import sake
 import tanjun
 from hikari.events.message_events import GuildMessageCreateEvent
 
 from ottbot.core.bot import OttBot
-from ottbot.core.utils.funcs import build_loaders
+from ottbot.core.utils.funcs import build_loaders, obtain_item
 
 component, load_component, unload_component = build_loaders()
 
@@ -89,15 +89,13 @@ async def cmd_waitdfor(
 @tanjun.as_slash_command("testdb", "test that the bot's database is working")
 async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
     await bot.pool.execute(
-        "INSERT INTO users (id) VALUES ($1)",
-        ctx.author.id,
+        "INSERT INTO users (discord_id) VALUES ($1)",
+        str(ctx.author.id),
     )
-    [id_] = await bot.pool.row("SELECT * FROM users WHERE id = $1", ctx.author.id)
-    usr = await bot.rest.fetch_user(id_)
+    _, id_ = await bot.pool.row("SELECT * FROM users WHERE discord_id = $1", str(ctx.author.id))
+    usr = await bot.rest.fetch_user(int(id_))
     await ctx.respond(usr.username)
-    await bot.pool.execute("DELETE FROM users WHERE id = $1", ctx.author.id)
-
-
+    await bot.pool.execute("DELETE FROM users WHERE discord_id = $1", str(ctx.author.id))
 
 
 @component.with_slash_command
@@ -109,5 +107,19 @@ async def cmd_nick_test(
     await member.edit(nick="asdf")
     await member.edit(nick=hikari.UNDEFINED)
     await ctx.respond("User Updated")
-    
-    
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("testobt", "Test obtain item")
+async def cmd_testobt(
+    ctx: tanjun.abc.SlashContext,
+    sake: sake.redis.RedisCache = tanjun.injected(type=sake.redis.RedisCache),
+    bot: OttBot = tanjun.injected(type=OttBot),
+) -> None:
+    if ctx.guild_id is None:
+        return
+    member = await obtain_item(hikari.Member, bot.cache, sake, bot.rest, ctx.author.id, ctx.guild_id)
+    await ctx.respond(member.display_name)
+
+    guild = await obtain_item(hikari.Guild, bot.cache, sake, bot.rest, ctx.guild_id)
+    await ctx.respond(guild.name)
