@@ -2,14 +2,14 @@
 
 # Immediate
 
-- [ ] Built-in ReST API
+- [x] Built-in ReST API
 - [x] Redis Caching
 - [ ] Util code
   - [x] Error Handler
   - [x] Logging system
   - [x] Embed Factory
   - [x] Async Database Wrapper
-    - [ ] database schema
+    - [x] database schema
 
 # Soon™
 
@@ -18,7 +18,7 @@
   - [x] authentication
   - [ ] fetching data from Discord
   - [ ] fetching data from Bot
-  - [ ] posting data to bot / DB
+  - [x] posting data to bot / DB
 
 # Long Term
 

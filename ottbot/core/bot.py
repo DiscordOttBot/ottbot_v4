@@ -122,7 +122,6 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(AsyncPGDatabase, self.pool)
             .set_type_dependency(sake.redis.RedisCache, cache)
             .set_type_dependency(aiohttp.ClientSession, session)
-
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, session.close)

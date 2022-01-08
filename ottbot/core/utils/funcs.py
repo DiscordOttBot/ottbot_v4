@@ -367,7 +367,7 @@ def ordinal(number: int) -> str:
 
 @t.overload
 async def obtain_item(
-    type: hikari.Member,
+    type: t.Type[hikari.Member],
     cache: hikari.api.Cache,
     redis: sake.redis.RedisCache,
     rest: hikari.api.RESTClient,

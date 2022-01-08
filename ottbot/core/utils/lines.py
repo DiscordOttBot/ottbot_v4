@@ -1,6 +1,10 @@
+import logging
 from pathlib import Path
 
 from pygount import ProjectSummary, SourceAnalysis
+import pygount
+
+logging.getLogger(pygount.__name__).setLevel(logging.CRITICAL)
 
 
 class Lines:
