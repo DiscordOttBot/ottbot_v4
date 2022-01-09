@@ -160,9 +160,22 @@ async def cmd_set(
 
 
 
+
 # TODO: Award currnecy to someone who comes up with the name of the currency
 
 """
+Prestige system
+
+- bank has a max amount per level
+- pay / give items to level up
+- once you reach a certian level you can prestige
+gain items through shop / loot boxes
+
+presige resets all currency and some items but gives a currency boost
+
+gain roles based on prestige level
+
+
 Commands
 
 bal

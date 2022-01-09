@@ -123,3 +123,14 @@ async def cmd_testobt(
 
     guild = await obtain_item(hikari.Guild, bot.cache, sake, bot.rest, ctx.guild_id)
     await ctx.respond(guild.name)
+
+
+@component.with_slash_command
+@tanjun.as_slash_command("embedtest", "description")
+async def cmd_embedtest(ctx: tanjun.abc.SlashContext) -> None:
+    """Send just an embed"""
+    if ctx.guild_id is None:
+        return
+
+    msg = await ctx.respond(hikari.Embed(title="asdf", description="asdf"), ensure_result=True)
+    await msg.edit(embed=hikari.Embed(title="asdf", description="asdf", color=0xFF0000))

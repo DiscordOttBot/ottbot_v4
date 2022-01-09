@@ -34,7 +34,7 @@ class OttClient(tanjun.Client, IClient):
     def load_modules_(self, module: str = ""):
         """Loads slash command modules"""
 
-        return super().load_modules(*get_list_of_files("ottbot/core/modules/" + module))
+        return super().load_modules(*get_list_of_files("ottbot/core/modules/" + module, ignore_underscores=False))
 
     @classmethod
     def from_gateway_bot_(
