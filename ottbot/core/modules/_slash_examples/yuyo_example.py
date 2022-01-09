@@ -51,8 +51,10 @@ async def cmd_yuyoreaction(
     @handler.with_callback("🗿")
     async def on_emoji_b(event: hikari.ReactionAddEvent | hikari.ReactionDeleteEvent) -> None:
         if event.emoji_name is not None:
-            print(event.emoji_name + "\n\n\n\nb")
+            print(event.emoji_name + "\n\n\n\nb callback")
 
     message = await ctx.respond("content", ensure_result=True)
+    await message.add_reaction("🗿")
     await handler.open(message)
     reaction_client.add_handler(message, handler)
+

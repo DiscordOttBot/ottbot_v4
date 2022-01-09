@@ -39,7 +39,7 @@ EventT = t.Union[
     hikari.StoppedEvent,
 ]
 
-SERVER_ID: int = 545984256640286730
+
 
 
 class OttBot(hikari.GatewayBot, IBot):
@@ -108,7 +108,7 @@ class OttBot(hikari.GatewayBot, IBot):
 
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
-            self, declare_global_commands=SERVER_ID, event_managed=True
+            self, declare_global_commands=constants.SERVER_ID, event_managed=True
         ).load_modules_()
         self.client = (
             self.client.set_hooks(

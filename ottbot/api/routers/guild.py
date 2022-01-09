@@ -34,16 +34,17 @@ async def get_guild_roles(id_: int):
 #         return status.HTTP_404_NOT_FOUND
 
 
-# @router.get("/{id_}/channels")
-# async def get_guild_channels(id_: int):
-#     """
-#     Get the channels of a guild
-#     :param id_: Guild ID
-#     :return: List of channels
-#     """
-#     guild = await router.bot.rest.fetch_guild(id_)
-#     if guild is None:
-#         return status.HTTP_404_NOT_FOUND
+@router.get("/{id_}/channels")
+async def get_guild_channels(id_: int):
+    """
+    Get the channels of a guild
+    :param id_: Guild ID
+    :return: List of channels
+    """
+    guild = await router.bot.rest.fetch_guild(id_)
+    if guild is None:
+        return status.HTTP_404_NOT_FOUND
+    return [ch for _, ch in guild.get_channels().items()]
 
 
 # @router.get("/{id_}/emojis")

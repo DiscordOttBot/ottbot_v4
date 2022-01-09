@@ -1,8 +1,9 @@
 import tanjun
 
-from ottbot.core.bot import SERVER_ID, OttBot
+from ottbot.core.bot import OttBot
 from ottbot.core.utils.checks import is_bot_owner_check
 from ottbot.core.utils.funcs import build_loaders, get_list_of_files
+from ottbot.constants import SERVER_ID
 
 component, load_component, unload_component = build_loaders(checks=[is_bot_owner_check])
 

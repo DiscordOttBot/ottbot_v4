@@ -23,7 +23,8 @@
 - [ ] reaction roles
 - [ ] rtfm code / command
 - [ ] auto complete
-
+- [ ] ? switch to dictonarys for api
+- [ ] update api endpoint so they match discords' endpoints
 ## Soon
 
 - [ ] normal commands
