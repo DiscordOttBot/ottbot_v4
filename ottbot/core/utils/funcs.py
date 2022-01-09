@@ -115,11 +115,12 @@ def get_list_of_files(dir_name: str, ignore_underscores: bool = True) -> list[pa
         ignore_underscores (bool): Whether to ignore files that start
             with an underscore.
     """
-
     list_of_files = os.listdir(dir_name)
     all_files = list()
     # Iterate over all the entries
     for entry in list_of_files:
+        if entry.startswith("_") and ignore_underscores:
+            continue
         # Create full path
         full_path = os.path.join(dir_name, entry)
         # If entry is a directory then get the list of files in this directory
@@ -127,10 +128,7 @@ def get_list_of_files(dir_name: str, ignore_underscores: bool = True) -> list[pa
             all_files += get_list_of_files(full_path)
         else:
             if full_path.endswith(".py"):
-                if ignore_underscores and full_path.split(os.sep)[-1].startswith("_"):
-                    continue
-                else:
-                    all_files.append(pathlib.Path(full_path))
+                all_files.append(pathlib.Path(full_path))
 
     return all_files
 

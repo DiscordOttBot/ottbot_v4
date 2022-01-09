@@ -16,7 +16,7 @@ async def cmd_load(
     module: str,
     bot: OttBot = tanjun.injected(type=OttBot),
 ) -> None:
-    modules = get_list_of_files(module)
+    modules = get_list_of_files("ottbot/core/modules/" + module)
     bot.client.load_modules_(module)
     await ctx.respond(f"loaded {[m.stem for m in modules]}")
 
