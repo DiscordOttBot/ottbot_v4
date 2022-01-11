@@ -2,8 +2,8 @@ import random
 from datetime import datetime
 
 import hikari
-
 import tanjun
+
 from ottbot.core.db.db import AsyncPGDatabase
 from ottbot.core.utils.funcs import build_loaders
 
@@ -70,7 +70,7 @@ async def cmd_daily(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.i
             return
 
     new_bal = bal + 1  # TODO: change how bal is calculated
-    set_bal(db, ctx.author.id, new_bal)
+    await set_bal(db, ctx.author.id, new_bal)
 
     await ctx.respond(f"Your new balance is {new_bal}")
 
@@ -125,18 +125,18 @@ async def cmd_deposit(
 
     bal = await get_bal(db, ctx.author.id)
     if amount.lower() == "all":
-        amount = bal
+        deposit = bal
         await set_bal(db, ctx.author.id, 0)
     else:
-        amount = int(amount)
-        if amount > bal:
+        deposit = int(amount)
+        if deposit > bal:
             await ctx.respond("You don't have that much currency!")
             return
-        set_bal(db, ctx.author.id, bal - amount)
+        await set_bal(db, ctx.author.id, bal - deposit)
 
     bank = await get_bank(db, ctx.author.id)
-    await set_bank(db, ctx.author.id, amount + bank)
-    await ctx.respond(f"Deposited {amount} currency into your bank. Your new bank balance is {amount + bank}")
+    await set_bank(db, ctx.author.id, deposit + bank)
+    await ctx.respond(f"Deposited {deposit} currency into your bank. Your new bank balance is {deposit + bank}")
 
 
 @currency_group.with_command
@@ -158,9 +158,6 @@ async def cmd_set(
     await ctx.respond(f"Set your balance to {amount}")
 
 
-
-
-
 # TODO: Award currnecy to someone who comes up with the name of the currency
 
 """
@@ -168,7 +165,7 @@ Prestige system
 
 - bank has a max amount per level
 - pay / give items to level up
-- once you reach a certian level you can prestige
+- once you reach a certain level you can prestige
 gain items through shop / loot boxes
 
 presige resets all currency and some items but gives a currency boost

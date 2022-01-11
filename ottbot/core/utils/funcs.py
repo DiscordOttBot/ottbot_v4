@@ -374,6 +374,7 @@ async def obtain_item(
 ) -> hikari.Member:
     ...
 
+
 @t.overload
 async def obtain_item(
     type: t.Type[hikari.Guild],
@@ -384,6 +385,7 @@ async def obtain_item(
     secondary_id: None,
 ) -> hikari.Guild:
     ...
+
 
 @t.overload
 async def obtain_item(
@@ -415,7 +417,7 @@ async def obtain_item(
         except sake.errors.EntryNotFound:
             member = await rest.fetch_member(secondary_id, id)
             return member
-    
+
     if type is hikari.Guild:
         guild = cache.get_guild(id)
         if guild is not None:

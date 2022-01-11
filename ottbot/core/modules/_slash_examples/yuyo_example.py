@@ -57,4 +57,3 @@ async def cmd_yuyoreaction(
     await message.add_reaction("🗿")
     await handler.open(message)
     reaction_client.add_handler(message, handler)
-
