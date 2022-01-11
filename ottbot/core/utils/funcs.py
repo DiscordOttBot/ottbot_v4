@@ -374,6 +374,16 @@ async def obtain_item(
 ) -> hikari.Member:
     ...
 
+@t.overload
+async def obtain_item(
+    type: t.Type[hikari.Guild],
+    cache: hikari.api.Cache,
+    redis: sake.redis.RedisCache,
+    rest: hikari.api.RESTClient,
+    id: int,
+    secondary_id: None,
+) -> hikari.Guild:
+    ...
 
 @t.overload
 async def obtain_item(
@@ -388,31 +398,52 @@ async def obtain_item(
 
 
 async def obtain_item(
-    type: t.Type[T],
+    type: t.Any,
     cache: hikari.api.Cache,
     redis: sake.redis.RedisCache,
     rest: hikari.api.RESTClient,
     id: int,
     secondary_id: int | None = None,
-) -> T:
-    match type:
-        case hikari.Guild:
-            guild = cache.get_guild(id)
-            if guild is not None:
-                return guild
-            try:
-                guild = await redis.get_guild(id)
-                return guild
-            except sake.errors.EntryNotFound:
-                guild = await rest.fetch_guild(id)
-                return guild
-        case hikari.Member:
-            member = cache.get_member(secondary_id, id)
-            if member is not None:
-                return member
-            try:
-                member = await redis.get_member(secondary_id, id)
-                return member
-            except sake.errors.EntryNotFound:
-                member = await rest.fetch_member(secondary_id, id)
-                return member
+) -> t.Any:
+    if type is hikari.Member and secondary_id is not None:
+        member = cache.get_member(secondary_id, id)
+        if member is not None:
+            return member
+        try:
+            member = await redis.get_member(secondary_id, id)
+            return member
+        except sake.errors.EntryNotFound:
+            member = await rest.fetch_member(secondary_id, id)
+            return member
+    
+    if type is hikari.Guild:
+        guild = cache.get_guild(id)
+        if guild is not None:
+            return guild
+        try:
+            guild = await redis.get_guild(id)
+            return guild
+        except sake.errors.EntryNotFound:
+            guild = await rest.fetch_guild(id)
+            return guild
+    # match type:
+    #     case hikari.Guild:
+    #         guild = cache.get_guild(id)
+    #         if guild is not None:
+    #             return guild
+    #         try:
+    #             guild = await redis.get_guild(id)
+    #             return guild
+    #         except sake.errors.EntryNotFound:
+    #             guild = await rest.fetch_guild(id)
+    #             return guild
+    #     case hikari.Member:
+    #         member = cache.get_member(secondary_id, id)
+    #         if member is not None:
+    #             return member
+    #         try:
+    #             member = await redis.get_member(secondary_id, id)
+    #             return member
+    #         except sake.errors.EntryNotFound:
+    #             member = await rest.fetch_member(secondary_id, id)
+    #             return member

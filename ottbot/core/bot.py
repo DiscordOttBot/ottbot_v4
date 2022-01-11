@@ -40,8 +40,6 @@ EventT = t.Union[
 ]
 
 
-
-
 class OttBot(hikari.GatewayBot, IBot):
     """Main Bot Class"""
 
@@ -120,6 +118,7 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(yuyo.ReactionClient, reaction_client)  #
             .set_type_dependency(yuyo.ComponentClient, component_client)
             .set_type_dependency(AsyncPGDatabase, self.pool)
+            .set_type_dependency(AsyncIOScheduler, self.scheduler)
             .set_type_dependency(sake.redis.RedisCache, cache)
             .set_type_dependency(aiohttp.ClientSession, session)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
@@ -286,7 +285,7 @@ class OttBot(hikari.GatewayBot, IBot):
         ...
 
     async def on_guild_available(self: _BotT, event: hikari.GuildAvailableEvent) -> None:
-        ...
+        print(event.guild.name)
 
     def clean_dynamic_dir(self: _BotT) -> None:
         filelist = glob(os.path.join(self._dynamic, "*"))

@@ -1,6 +1,8 @@
 import logging
 from pathlib import Path
 
+import hikari
+
 from pygount import ProjectSummary, SourceAnalysis
 import pygount
 
@@ -37,3 +39,5 @@ class Lines:
         self.docs = data.total_documentation_count
         self.blank = data.total_empty_count
         self.total = data.total_line_count
+
+hikari.GatewayBot.update_presence(status=hikari.Status.ONLINE, activity=hikari.Activity(type=hikari.ActivityType.WATCHING, name="source code"))

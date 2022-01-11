@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS guild_config (
     id bigserial NOT NULL PRIMARY KEY,
     guild_id bigint NOT NULL UNIQUE,
-    prefix varchar(5) NOT NULL DEFAULT '!'
+    prefix varchar(5) NOT NULL DEFAULT '!',
+    welcome_channel_id bigint
 );
 
 DROP TABLE IF EXISTS currency;
