@@ -64,7 +64,7 @@ async def on_member_create(
                 uses = invite_ptr.uses
                 await db.execute("UPDATE invites SET uses = $1 WHERE code = $2", invite_ptr.uses, code)
                 break
-            
+
         elif db_ptr[1] < invite_ptr.code:
             if sorted_invites:
                 invite_ptr = sorted_invites.pop()
@@ -75,6 +75,9 @@ async def on_member_create(
                 db_ptr = sorted_db_invites.pop()
             else:
                 invite_ptr = sorted_invites.pop()
+
+    if code is not None and user is not None and uses is not None:
+        handle_invite_rewards(db, event.guild_id, user, code, uses)
 
     if user is not None:
         await event.member.send(
@@ -96,3 +99,9 @@ async def on_invite_create(
             event.invite.uses,
             event.invite.expires_at.replace(tzinfo=None),
         )
+
+
+def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User, code: int, uses: int):
+    """Handle and rewards given to users for inviting people defined in a Guild's config"""
+    # TODO: ^
+    ...

@@ -357,6 +357,17 @@ ORDINAL_ENDINGS = {"1": "st", "2": "nd", "3": "rd"}
 
 
 def ordinal(number: int) -> str:
+    """Correctly format an ordinal number.
+    
+    ```
+    ordinal(1) --> '1st'
+    ordinal(2) --> '2nd'
+    ordinal(3) --> '3rd'
+    ordinal(11) --> '11th'
+    ordinal(12) --> '12th'
+    ordinal(13) --> '13th'
+    ```
+    """
     if str(number)[-2:] not in ("11", "12", "13"):
         return f"{number:,}{ORDINAL_ENDINGS.get(str(number)[-1], 'th')}"
     else:
