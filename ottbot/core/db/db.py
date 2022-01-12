@@ -71,7 +71,7 @@ class AsyncPGDatabase:
 
         query = await conn.prepare(q)
         if data := await query.fetch(*values):
-            return [*map(lambda r: tuple(r.values()), data)]
+            return [*map(lambda r: tuple(r.values())[0], data)]
 
         return None
 

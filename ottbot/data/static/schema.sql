@@ -26,5 +26,29 @@ CREATE TABLE IF NOT EXISTS currency (
     user_id bigint NOT NULL,
     balance bigint NOT NULL DEFAULT 0,
     bank bigint NOT NULL DEFAULT 0,
-    last_daily TIMESTAMP
+    last_daily timestamp
 );
+
+-- Trigger for deleting old invites
+
+-- CREATE FUNCTION delete_old_invites() RETURNS trigger
+--     LANGUAGE plpgsql
+--     AS $$
+-- BEGIN
+--   DELETE FROM expire_table WHERE timestamp < NOW() - INTERVAL '1 minute';
+--   RETURN NEW;
+-- END;
+-- $$;
+
+CREATE TABLE IF NOT EXISTS invites (
+    id bigserial NOT NULL PRIMARY KEY,
+    user_id bigint NOT NULL,
+    guild_id bigint NOT NULL,
+    code varchar(32) NOT NULL,
+    uses bigint NOT NULL DEFAULT 0,
+    expires_at timestampz
+);
+
+-- CREATE TRIGGER delete_old_invites_trigger
+--     AFTER INSERT ON invites
+--     EXECUTE PROCEDURE delete_old_invites();

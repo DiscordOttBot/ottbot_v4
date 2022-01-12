@@ -4,12 +4,14 @@ import os
 import typing as t
 from glob import glob
 
-import aiohttp
 import hikari
+from ottbot.core.utils.session_manager import SessionManager
+from ottbot.core.utils.tasks import clean_invite_table
 import sake
 import tanjun
 import yuyo
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 from hikari import presences
 
 from ottbot import constants
@@ -102,8 +104,6 @@ class OttBot(hikari.GatewayBot, IBot):
 
         cache = sake.redis.RedisCache(app=self, event_manager=self.event_manager, address="redis://127.0.0.1")
 
-        session = aiohttp.ClientSession()
-
         # create tanjun client
         self.client: OttClient = OttClient.from_gateway_bot_(
             self, declare_global_commands=constants.SERVER_ID, event_managed=True
@@ -120,10 +120,13 @@ class OttBot(hikari.GatewayBot, IBot):
             .set_type_dependency(AsyncPGDatabase, self.pool)
             .set_type_dependency(AsyncIOScheduler, self.scheduler)
             .set_type_dependency(sake.redis.RedisCache, cache)
-            .set_type_dependency(aiohttp.ClientSession, session)
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, component_client.open)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, component_client.close)
-            .add_client_callback(tanjun.ClientCallbackNames.CLOSING, session.close)
+            .add_client_callback(tanjun.ClientCallbackNames.STARTING, self.scheduler.start)
+            .add_client_callback(tanjun.ClientCallbackNames.CLOSING, self.scheduler.shutdown)
+        )
+        SessionManager(self.client.rest.http_settings, self.client.rest.proxy_settings, "Discord Bot").load_into_client(
+            self.client
         )
 
     async def init_cache(self: _BotT):
@@ -157,7 +160,7 @@ class OttBot(hikari.GatewayBot, IBot):
     ) -> None:
         """Create the client, subscribe to important events, and run the bot.
 
-        When running an API along side the bot, use `await bot.start()`
+        When running an API along side the bot, use `await bot.start_()`
         and `await bot.close()` on api events instead."""
         self.create_client()
         self.subscribe_to_events()
@@ -240,13 +243,13 @@ class OttBot(hikari.GatewayBot, IBot):
             hikari.StartedEvent: self.on_started,
             hikari.StoppingEvent: self.on_stopping,
             hikari.StoppedEvent: self.on_stopped,
+            hikari.GuildAvailableEvent: self.on_guild_available,
             hikari.ExceptionEvent: on_general_error,
         }
         [self.event_manager.subscribe(key, subscriptions[key]) for key in subscriptions]
 
     async def on_starting(self: _BotT, event: hikari.StartingEvent) -> None:
         """Runs before bot is connected. Blocks on_started until complete."""
-
         # try:
         #     await self.cache.open()
         # except ConnectionRefusedError as e:
@@ -268,9 +271,7 @@ class OttBot(hikari.GatewayBot, IBot):
         await self.init_cache()
 
         self.client.scheduler.start()
-
-        # async for guild in self.rest.fetch_my_guilds():
-        # self.guilds.append(guild)
+        await self.schedule_tasks()
 
         logging.info("Bot ready")
 
@@ -285,7 +286,11 @@ class OttBot(hikari.GatewayBot, IBot):
         ...
 
     async def on_guild_available(self: _BotT, event: hikari.GuildAvailableEvent) -> None:
-        print(event.guild.name)
+        # self.guilds.append(event.guild)
+        ...
+
+    async def schedule_tasks(self) -> None:
+        self.scheduler.add_job(clean_invite_table, trigger=CronTrigger(second=0, minute=0, hour=0), args=[self.pool])
 
     def clean_dynamic_dir(self: _BotT) -> None:
         filelist = glob(os.path.join(self._dynamic, "*"))

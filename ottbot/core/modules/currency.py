@@ -158,6 +158,13 @@ async def cmd_set(
     await ctx.respond(f"Set your balance to {amount}")
 
 
+# TODO: Add message triggered games
+# @component.with_listener(hikari.GuildMessageCreateEvent)
+# async def foo(event: hikari.GuildMessageCreateEvent):
+#     print(f"GMCE: {event.message.content}")
+#     ...
+
+
 # TODO: Award currnecy to someone who comes up with the name of the currency
 
 """
