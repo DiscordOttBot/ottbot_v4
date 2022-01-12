@@ -1,7 +1,7 @@
 import random
 
-import hikari
 import aiohttp
+import hikari
 import sake
 import tanjun
 from hikari.events.message_events import GuildMessageCreateEvent
@@ -136,9 +136,12 @@ async def cmd_embedtest(ctx: tanjun.abc.SlashContext) -> None:
     msg = await ctx.respond(hikari.Embed(title="asdf", description="asdf"), ensure_result=True)
     await msg.edit(embed=hikari.Embed(title="asdf", description="asdf", color=0xFF0000))
 
+
 @component.with_slash_command
 @tanjun.as_slash_command("sessiontest", "Test the aiohttp session")
-async def cmd_sessiontest(ctx: tanjun.abc.SlashContext, session: aiohttp.ClientSession = tanjun.injected(type=aiohttp.ClientSession)) -> None:
+async def cmd_sessiontest(
+    ctx: tanjun.abc.SlashContext, session: aiohttp.ClientSession = tanjun.injected(type=aiohttp.ClientSession)
+) -> None:
     if ctx.guild_id is None:
         return
 

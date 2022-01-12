@@ -5,8 +5,6 @@ import typing as t
 from glob import glob
 
 import hikari
-from ottbot.core.utils.session_manager import SessionManager
-from ottbot.core.utils.tasks import clean_invite_table
 import sake
 import tanjun
 import yuyo
@@ -32,6 +30,8 @@ from ottbot.core.utils.rotating_logs import (
     BetterTimedRotatingFileHandler,
     HikariFormatter,
 )
+from ottbot.core.utils.session_manager import SessionManager
+from ottbot.core.utils.tasks import clean_invite_table
 
 _BotT = t.TypeVar("_BotT", bound="OttBot")
 EventT = t.Union[

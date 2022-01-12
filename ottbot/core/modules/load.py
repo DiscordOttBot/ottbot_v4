@@ -1,12 +1,11 @@
-from ottbot.core.client import OttClient
 import tanjun
 
 from ottbot.constants import SERVER_ID
+from ottbot.core.client import OttClient
 from ottbot.core.utils.checks import is_bot_owner_check
 from ottbot.core.utils.funcs import build_loaders, get_list_of_files
 
 component, load_component, unload_component = build_loaders(checks=[is_bot_owner_check])
-
 
 
 @component.with_slash_command
@@ -80,4 +79,3 @@ async def cmd_reload(
     await client.declare_global_commands(guild=SERVER_ID)
 
     await ctx.respond(f"Reloaded modules {[m.stem for m in modules]}")
-

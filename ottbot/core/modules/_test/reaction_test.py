@@ -49,7 +49,7 @@ async def _is_unicode_or_custom_emoji(ctx: tanjun.abc.Context, to_check: str) ->
     if not emoji_count(to_check):
         try:
             custom_emoji_id = to_check.split(":")[-1][:-1]
-            custom_emote = await tanjun.conversion.EmojiConverter().convert(ctx, custom_emoji_id)
+            custom_emote = await tanjun.to_emoji(custom_emoji_id, ctx)
             if not custom_emote:
                 return False
         except ValueError:

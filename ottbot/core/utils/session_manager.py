@@ -2,14 +2,12 @@ __all__: list[str] = ["SessionManager"]
 
 import asyncio
 import logging
-import typing
 
 import aiohttp
-from ottbot.core.client import OttClient
 import tanjun
-
 from hikari import config
 
+from ottbot.core.client import OttClient
 
 _LOGGER = logging.getLogger("hikari.reinhard")
 
@@ -35,7 +33,7 @@ class SessionManager:
 
     def load_into_client(self, client: tanjun.Client) -> None:
         """Add callbacks to the client for opening and closing the session"""
-        
+
         if client.is_alive:
             raise RuntimeError("This should be loaded into the client before it has started.")
 

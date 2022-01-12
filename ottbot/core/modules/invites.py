@@ -1,10 +1,9 @@
-import datetime
 import hikari
-from ottbot.core.bot import OttBot
-
 import tanjun
-from ottbot.core.utils.funcs import build_loaders, ordinal
+
+from ottbot.core.bot import OttBot
 from ottbot.core.db import AsyncPGDatabase
+from ottbot.core.utils.funcs import build_loaders, ordinal
 
 component, load_component, unload_component = build_loaders()
 
@@ -79,7 +78,7 @@ async def on_member_create(
     if code is not None and user is not None and uses is not None:
         handle_invite_rewards(db, event.guild_id, user, code, uses)
 
-    if user is not None:
+    if user is not None and uses is not None:
         await event.member.send(
             f"You are the {ordinal(uses)} invited to the server by {user.username} with the code {code}"
         )
@@ -97,11 +96,11 @@ async def on_invite_create(
             event.guild_id,
             event.invite.code,
             event.invite.uses,
-            event.invite.expires_at.replace(tzinfo=None),
+            event.invite.expires_at.replace(tzinfo=None) if event.invite.expires_at else None,
         )
 
 
-def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User, code: int, uses: int):
+def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User, code: str, uses: int):
     """Handle and rewards given to users for inviting people defined in a Guild's config"""
     # TODO: ^
     ...

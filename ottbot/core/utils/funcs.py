@@ -358,7 +358,7 @@ ORDINAL_ENDINGS = {"1": "st", "2": "nd", "3": "rd"}
 
 def ordinal(number: int) -> str:
     """Correctly format an ordinal number.
-    
+
     ```
     ordinal(1) --> '1st'
     ordinal(2) --> '2nd'
