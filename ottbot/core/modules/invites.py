@@ -1,3 +1,5 @@
+"""Invite tracker"""
+
 import hikari
 import tanjun
 
@@ -9,6 +11,8 @@ component, load_component, unload_component = build_loaders()
 
 
 invite_group = component.with_slash_command(tanjun.slash_command_group("invite", "Invite related commands"))
+
+
 
 
 @invite_group.with_command
@@ -26,6 +30,14 @@ async def cmd_total(
     id = member.id if member else ctx.author.id
 
     rows = await db.rows("SELECT uses FROM invites WHERE user_id = $1 AND guild_id = $2", id, ctx.guild_id)
+
+    # fields = [()]
+
+    embed = bot.embeds.build(
+        ctx,
+        title="Invites",
+        description=f"{ordinal(len(rows))} people invited by {member.mention if member else ctx.author.mention}",
+    )
 
     print(rows)
     await ctx.respond("...")
@@ -104,3 +116,20 @@ def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User,
     """Handle and rewards given to users for inviting people defined in a Guild's config"""
     # TODO: ^
     ...
+
+# TODO: add embeds to messages
+# ┊ ┊ ┊ ┊⚡ ...
+# ┊ ┊ ┊⚡ ...
+# ┊ ┊⚡ ...
+# ┊⚡ ...
+# ⚡ ...
+# ➤ ...
+# ➤ ...
+# ➤ ...
+
+# TODO: subract total invites when someone leaves
+# TODO: Detect new accounts
+# TODO: impl handle_invite_rewards
+
+# TODO: getters / setters for db values
+# TODO: blacklist for user id -> auto black list for banned users
