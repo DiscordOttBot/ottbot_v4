@@ -5,6 +5,7 @@ import typing as t
 from glob import glob
 
 import hikari
+from pytz import utc
 import sake
 import tanjun
 import yuyo
@@ -66,7 +67,7 @@ class OttBot(hikari.GatewayBot, IBot):
         self.version: str = version
         self.log_level: str = log_level
 
-        self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
+        self.scheduler: AsyncIOScheduler = AsyncIOScheduler(timezone=utc)
         self.errors: Errors = Errors(self)
         self.embeds: Embeds = Embeds()
         self.lines: Lines = Lines()

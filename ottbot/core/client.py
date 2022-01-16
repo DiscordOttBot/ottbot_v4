@@ -1,3 +1,4 @@
+import datetime
 import typing as t
 from collections import abc as collections
 
@@ -28,7 +29,7 @@ class OttClient(tanjun.Client, IClient):
         self.version = self.bot.version
 
         super().__init__(*args, **kwargs)
-        self.scheduler: AsyncIOScheduler = AsyncIOScheduler()
+        self.scheduler: AsyncIOScheduler = AsyncIOScheduler(timezone=utc)
         self.scheduler.configure(timezone=utc)
 
     def load_modules_(self, module: str = ""):

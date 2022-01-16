@@ -52,3 +52,9 @@ CREATE TABLE IF NOT EXISTS invites (
 -- CREATE TRIGGER delete_old_invites_trigger
 --     AFTER INSERT ON invites
 --     EXECUTE PROCEDURE delete_old_invites();
+
+CREATE TABLE IF NOT EXISTS auto_roles (
+    id bigserial NOT NULL PRIMARY KEY,
+    guild_id bigint NOT NULL,
+    role_id bigint NOT NULL UNIQUE
+);
