@@ -90,3 +90,21 @@ async def register_auto_role_callbacks(
     if ids:
         for gid, rid in ids:
             component_client.set_constant_id(f"autorole_{gid}_{rid}", give_autorole)
+
+
+# on member join roles
+
+
+@component.with_listener(hikari.MemberCreateEvent)
+async def on_member_create(
+    event: hikari.MemberCreateEvent, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
+) -> None:
+    if event.guild_id is None:
+        return
+
+    on_join_roles: list[hikari.Snowflake] = await db.rows(
+        "SELECT on_join_role_id FROM auto_roles WHERE guild_id = $1", event.guild_id
+    )
+
+    for id in on_join_roles:
+        await event.member.add_role(id, reason="Auto-role")
