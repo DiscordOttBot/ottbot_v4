@@ -2,9 +2,9 @@ import functools
 import typing as t
 
 import hikari
-
 import tanjun
 import yuyo
+
 from ottbot.core.bot import OttBot
 from ottbot.core.utils.funcs import build_loaders
 
@@ -14,7 +14,7 @@ component, load_component, unload_component = build_loaders()
 @component.with_slash_command
 @tanjun.as_slash_command("yuyo", "An example yuyo component paginator")
 async def cmd_yuyo(
-    ctx: tanjun.abc.SlashContext, component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient)
+    ctx: tanjun.abc.SlashContext, component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient)
 ) -> None:
     fields: t.Iterator[tuple[str | hikari.UndefinedType, hikari.Embed | hikari.UndefinedType]] = iter(
         [
@@ -39,7 +39,7 @@ async def cmd_yuyo(
 @component.with_slash_command
 @tanjun.as_slash_command("yuyoreaction", "An example reaction client command")
 async def cmd_yuyoreaction(
-    ctx: tanjun.abc.SlashContext, reaction_client: yuyo.ReactionClient = tanjun.injected(type=yuyo.ReactionClient)
+    ctx: tanjun.abc.SlashContext, reaction_client: yuyo.ReactionClient = tanjun.inject(type=yuyo.ReactionClient)
 ) -> None:
     async def on_emoji_a(event: hikari.ReactionAddEvent | hikari.ReactionDeleteEvent) -> None:
         if event.emoji_id is not None and event.emoji_name is not None:
@@ -65,8 +65,8 @@ async def cmd_yuyoreaction(
 @tanjun.as_slash_command("yuyoid", "Test yuyo custom ids")
 async def cmd_yuyoid(
     ctx: tanjun.abc.SlashContext,
-    component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient),
-    bot: OttBot = tanjun.injected(type=OttBot),
+    component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -105,7 +105,7 @@ async def cmd_yuyo_addid(
     ctx: tanjun.abc.SlashContext,
     message: str,
     id: str,
-    component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient),
+    component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -119,11 +119,10 @@ async def cmd_name(ctx: tanjun.abc.SlashContext) -> None:
     if ctx.guild_id is None:
         return
 
-    
 
 @component.with_listener(hikari.StartedEvent)
 async def on_started(
-    event: hikari.StartedEvent, component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient)
+    event: hikari.StartedEvent, component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient)
 ) -> None:
     async def yuyo_callback(ctx: yuyo.ComponentContext) -> None:
         print("yuyo_callback")

@@ -58,7 +58,7 @@ async def cmd_test2(ctx: tanjun.abc.SlashContext) -> None:
 async def cmd_user(
     ctx: tanjun.abc.SlashContext,
     id_str: str,
-    bot: OttBot = tanjun.injected(type=OttBot),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is not None:
         user = bot.cache.get_member(ctx.guild_id, int(id_str))
@@ -72,7 +72,7 @@ async def cmd_user(
 @tanjun.as_slash_command("waitfor", "`wait_for` test")
 async def cmd_waitdfor(
     ctx: tanjun.abc.SlashContext,
-    bot: OttBot = tanjun.injected(type=OttBot),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     await ctx.respond("Send a message")
     event: GuildMessageCreateEvent = await bot.wait_for(
@@ -88,7 +88,7 @@ async def cmd_waitdfor(
 
 @component.with_slash_command
 @tanjun.as_slash_command("testdb", "test that the bot's database is working")
-async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     await bot.pool.execute(
         "INSERT INTO users (discord_id) VALUES ($1)",
         str(ctx.author.id),
@@ -103,7 +103,7 @@ async def cmd_test_db(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injecte
 @tanjun.with_member_slash_option("member", "The member test on")
 @tanjun.as_slash_command("nick_test", "test nickname permissions")
 async def cmd_nick_test(
-    ctx: tanjun.abc.SlashContext, member: hikari.Member, bot: OttBot = tanjun.injected(type=OttBot)
+    ctx: tanjun.abc.SlashContext, member: hikari.Member, bot: OttBot = tanjun.inject(type=OttBot)
 ) -> None:
     await member.edit(nick="asdf")
     await member.edit(nick=hikari.UNDEFINED)
@@ -114,8 +114,8 @@ async def cmd_nick_test(
 @tanjun.as_slash_command("testobt", "Test obtain item")
 async def cmd_testobt(
     ctx: tanjun.abc.SlashContext,
-    sake: sake.redis.RedisCache = tanjun.injected(type=sake.redis.RedisCache),
-    bot: OttBot = tanjun.injected(type=OttBot),
+    sake: sake.redis.RedisCache = tanjun.inject(type=sake.redis.RedisCache),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -140,7 +140,7 @@ async def cmd_embedtest(ctx: tanjun.abc.SlashContext) -> None:
 @component.with_slash_command
 @tanjun.as_slash_command("sessiontest", "Test the aiohttp session")
 async def cmd_sessiontest(
-    ctx: tanjun.abc.SlashContext, session: aiohttp.ClientSession = tanjun.injected(type=aiohttp.ClientSession)
+    ctx: tanjun.abc.SlashContext, session: aiohttp.ClientSession = tanjun.inject(type=aiohttp.ClientSession)
 ) -> None:
     if ctx.guild_id is None:
         return

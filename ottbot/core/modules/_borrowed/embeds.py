@@ -74,8 +74,8 @@ embed = component.with_slash_command(  # pylint: disable=C0103
 async def interactive_edit(
     ctx: SlashContext,
     message_id: hikari.Message,
-    bot: OttBot = tanjun.injected(type=OttBot),
-    client: OttClient = tanjun.injected(type=OttClient),
+    bot: OttBot = tanjun.inject(type=OttBot),
+    client: OttClient = tanjun.inject(type=OttClient),
 ):
     """Interactive Edit Embed Builder!
     Run this slash command for a WYSIWYG embed edit experience."""
@@ -113,8 +113,8 @@ async def interactive_edit(
 @tanjun.as_slash_command("interactive-post", "Build an Embed!")
 async def interactive_post(
     ctx: SlashContext,
-    bot: OttBot = tanjun.injected(type=OttBot),
-    client: OttClient = tanjun.injected(type=OttClient),
+    bot: OttBot = tanjun.inject(type=OttBot),
+    client: OttClient = tanjun.inject(type=OttClient),
 ) -> None:
     """Interactive Embed Builder!
     Run this slash command for a WYSIWYG embed experience."""

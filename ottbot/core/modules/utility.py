@@ -20,7 +20,7 @@ async def cmd_qr(
     text: str,
     size: int,
     format: str,
-    bot: OttBot = tanjun.injected(type=OttBot),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if size > 100:
         await ctx.respond("Size must be less than 100")

@@ -11,7 +11,7 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("reaction_test", "A command to test reactions")
-async def cmd_reaction_test(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_reaction_test(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     message = await ctx.respond("React to this message", ensure_result=True)
     event = await bot.wait_for(GuildReactionAddEvent, timeout=60, predicate=lambda e: e.message_id == message.id)
     emoji = (await bot.rest.fetch_emoji(event.guild_id, event.emoji_id)).name if event.emoji_id else event.emoji_name
@@ -29,7 +29,7 @@ async def cmd_reaction_test(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.i
 
 @component.with_slash_command
 @tanjun.as_slash_command("emoji_db_test", "A command to test emojies in the database")
-async def test_db_emoji(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def test_db_emoji(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     message = await ctx.respond("React to this message", ensure_result=True)
     event = await bot.wait_for(GuildReactionAddEvent, timeout=60, predicate=lambda e: e.message_id == message.id)
     emoji = (await bot.rest.fetch_emoji(event.guild_id, event.emoji_id)).name if event.emoji_id else event.emoji_name

@@ -12,7 +12,7 @@ component, load_component, unload_component = build_loaders()
 @tanjun.with_member_slash_option("user", "The user to spotlight", default=None)
 @tanjun.as_slash_command("spotlight", "Displays previous messages from a user")
 async def cmd_spotlight(
-    ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.injected(type=OttBot)
+    ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.inject(type=OttBot)
 ) -> None:
     if ctx.guild_id is None:
         return

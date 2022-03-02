@@ -46,7 +46,7 @@ async def set_bank(db: AsyncPGDatabase, user_id: int, bank: int) -> None:
 async def cmd_bal(
     ctx: tanjun.abc.SlashContext,
     member: hikari.Member | None,
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -58,7 +58,7 @@ async def cmd_bal(
 
 @currency_group.with_command
 @tanjun.as_slash_command("daily", "Claim your daily currency.")
-async def cmd_daily(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)) -> None:
+async def cmd_daily(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)) -> None:
     if ctx.guild_id is None:
         return
 
@@ -77,7 +77,7 @@ async def cmd_daily(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.i
 
 @currency_group.with_command
 @tanjun.as_slash_command("dice", "Roll dice for currency")
-async def cmd_(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)) -> None:
+async def cmd_(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)) -> None:
     if ctx.guild_id is None:
         return
     roll = random.randint(1, 6)
@@ -90,7 +90,7 @@ async def cmd_(ctx: tanjun.abc.SlashContext, db: AsyncPGDatabase = tanjun.inject
 @tanjun.with_int_slash_option("number", "The number that you are guessing")
 @tanjun.as_slash_command("guess", "Guess a number between 1 and 100 for currency")
 async def cmd_guess(
-    ctx: tanjun.abc.SlashContext, number: int, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
+    ctx: tanjun.abc.SlashContext, number: int, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -118,7 +118,7 @@ async def cmd_guess(
 @tanjun.with_str_slash_option("amount", "The amount to deposit, or 'all' to deposit all your balance")
 @tanjun.as_slash_command("deposit", "Deposit currency into your bank")
 async def cmd_deposit(
-    ctx: tanjun.abc.SlashContext, amount: str, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
+    ctx: tanjun.abc.SlashContext, amount: str, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -147,7 +147,7 @@ async def cmd_set(
     ctx: tanjun.abc.SlashContext,
     amount: int,
     member: hikari.Member,
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
 ) -> None:
     if ctx.guild_id is None:
         return

@@ -18,7 +18,7 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("ping", "Ping the bot to check if it's online")
-async def cmd_ping(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_ping(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     before = time.time()
     msg = await ctx.respond("Pong!", ensure_result=True)
     after = time.time()
@@ -30,7 +30,7 @@ async def cmd_ping(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(t
 
 @component.with_slash_command
 @tanjun.as_slash_command("stats", "Display stats about the bot")
-async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)):
+async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)):
     bot.lines.count()
     proc = Process()
     with proc.oneshot():
@@ -98,7 +98,7 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(
 @tanjun.with_member_slash_option("user", "The user to get information about", default=None)
 @tanjun.as_slash_command("user_info", "Information about a user")
 async def cmd_user_info(
-    ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.injected(type=OttBot)
+    ctx: tanjun.abc.SlashContext, user: hikari.Member | None, bot: OttBot = tanjun.inject(type=OttBot)
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -175,7 +175,7 @@ async def cmd_user_info(
 
 @component.with_slash_command
 @tanjun.as_slash_command("server_info", "Information about the current server information")
-async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_server_info(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     guild = await ctx.fetch_guild()
     if guild is None:
         return

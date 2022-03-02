@@ -15,7 +15,7 @@ component, load_component, unload_component = build_loaders()
 @component.with_slash_command
 @tanjun.with_str_slash_option("question", "The question to ask")
 @tanjun.as_slash_command("8ball", "Ask the magic 8ball a question")
-async def cmd_8ball(ctx: tanjun.abc.SlashContext, question: str, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_8ball(ctx: tanjun.abc.SlashContext, question: str, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     """Ask the magic 8ball a question"""
     if ctx.guild_id is None:
         return
@@ -90,7 +90,7 @@ async def cmd_float(ctx: tanjun.abc.SlashContext) -> None:
 @tanjun.with_int_slash_option("count", "The number of members to count down to", default=1)
 @tanjun.as_slash_command("wheel", "Spin a wheel to select an item from a list")
 async def cmd_wheel(
-    ctx: tanjun.abc.SlashContext, ids: str, count: int, bot: OttBot = tanjun.injected(type=OttBot)
+    ctx: tanjun.abc.SlashContext, ids: str, count: int, bot: OttBot = tanjun.inject(type=OttBot)
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -119,7 +119,7 @@ async def cmd_slap(
     ctx: tanjun.abc.SlashContext,
     member: hikari.Member | None,
     reason: str | None,
-    bot: OttBot = tanjun.injected(type=OttBot),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -146,7 +146,7 @@ async def cmd_echo(ctx: tanjun.abc.SlashContext, message: str) -> None:
 
 @component.with_slash_command
 @tanjun.as_slash_command("bababooey", "Sends BABABOOEY.MP3")
-async def cmd_bababooey(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_bababooey(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     msg = await ctx.respond("BABABOOEY", ensure_result=True)
     file = hikari.File(pathlib.Path(f"{bot._static}/BABABOOEY.mp3"))
     await msg.edit(attachment=file)
@@ -154,7 +154,7 @@ async def cmd_bababooey(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injec
 
 @component.with_slash_command
 @tanjun.as_slash_command("bell", "Sends BELL.MP3")
-async def cmd_bell(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_bell(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     msg = await ctx.respond(ZWJ, ensure_result=True)
     file = hikari.File(pathlib.Path(f"{bot._static}/BELL.mp3"))
     await msg.edit(attachment=file)

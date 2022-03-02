@@ -8,7 +8,7 @@ component, load_component, unload_component = build_loaders()
 
 @component.with_slash_command
 @tanjun.as_slash_command("testinvite", "Invite Test")
-async def cmd_testinvite(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.injected(type=OttBot)) -> None:
+async def cmd_testinvite(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(type=OttBot)) -> None:
     if ctx.guild_id is None:
         return
 

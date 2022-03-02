@@ -1,11 +1,12 @@
 import functools
-import hikari
-from ottbot.core.db.db import AsyncPGDatabase
 
+import hikari
 import tanjun
 import yuyo
-from ottbot.core.utils.funcs import build_loaders
+
 from ottbot.core.bot import OttBot
+from ottbot.core.db.db import AsyncPGDatabase
+from ottbot.core.utils.funcs import build_loaders
 
 component, load_component, unload_component = build_loaders()
 
@@ -30,9 +31,9 @@ async def give_autorole(ctx: yuyo.ComponentContext) -> None:
 async def cmd_autorole(
     ctx: tanjun.abc.SlashContext,
     role: hikari.Role,
-    component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient),
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
-    bot: OttBot = tanjun.injected(type=OttBot),
+    component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -57,9 +58,9 @@ async def cmd_autorole(
 @tanjun.as_slash_command("autorolemsg", "Send a message with the buttons for autoroles")
 async def cmd_autorolemsg(
     ctx: tanjun.abc.SlashContext,
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
-    bot: OttBot = tanjun.injected(type=OttBot),
-    cc: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
+    bot: OttBot = tanjun.inject(type=OttBot),
+    cc: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -81,9 +82,9 @@ async def cmd_autorolemsg(
 @component.with_listener(hikari.StartedEvent)
 async def register_auto_role_callbacks(
     event: hikari.StartedEvent,
-    component_client: yuyo.ComponentClient = tanjun.injected(type=yuyo.ComponentClient),
-    bot: OttBot = tanjun.injected(type=OttBot),
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
+    component_client: yuyo.ComponentClient = tanjun.inject(type=yuyo.ComponentClient),
+    bot: OttBot = tanjun.inject(type=OttBot),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
 ) -> None:
 
     ids = await db.rows("SELECT (guild_id, role_id) FROM auto_roles")
@@ -97,7 +98,7 @@ async def register_auto_role_callbacks(
 
 @component.with_listener(hikari.MemberCreateEvent)
 async def on_member_create(
-    event: hikari.MemberCreateEvent, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
+    event: hikari.MemberCreateEvent, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)
 ) -> None:
     if event.guild_id is None:
         return

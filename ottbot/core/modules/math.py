@@ -49,7 +49,7 @@ def generate_image(bot: OttBot, latex: str, name: str, resolution: str):
 @tanjun.with_str_slash_option("expression", "The expression to generate latex from")
 @tanjun.as_slash_command("latex", "Generate latex based on an expression")
 async def cmd_latex(
-    ctx: tanjun.abc.SlashContext, expression: str, resolution: str, bot: OttBot = tanjun.injected(type=OttBot)
+    ctx: tanjun.abc.SlashContext, expression: str, resolution: str, bot: OttBot = tanjun.inject(type=OttBot)
 ) -> None:
     path = generate_image(bot, expression, f"{ctx.author.id}", resolution)
     if path:

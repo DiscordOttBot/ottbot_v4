@@ -13,16 +13,14 @@ component, load_component, unload_component = build_loaders()
 invite_group = component.with_slash_command(tanjun.slash_command_group("invite", "Invite related commands"))
 
 
-
-
 @invite_group.with_command
 @tanjun.with_member_slash_option("member", "The member to check.", default=None)
 @tanjun.as_slash_command("total", "Get the total number of people invited my a member.")
 async def cmd_total(
     ctx: tanjun.abc.SlashContext,
     member: hikari.Member | None,
-    db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase),
-    bot: OttBot = tanjun.injected(type=OttBot),
+    db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase),
+    bot: OttBot = tanjun.inject(type=OttBot),
 ) -> None:
     if ctx.guild_id is None:
         return
@@ -40,12 +38,12 @@ async def cmd_total(
     )
 
     print(rows)
-    await ctx.respond("...")
+    await ctx.respond("...", embed=embed)
 
 
 @component.with_listener(hikari.MemberCreateEvent)
 async def on_member_create(
-    event: hikari.MemberCreateEvent, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
+    event: hikari.MemberCreateEvent, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)
 ) -> None:
     print(f"Member join {event.member.display_name}")
     invites = await event.app.rest.fetch_guild_invites(event.guild_id)
@@ -97,9 +95,7 @@ async def on_member_create(
 
 
 @component.with_listener(hikari.InviteCreateEvent)
-async def on_invite_create(
-    event: hikari.InviteCreateEvent, db: AsyncPGDatabase = tanjun.injected(type=AsyncPGDatabase)
-):
+async def on_invite_create(event: hikari.InviteCreateEvent, db: AsyncPGDatabase = tanjun.inject(type=AsyncPGDatabase)):
     print("Invite create event")
     if event.invite.inviter:
         await db.execute(
@@ -117,6 +113,7 @@ def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User,
     # TODO: ^
     ...
 
+
 # TODO: add embeds to messages
 # ┊ ┊ ┊ ┊⚡ ...
 # ┊ ┊ ┊⚡ ...
@@ -127,7 +124,7 @@ def handle_invite_rewards(db: AsyncPGDatabase, guild_id: int, user: hikari.User,
 # ➤ ...
 # ➤ ...
 
-# TODO: subract total invites when someone leaves
+# TODO: subtract total invites when someone leaves
 # TODO: Detect new accounts
 # TODO: impl handle_invite_rewards
 

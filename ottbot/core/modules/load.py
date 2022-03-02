@@ -15,7 +15,7 @@ component, load_component, unload_component = build_loaders(checks=[is_bot_owner
 async def cmd_load(
     ctx: tanjun.abc.SlashContext,
     module: str,
-    client: OttClient = tanjun.injected(type=OttClient),
+    client: OttClient = tanjun.inject(type=OttClient),
 ) -> None:
     modules = get_list_of_files("ottbot/core/modules/" + module)
     client.load_modules_(module)
@@ -29,7 +29,7 @@ async def cmd_load(
 async def cmd_unload(
     ctx: tanjun.abc.SlashContext,
     module: str,
-    client: OttClient = tanjun.injected(type=OttClient),
+    client: OttClient = tanjun.inject(type=OttClient),
 ) -> None:
     modules = get_list_of_files("ottbot/core/modules/" + module, ignore_underscores=False)
     for m in modules:
@@ -47,7 +47,7 @@ async def cmd_unload(
 async def cmd_update(
     ctx: tanjun.abc.SlashContext,
     module: str,
-    client: OttClient = tanjun.injected(type=OttClient),
+    client: OttClient = tanjun.inject(type=OttClient),
 ) -> None:
     modules = get_list_of_files("ottbot/core/modules/" + module)
     for m in modules:
@@ -67,7 +67,7 @@ async def cmd_update(
 async def cmd_reload(
     ctx: tanjun.abc.SlashContext,
     module: str,
-    client: OttClient = tanjun.injected(type=OttClient),
+    client: OttClient = tanjun.inject(type=OttClient),
 ) -> None:
     modules = get_list_of_files("ottbot/core/modules/" + module)
     for m in modules:
