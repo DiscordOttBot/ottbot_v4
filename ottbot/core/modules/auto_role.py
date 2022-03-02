@@ -1,5 +1,3 @@
-import functools
-
 import hikari
 import tanjun
 import yuyo
@@ -45,7 +43,7 @@ async def cmd_autorole(
         return
 
     try:
-        component_client.set_constant_id(f"autorole_{ctx.guild_id}_{role.id}", functools.partial(give_autorole, bot))
+        component_client.set_constant_id(f"autorole_{ctx.guild_id}_{role.id}", give_autorole)
     except ValueError:
         await ctx.respond("That role is already registered")
 
