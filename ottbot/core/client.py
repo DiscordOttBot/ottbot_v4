@@ -22,7 +22,7 @@ class OttClient(tanjun.Client, IClient):
         "bot",
     )
 
-    def __init__(self: _ClientT, *args: t.Any, **kwargs: t.Any) -> None:
+    def __init__(self: _ClientT, *args: t.Any, **kwargs: dict[str, t.Any]) -> None:
 
         self.bot = kwargs["shards"]
         self.version = self.bot.version
