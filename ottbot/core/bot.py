@@ -127,7 +127,7 @@ class OttBot(hikari.GatewayBot, IBot):
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, self.scheduler.start)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, self.scheduler.shutdown)
         )
-        SessionManager(self.client.rest.http_settings.timeouts, self.client.rest.proxy_settings, "Discord Bot").load_into_client(
+        SessionManager(self._http_settings.timeouts, self._proxy_settings, "Discord Bot").load_into_client(
             self.client
         )
 
