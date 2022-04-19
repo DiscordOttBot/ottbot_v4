@@ -36,7 +36,7 @@ async def cmd_stats(ctx: tanjun.abc.SlashContext, bot: OttBot = tanjun.inject(ty
     with proc.oneshot():
         uptime = timedelta(seconds=time.time() - proc.create_time())
         cpu_time = str(timedelta(seconds=(cpu := proc.cpu_times()).system + cpu.user))
-        mem_total = virtual_memory().total / (1024 ** 2)
+        mem_total = virtual_memory().total / (1024**2)
         mem_of_total = proc.memory_percent()
         mem_usage = mem_total * (mem_of_total / 100)
 

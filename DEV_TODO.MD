@@ -16,15 +16,16 @@
 - [x] fix redis (waiting on Sake rewrite)
 - [x] make example commands w/ buttons
 - [x] look into db code (orm)
-- [ ] dashboard
+- [x] dashboard
 - [ ] stream status (btc, eth, ...)
 - [x] Database Schema + logic
 - [x] reload command
+- [ ] star board
 - [ ] reaction roles
 - [ ] rtfm code / command
 - [ ] auto complete
-- [ ] ? switch to dictonarys for api
 - [ ] update api endpoint so they match discords' endpoints
+
 ## Soon
 
 - [ ] normal commands

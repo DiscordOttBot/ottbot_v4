@@ -6,7 +6,8 @@ from collections import abc as collections_abc
 import hikari
 import tanjun
 from tanjun import abc as tanjun_abc
-from tanjun.checks import CommandT, _Check
+from tanjun.checks import _Check
+from tanjun.checks import _CommandT as CommandT
 
 from ottbot.config import Config
 

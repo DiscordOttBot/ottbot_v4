@@ -30,12 +30,3 @@ uvicorn
 requests
 types-ujson
 types-orjson
-
-# Dev
-mypy
-flake8
-black==21.11b1
-isort
-codespell
-nox
-pyright

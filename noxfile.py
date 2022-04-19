@@ -5,7 +5,7 @@ import nox
 
 @nox.session(reuse_venv=True)
 def format_code(session):
-    session.install("-r", "requirements.txt")
+    session.install("-r", "requirements.txt", "-r", "dev-requirements.txt")
 
     session.run("isort", "ottbot")
     session.run("codespell", "ottbot", "--ignore-regex", "(nd|swith)")
@@ -14,11 +14,7 @@ def format_code(session):
 
 @nox.session(reuse_venv=True)
 def lint_code(session: nox.Session):
-
-    session.install("flake8")
-    session.install("mypy==0.930")
-    session.install("pyright")
-    session.install("-r", "requirements.txt")
+    session.install("-r", "requirements.txt", "-r", "dev-requirements.txt")
 
     session.run("flake8", "ottbot")
 

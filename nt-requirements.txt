@@ -1,0 +1,29 @@
+hikari
+hikari-tanjun
+hikari-sake
+hikari-yuyo
+hikari[speedups]
+aiofiles
+aiohttp
+
+# utilities
+aioredis
+hiredis
+python-dotenv
+APScheduler
+pygount
+colorama
+asyncpg
+psutil
+distro
+emoji
+pypresence
+pyqrcode
+pypng
+
+# Server
+fastapi
+uvicorn
+requests
+types-ujson
+types-orjson
