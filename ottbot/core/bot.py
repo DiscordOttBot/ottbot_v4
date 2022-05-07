@@ -12,7 +12,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from hikari import presences
 from pytz import utc
-from hikari.impl.config import ProxySettings
 
 from ottbot import constants
 from ottbot.abc.ibot import IBot
@@ -127,9 +126,7 @@ class OttBot(hikari.GatewayBot, IBot):
             .add_client_callback(tanjun.ClientCallbackNames.STARTING, self.scheduler.start)
             .add_client_callback(tanjun.ClientCallbackNames.CLOSING, self.scheduler.shutdown)
         )
-        SessionManager(self._http_settings.timeouts, self._proxy_settings, "Discord Bot").load_into_client(
-            self.client
-        )
+        SessionManager(self._http_settings.timeouts, self._proxy_settings, "Discord Bot").load_into_client(self.client)
 
     async def init_cache(self: _BotT):
         # cache = sake.redis.RedisCache(app=self, event_manager=self.event_manager, address="redis://127.0.0.1")

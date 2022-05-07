@@ -5,8 +5,8 @@ import logging
 
 import aiohttp
 import tanjun
-
 from hikari.impl import config
+
 from ottbot.core.client import OttClient
 
 _LOGGER = logging.getLogger("hikari.reinhard")
@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger("hikari.reinhard")
 class SessionManager:
     """Utility class for managing an `aiohttp.ClientSession` type dependency."""
 
-    __slots__ = ("http_settings", "proxy_settings", "_session", "user_agent")
+    __slots__ = ("http_timeout_settings", "proxy_settings", "_session", "user_agent")
 
     def __init__(
         self, http_timeout_settings: config.HTTPTimeoutSettings, proxy_settings: config.ProxySettings, user_agent: str

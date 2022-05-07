@@ -36,7 +36,7 @@ def generate_image(bot: OttBot, latex: str, name: str, resolution: str):
         ["latex", "-no-shell-escape", "-interaction=nonstopmode", latex_file], cwd=bot._dynamic, stdout=subprocess.PIPE
     )
     if latexsuccess.returncode == 0:
-        subprocess.run(["dvipng", "-q*", "-D", RES_TO_DPI[resolution], "-T", "tight", dvi_file], cwd=bot._dynamic)
+        subprocess.run(["dvipng", "-q", "-D", RES_TO_DPI[resolution], "-T", "tight", dvi_file], cwd=bot._dynamic)
         return png_file
     else:
         return ""

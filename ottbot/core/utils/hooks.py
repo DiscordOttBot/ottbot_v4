@@ -15,7 +15,11 @@ def _embed(ctx: tanjun.abc.Context, message: str) -> hikari.Embed:
     )
 
     return embed
-def build_on_error(logger: Logger) -> t.Callable[[tanjun.abc.Context, Exception], t.Coroutine[t.Any, t.Any, t.Optional[bool]]]:
+
+
+def build_on_error(
+    logger: Logger,
+) -> t.Callable[[tanjun.abc.Context, Exception], t.Coroutine[t.Any, t.Any, t.Optional[bool]]]:
     async def on_error(ctx: tanjun.abc.Context, exc: Exception) -> None:
         log_exc(ctx, exc, logger)
 
