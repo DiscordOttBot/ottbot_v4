@@ -89,4 +89,4 @@ class OttClient(tanjun.Client, IClient):
             set_global_commands=set_global_commands,
             command_ids=command_ids,
             _stack_level=1,
-        ).set_hikari_trait_injectors(bot)
+        ).set_hikari_trait_

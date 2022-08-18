@@ -35,13 +35,18 @@ class AsyncPGDatabase:
 
     async def close(self) -> None:
         """Closes the connection pool"""
+        if self.pool:
+            await self.pool.close()
+        else:
+            raise ValueError("Pool is not defined")
 
-        await self.pool.close()
-
+    @staticmethod
     def with_connection(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:  # type: ignore
         """A decorator used to acquire a connection from the pool"""
 
         async def wrapper(self: "AsyncPGDatabase", *args: t.Any) -> t.Any:
+            if self.pool is None:
+                return
             async with self.pool.acquire() as conn:
                 self.calls += 1
                 return await func(self, *args, conn=conn)
