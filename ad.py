@@ -16,7 +16,7 @@ RPC.update(
     large_text="xd",
     buttons=[
         # {"label": "Invite my Bot", "url": ""},
-        {"label": "Soruce Code", "url": "https://github.com/AlexanderHOtt/ottbot_v4/"},
+        {"label": "Soruce Code", "url": "https://example.com"},
     ],
 )
 
