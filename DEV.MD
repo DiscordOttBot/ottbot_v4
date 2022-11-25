@@ -65,10 +65,10 @@ sudo /etc/init.d/postgresql start
 
 # Repos
 
-https://github.com/tandemdude/rtfm-botto
-https://gitlab.com/aster.codes/vegas2/-/tree/main
-https://github.com/Jonxslays/Jonxhikari
-https://github.com/FasterSpeeding/Reinhard
-https://gitlab.com/aster.codes/maybax2/-/tree/deploy
-https://github.com/YodaPY/DTV
-https://github.com/jagrosh/Vortex/wiki/Auto-Moderation
+- https://github.com/tandemdude/rtfm-botto
+- https://gitlab.com/aster.codes/vegas2/-/tree/main
+- https://github.com/Jonxslays/Jonxhikari
+- https://github.com/FasterSpeeding/Reinhard
+- https://gitlab.com/aster.codes/maybax2/-/tree/deploy
+- https://github.com/YodaPY/DTV
+- https://github.com/jagrosh/Vortex/wiki/Auto-Moderation
